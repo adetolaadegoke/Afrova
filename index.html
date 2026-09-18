@@ -38,12 +38,17 @@
       border: 0;
     }
 
+    input {
+      font-family: inherit;
+    }
+
     .app {
       display: flex;
       min-height: 100vh;
     }
 
     /* SIDEBAR */
+
     .sidebar {
       width: 240px;
       background: #0d0d12;
@@ -99,6 +104,7 @@
     }
 
     /* MAIN */
+
     .main {
       margin-left: 240px;
       width: calc(100% - 240px);
@@ -150,9 +156,12 @@
       place-items: center;
       font-weight: 800;
       color: #17100a;
+      cursor: pointer;
+      flex-shrink: 0;
     }
 
     /* HERO */
+
     .hero {
       background:
         radial-gradient(circle at 85% 20%, rgba(255,122,0,.4), transparent 30%),
@@ -199,6 +208,10 @@
       font-weight: 700;
     }
 
+    .primary:hover {
+      background: var(--accent2);
+    }
+
     .secondary {
       background: rgba(255,255,255,.08);
       color: white;
@@ -207,7 +220,12 @@
       font-weight: 700;
     }
 
+    .secondary:hover {
+      background: rgba(255,255,255,.14);
+    }
+
     /* SECTIONS */
+
     .section {
       margin-bottom: 42px;
     }
@@ -319,6 +337,7 @@
     }
 
     /* ARTISTS */
+
     .artist-card {
       text-align: center;
       background: var(--panel);
@@ -346,6 +365,7 @@
     }
 
     /* PREMIUM */
+
     .plans {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -392,6 +412,7 @@
     }
 
     /* ARTIST AREA */
+
     .artist-area {
       background: linear-gradient(135deg, #17100b, #101016);
       border: 1px solid var(--border);
@@ -416,6 +437,7 @@
     }
 
     /* PLAYER */
+
     .player {
       position: fixed;
       bottom: 0;
@@ -514,10 +536,171 @@
       font-size: 11px;
     }
 
-    /* MOBILE */
+    /* MOBILE NAV */
+
     .mobile-nav {
       display: none;
     }
+
+    /* AUTH MODAL */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.78);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+      background: #111117;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.5);
+    }
+
+    .auth-logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .auth-logo span {
+      color: var(--accent);
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    .auth-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #181820;
+      color: white;
+      outline: none;
+    }
+
+    .auth-input:focus {
+      border-color: var(--accent);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    .auth-submit:hover {
+      background: var(--accent2);
+    }
+
+    .auth-switch {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    .auth-switch button {
+      background: none;
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    .close-modal {
+      float: right;
+      background: rgba(255,255,255,.08);
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 18px;
+    }
+
+    .account-info {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .account-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7a00, #ffbd70);
+      color: #17100a;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: 800;
+      margin: 0 auto 12px;
+    }
+
+    .account-email {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 5px;
+      word-break: break-word;
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      color: white;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    /* MESSAGE */
+
+    #message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      max-width: 340px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 13px 17px;
+      border-radius: 10px;
+      z-index: 300;
+      display: none;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* RESPONSIVE */
 
     @media (max-width: 1000px) {
       .cards {
@@ -616,23 +799,10 @@
       .mobile-nav button.active {
         color: var(--accent2);
       }
-    }
 
-    .hidden {
-      display: none !important;
-    }
-
-    #message {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      padding: 13px 17px;
-      border-radius: 10px;
-      z-index: 100;
-      display: none;
-      font-size: 13px;
+      .auth-box {
+        padding: 23px;
+      }
     }
   </style>
 </head>
@@ -643,30 +813,57 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="logo">Afro<span>va</span></div>
+
+    <div class="logo">
+      Afro<span>va</span>
+    </div>
 
     <div class="nav-title">Menu</div>
 
-    <button class="nav-btn active" onclick="showSection('home', this)">⌂ &nbsp; Home</button>
-    <button class="nav-btn" onclick="showSection('search', this)">⌕ &nbsp; Search</button>
-    <button class="nav-btn" onclick="showSection('library', this)">♫ &nbsp; Your Library</button>
+    <button class="nav-btn active" onclick="showSection('home', this)">
+      ⌂ &nbsp; Home
+    </button>
+
+    <button class="nav-btn" onclick="showSection('search', this)">
+      ⌕ &nbsp; Search
+    </button>
+
+    <button class="nav-btn" onclick="showSection('library', this)">
+      ♫ &nbsp; Your Library
+    </button>
 
     <div class="nav-title">Your Music</div>
 
-    <button class="nav-btn" onclick="showSection('liked', this)">♥ &nbsp; Liked Songs</button>
-    <button class="nav-btn" onclick="showSection('playlists', this)">☷ &nbsp; Playlists</button>
-    <button class="nav-btn" onclick="showSection('albums', this)">▣ &nbsp; Albums</button>
+    <button class="nav-btn" onclick="showSection('liked', this)">
+      ♥ &nbsp; Liked Songs
+    </button>
+
+    <button class="nav-btn" onclick="showSection('playlists', this)">
+      ☷ &nbsp; Playlists
+    </button>
+
+    <button class="nav-btn" onclick="showSection('albums', this)">
+      ▣ &nbsp; Albums
+    </button>
 
     <div class="nav-title">For Artists</div>
 
-    <button class="nav-btn" onclick="showSection('artist', this)">♬ &nbsp; Artist Studio</button>
-    <button class="nav-btn" onclick="showSection('premium', this)">◆ &nbsp; Premium</button>
+    <button class="nav-btn" onclick="showSection('artist', this)">
+      ♬ &nbsp; Artist Studio
+    </button>
+
+    <button class="nav-btn" onclick="showSection('premium', this)">
+      ◆ &nbsp; Premium
+    </button>
+
   </aside>
+
 
   <!-- MAIN -->
   <main class="main">
 
     <div class="topbar">
+
       <input
         id="searchInput"
         class="search"
@@ -675,20 +872,32 @@
         oninput="searchMusic()"
       >
 
-      <button class="premium-btn" onclick="showSection('premium')">
+      <button
+        class="premium-btn"
+        onclick="showSection('premium')">
         Get Premium
       </button>
 
-      <div class="profile">A</div>
+      <div
+        class="profile"
+        id="profileButton"
+        onclick="openAccount()">
+        A
+      </div>
+
     </div>
+
 
     <!-- HOME -->
     <section id="home">
 
       <div class="hero">
+
         <small>Welcome to Afrova</small>
 
-        <h1>Your sound. Your culture. Your Afrova.</h1>
+        <h1>
+          Your sound. Your culture. Your Afrova.
+        </h1>
 
         <p>
           Discover new music, follow your favourite artists,
@@ -696,21 +905,41 @@
         </p>
 
         <div class="hero-actions">
-          <button class="primary" onclick="playSong(0)">▶ Start Listening</button>
-          <button class="secondary" onclick="showSection('artist')">For Artists</button>
+
+          <button
+            class="primary"
+            onclick="playSong(0)">
+            ▶ Start Listening
+          </button>
+
+          <button
+            class="secondary"
+            onclick="showSection('artist')">
+            For Artists
+          </button>
+
         </div>
+
       </div>
 
+
       <div class="section">
+
         <div class="section-head">
           <h2>Trending on Afrova</h2>
           <button class="see-all">See all</button>
         </div>
 
-        <div class="cards" id="songCards"></div>
+        <div
+          class="cards"
+          id="songCards">
+        </div>
+
       </div>
 
+
       <div class="section">
+
         <div class="section-head">
           <h2>Popular Artists</h2>
         </div>
@@ -748,14 +977,18 @@
           </div>
 
         </div>
+
       </div>
 
+
       <div class="section">
+
         <div class="section-head">
           <h2>Made for You</h2>
         </div>
 
         <div class="cards">
+
           <div class="card">
             <div class="cover two">🎧</div>
             <h3>Afrova Mix</h3>
@@ -785,52 +1018,89 @@
             <h3>New Releases</h3>
             <p>Fresh music</p>
           </div>
+
         </div>
+
       </div>
 
     </section>
+
 
     <!-- SEARCH -->
     <section id="search" class="hidden">
+
       <div class="section">
+
         <div class="section-head">
           <h2>Search Results</h2>
         </div>
-        <div class="cards" id="searchResults"></div>
+
+        <div
+          class="cards"
+          id="searchResults">
+        </div>
+
       </div>
+
     </section>
+
 
     <!-- LIBRARY -->
     <section id="library" class="hidden">
+
       <div class="section">
+
         <div class="section-head">
           <h2>Your Library</h2>
         </div>
+
         <p style="color:var(--muted); line-height:1.7;">
           Your saved songs, albums and playlists will appear here.
         </p>
+
       </div>
+
     </section>
+
 
     <!-- LIKED -->
     <section id="liked" class="hidden">
+
       <div class="section">
+
         <div class="section-head">
           <h2>Liked Songs</h2>
         </div>
-        <div class="cards" id="likedSongs"></div>
+
+        <div
+          class="cards"
+          id="likedSongs">
+        </div>
+
       </div>
+
     </section>
+
 
     <!-- PLAYLISTS -->
     <section id="playlists" class="hidden">
+
       <div class="section">
+
         <div class="section-head">
+
           <h2>Your Playlists</h2>
-          <button class="primary" onclick="createPlaylist()">+ Create Playlist</button>
+
+          <button
+            class="primary"
+            onclick="createPlaylist()">
+            + Create Playlist
+          </button>
+
         </div>
 
         <div class="cards">
+
           <div class="card">
             <div class="cover">🎵</div>
             <h3>My Afro Playlist</h3>
@@ -842,92 +1112,198 @@
             <h3>Afrobeats</h3>
             <p>Afrobeat collection</p>
           </div>
+
         </div>
+
       </div>
+
     </section>
+
 
     <!-- ALBUMS -->
     <section id="albums" class="hidden">
+
       <div class="section">
+
         <div class="section-head">
           <h2>Albums</h2>
         </div>
-        <div class="cards" id="albumCards"></div>
+
+        <div
+          class="cards"
+          id="albumCards">
+        </div>
+
       </div>
+
     </section>
+
 
     <!-- ARTIST STUDIO -->
     <section id="artist" class="hidden">
 
       <div class="hero">
+
         <small>Afrova for Artists</small>
-        <h1>Put your music in front of listeners.</h1>
+
+        <h1>
+          Put your music in front of listeners.
+        </h1>
+
         <p>
-          Create your artist profile, upload music, manage releases
-          and view your listener statistics.
+          Create your artist profile, upload music,
+          manage releases and view your listener statistics.
         </p>
 
         <div class="hero-actions">
-          <button class="primary" onclick="artistMessage()">Create Artist Account</button>
-          <button class="secondary" onclick="artistMessage()">Upload Music</button>
+
+          <button
+            class="primary"
+            onclick="artistMessage()">
+            Create Artist Account
+          </button>
+
+          <button
+            class="secondary"
+            onclick="artistMessage()">
+            Upload Music
+          </button>
+
         </div>
+
       </div>
 
+
       <div class="artist-area">
+
         <h2>Artist Studio</h2>
+
         <p>
-          Upload songs and albums, add cover artwork, manage releases
-          and track how people listen to your music.
+          Upload songs and albums, add cover artwork,
+          manage releases and track how people listen
+          to your music.
         </p>
 
         <div class="artist-actions">
-          <button class="primary" onclick="artistMessage()">＋ Upload Song</button>
-          <button class="secondary" onclick="artistMessage()">＋ New Album / EP</button>
-          <button class="secondary" onclick="artistMessage()">Analytics</button>
+
+          <button
+            class="primary"
+            onclick="artistMessage()">
+            ＋ Upload Song
+          </button>
+
+          <button
+            class="secondary"
+            onclick="artistMessage()">
+            ＋ New Album / EP
+          </button>
+
+          <button
+            class="secondary"
+            onclick="artistMessage()">
+            Analytics
+          </button>
+
         </div>
+
       </div>
 
     </section>
+
 
     <!-- PREMIUM -->
     <section id="premium" class="hidden">
 
       <div class="hero">
+
         <small>Afrova Premium</small>
-        <h1>Take your music experience further.</h1>
+
+        <h1>
+          Take your music experience further.
+        </h1>
+
         <p>
           Enjoy an enhanced Afrova experience with Premium plans.
         </p>
+
       </div>
+
 
       <div class="plans">
 
         <div class="plan">
+
           <h3>Student</h3>
-          <div class="price">₦400 <span>/ month</span></div>
-          <p>Premium access for eligible students.</p>
-          <button onclick="subscribe('Student')">Choose Student</button>
+
+          <div class="price">
+            ₦400 <span>/ month</span>
+          </div>
+
+          <p>
+            Premium access for eligible students.
+          </p>
+
+          <button onclick="subscribe('Student')">
+            Choose Student
+          </button>
+
         </div>
 
+
         <div class="plan">
+
           <h3>Individual</h3>
-          <div class="price">₦600 <span>/ month</span></div>
-          <p>Premium access for one person.</p>
-          <button onclick="subscribe('Individual')">Choose Individual</button>
+
+          <div class="price">
+            ₦600 <span>/ month</span>
+          </div>
+
+          <p>
+            Premium access for one person.
+          </p>
+
+          <button onclick="subscribe('Individual')">
+            Choose Individual
+          </button>
+
         </div>
 
+
         <div class="plan">
+
           <h3>Duo</h3>
-          <div class="price">₦1,200 <span>/ month</span></div>
-          <p>Premium access for two people.</p>
-          <button onclick="subscribe('Duo')">Choose Duo</button>
+
+          <div class="price">
+            ₦1,200 <span>/ month</span>
+          </div>
+
+          <p>
+            Premium access for two people.
+          </p>
+
+          <button onclick="subscribe('Duo')">
+            Choose Duo
+          </button>
+
         </div>
 
+
         <div class="plan">
+
           <h3>Family</h3>
-          <div class="price">₦1,500 <span>/ month</span></div>
-          <p>Premium access for your family.</p>
-          <button onclick="subscribe('Family')">Choose Family</button>
+
+          <div class="price">
+            ₦1,500 <span>/ month</span>
+          </div>
+
+          <p>
+            Premium access for your family.
+          </p>
+
+          <button onclick="subscribe('Family')">
+            Choose Family
+          </button>
+
         </div>
 
       </div>
@@ -935,189 +1311,890 @@
     </section>
 
   </main>
+
 </div>
+
 
 <!-- MOBILE NAV -->
+
 <div class="mobile-nav">
-  <button class="active" onclick="showSection('home')">⌂<br>Home</button>
-  <button onclick="showSection('search')">⌕<br>Search</button>
-  <button onclick="showSection('library')">♫<br>Library</button>
-  <button onclick="showSection('premium')">◆<br>Premium</button>
+
+  <button
+    class="active"
+    onclick="showSection('home')">
+    ⌂<br>Home
+  </button>
+
+  <button
+    onclick="showSection('search')">
+    ⌕<br>Search
+  </button>
+
+  <button
+    onclick="showSection('library')">
+    ♫<br>Library
+  </button>
+
+  <button
+    onclick="showSection('premium')">
+    ◆<br>Premium
+  </button>
+
 </div>
 
+
 <!-- PLAYER -->
+
 <div class="player">
 
   <div class="now">
-    <div class="now-cover">♪</div>
+
+    <div class="now-cover">
+      ♪
+    </div>
 
     <div class="now-info">
-      <strong id="nowTitle">Select a song</strong>
-      <span id="nowArtist">Afrova</span>
+
+      <strong id="nowTitle">
+        Select a song
+      </strong>
+
+      <span id="nowArtist">
+        Afrova
+      </span>
+
     </div>
+
   </div>
+
 
   <div class="controls">
-    <button class="control" onclick="previousSong()">⏮</button>
 
-    <button class="main-play" id="playButton" onclick="togglePlay()">▶</button>
+    <button
+      class="control"
+      onclick="previousSong()">
+      ⏮
+    </button>
 
-    <button class="control" onclick="nextSong()">⏭</button>
+    <button
+      class="main-play"
+      id="playButton"
+      onclick="togglePlay()">
+      ▶
+    </button>
+
+    <button
+      class="control"
+      onclick="nextSong()">
+      ⏭
+    </button>
+
   </div>
 
-  <div class="progress-area">
-    <span class="time" id="currentTime">0:00</span>
 
-    <div class="progress" onclick="seek(event)">
-      <div class="progress-fill" id="progressFill"></div>
+  <div class="progress-area">
+
+    <span
+      class="time"
+      id="currentTime">
+      0:00
+    </span>
+
+    <div
+      class="progress"
+      onclick="seek(event)">
+
+      <div
+        class="progress-fill"
+        id="progressFill">
+      </div>
+
     </div>
 
-    <span class="time" id="duration">0:00</span>
+    <span
+      class="time"
+      id="duration">
+      0:00
+    </span>
+
   </div>
 
 </div>
 
+
+<!-- AUTH MODAL -->
+
+<div
+  class="modal-overlay"
+  id="authModal">
+
+  <div class="auth-box">
+
+    <button
+      class="close-modal"
+      onclick="closeAuth()">
+      ×
+    </button>
+
+    <div class="auth-logo">
+      Afro<span>va</span>
+    </div>
+
+    <div class="auth-subtitle">
+      Your sound. Your culture. Your Afrova.
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div id="loginForm">
+
+      <h2>Welcome back</h2>
+
+      <input
+        id="loginEmail"
+        class="auth-input"
+        type="email"
+        placeholder="Email address"
+        autocomplete="email"
+      >
+
+      <input
+        id="loginPassword"
+        class="auth-input"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+      <button
+        class="auth-submit"
+        onclick="handleLogin()">
+        Log In
+      </button>
+
+      <div class="auth-switch">
+        Don't have an account?
+        <button onclick="showSignup()">
+          Sign Up
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- SIGN UP -->
+
+    <div
+      id="signupForm"
+      class="hidden">
+
+      <h2>Create your account</h2>
+
+      <input
+        id="signupName"
+        class="auth-input"
+        type="text"
+        placeholder="Display name"
+        autocomplete="name"
+      >
+
+      <input
+        id="signupEmail"
+        class="auth-input"
+        type="email"
+        placeholder="Email address"
+        autocomplete="email"
+      >
+
+      <input
+        id="signupPassword"
+        class="auth-input"
+        type="password"
+        placeholder="Password"
+        autocomplete="new-password"
+      >
+
+      <button
+        class="auth-submit"
+        onclick="handleSignup()">
+        Create Account
+      </button>
+
+      <div class="auth-switch">
+        Already have an account?
+        <button onclick="showLogin()">
+          Log In
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+
+    <div
+      id="accountForm"
+      class="hidden">
+
+      <h2>Your Account</h2>
+
+      <div class="account-info">
+
+        <div
+          class="account-avatar"
+          id="accountAvatar">
+          A
+        </div>
+
+        <strong id="accountName">
+          Afrova User
+        </strong>
+
+        <div
+          class="account-email"
+          id="accountEmail">
+          -
+        </div>
+
+      </div>
+
+      <button
+        class="logout-btn"
+        onclick="logout()">
+        Log Out
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- MESSAGE -->
+
 <div id="message"></div>
+
 
 <audio id="audio"></audio>
 
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-  const SUPABASE_URL = "https://eeurywspkbqbxayoyexi.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
-  const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
 
-async function signUp(email, password, displayName) {
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password
-  });
+<!-- SUPABASE LIBRARY -->
 
-  if (error) {
-    showMessage(error.message);
-    return;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- AFROVA APP SCRIPT -->
+
+<script>
+
+  /* =========================================
+     SUPABASE
+     ========================================= */
+
+  const SUPABASE_URL =
+    "https://eeurywspkbqbxayoyexi.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+  /* =========================================
+     AUTH
+     ========================================= */
+
+  async function signUp(
+    email,
+    password,
+    displayName
+  ) {
+
+    const { data, error } =
+      await supabaseClient.auth.signUp({
+
+        email: email,
+
+        password: password,
+
+        options: {
+          data: {
+            display_name: displayName
+          }
+        }
+
+      });
+
+
+    if (error) {
+
+      showMessage(error.message);
+
+      return false;
+    }
+
+
+    /*
+      If Supabase requires email confirmation,
+      there may not be a session yet.
+    */
+
+    if (data.session && data.user) {
+
+      await createProfile(data.user);
+
+      showMessage(
+        "Account created successfully!"
+      );
+
+    } else {
+
+      showMessage(
+        "Account created. Check your email to confirm your account."
+      );
+
+    }
+
+    return true;
   }
 
-  if (data.user) {
-    const { error: profileError } =
+
+  async function createProfile(user) {
+
+    if (!user) return;
+
+
+    const { data: existingProfile } =
+      await supabaseClient
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .maybeSingle();
+
+
+    if (existingProfile) {
+      return;
+    }
+
+
+    const displayName =
+      user.user_metadata?.display_name ||
+      user.email?.split("@")[0] ||
+      "Afrova User";
+
+
+    const { error } =
       await supabaseClient
         .from("profiles")
         .insert({
-          id: data.user.id,
+
+          id: user.id,
+
           display_name: displayName,
+
           role: "listener"
+
         });
 
-    if (profileError) {
-      showMessage(profileError.message);
-      return;
+
+    if (error) {
+
+      console.error(
+        "Profile creation error:",
+        error.message
+      );
+
     }
+
   }
 
-  showMessage("Account created successfully!");
-}
 
-async function login(email, password) {
-  const { error } =
-    await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+  async function login(
+    email,
+    password
+  ) {
 
-  if (error) {
-    showMessage(error.message);
-    return;
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+
+        email: email,
+
+        password: password
+
+      });
+
+
+    if (error) {
+
+      showMessage(error.message);
+
+      return false;
+    }
+
+
+    await createProfile(data.user);
+
+    showMessage(
+      "Welcome back to Afrova!"
+    );
+
+    return true;
   }
 
-  showMessage("Welcome back to Afrova!");
-}
 
-async function logout() {
-  const { error } =
-    await supabaseClient.auth.signOut();
+  async function logout() {
 
-  if (error) {
-    showMessage(error.message);
-    return;
+    const { error } =
+      await supabaseClient.auth.signOut();
+
+
+    if (error) {
+
+      showMessage(error.message);
+
+      return;
+
+    }
+
+
+    closeAuth();
+
+    updateAccountButton(null);
+
+    showMessage(
+      "You have been logged out."
+    );
+
   }
 
-  showMessage("You have been logged out.");
-}
 
-  /*
-    AFROVA MUSIC DATA
+  async function checkLogin() {
 
-    Replace an audio URL below with a legal audio file
-    that you have permission to use.
-  */
+    const { data } =
+      await supabaseClient.auth.getSession();
+
+
+    if (data.session) {
+
+      await createProfile(
+        data.session.user
+      );
+
+      updateAccountButton(
+        data.session.user
+      );
+
+    } else {
+
+      updateAccountButton(null);
+
+    }
+
+  }
+
+
+  supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
+
+      if (session) {
+
+        updateAccountButton(
+          session.user
+        );
+
+      } else {
+
+        updateAccountButton(null);
+
+      }
+
+    }
+  );
+
+
+  /* =========================================
+     AUTH UI
+     ========================================= */
+
+  function openAccount() {
+
+    document
+      .getElementById("authModal")
+      .classList.add("show");
+
+
+    supabaseClient.auth.getSession()
+      .then(({ data }) => {
+
+        if (data.session) {
+
+          showAccount(
+            data.session.user
+          );
+
+        } else {
+
+          showLogin();
+
+        }
+
+      });
+
+  }
+
+
+  function closeAuth() {
+
+    document
+      .getElementById("authModal")
+      .classList.remove("show");
+
+  }
+
+
+  function showLogin() {
+
+    document
+      .getElementById("loginForm")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("signupForm")
+      .classList.add("hidden");
+
+    document
+      .getElementById("accountForm")
+      .classList.add("hidden");
+
+  }
+
+
+  function showSignup() {
+
+    document
+      .getElementById("loginForm")
+      .classList.add("hidden");
+
+    document
+      .getElementById("signupForm")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("accountForm")
+      .classList.add("hidden");
+
+  }
+
+
+  function showAccount(user) {
+
+    document
+      .getElementById("loginForm")
+      .classList.add("hidden");
+
+    document
+      .getElementById("signupForm")
+      .classList.add("hidden");
+
+    document
+      .getElementById("accountForm")
+      .classList.remove("hidden");
+
+
+    const name =
+      user.user_metadata?.display_name ||
+      user.email?.split("@")[0] ||
+      "Afrova User";
+
+
+    document
+      .getElementById("accountName")
+      .textContent = name;
+
+
+    document
+      .getElementById("accountEmail")
+      .textContent =
+        user.email || "";
+
+
+    document
+      .getElementById("accountAvatar")
+      .textContent =
+        name.charAt(0).toUpperCase();
+
+  }
+
+
+  function updateAccountButton(user) {
+
+    const button =
+      document.getElementById(
+        "profileButton"
+      );
+
+
+    if (!button) return;
+
+
+    if (user) {
+
+      const name =
+        user.user_metadata?.display_name ||
+        user.email?.split("@")[0] ||
+        "A";
+
+      button.textContent =
+        name.charAt(0).toUpperCase();
+
+    } else {
+
+      button.textContent = "A";
+
+    }
+
+  }
+
+
+  async function handleLogin() {
+
+    const email =
+      document
+        .getElementById("loginEmail")
+        .value
+        .trim();
+
+
+    const password =
+      document
+        .getElementById("loginPassword")
+        .value;
+
+
+    if (!email || !password) {
+
+      showMessage(
+        "Please enter your email and password."
+      );
+
+      return;
+
+    }
+
+
+    const success =
+      await login(
+        email,
+        password
+      );
+
+
+    if (success) {
+
+      const { data } =
+        await supabaseClient.auth.getSession();
+
+
+      if (data.session) {
+
+        showAccount(
+          data.session.user
+        );
+
+      }
+
+    }
+
+  }
+
+
+  async function handleSignup() {
+
+    const displayName =
+      document
+        .getElementById("signupName")
+        .value
+        .trim();
+
+
+    const email =
+      document
+        .getElementById("signupEmail")
+        .value
+        .trim();
+
+
+    const password =
+      document
+        .getElementById("signupPassword")
+        .value;
+
+
+    if (!displayName) {
+
+      showMessage(
+        "Please enter your display name."
+      );
+
+      return;
+
+    }
+
+
+    if (!email) {
+
+      showMessage(
+        "Please enter your email."
+      );
+
+      return;
+
+    }
+
+
+    if (password.length < 6) {
+
+      showMessage(
+        "Password must be at least 6 characters."
+      );
+
+      return;
+
+    }
+
+
+    const success =
+      await signUp(
+        email,
+        password,
+        displayName
+      );
+
+
+    if (success) {
+
+      document
+        .getElementById("signupName")
+        .value = "";
+
+      document
+        .getElementById("signupEmail")
+        .value = "";
+
+      document
+        .getElementById("signupPassword")
+        .value = "";
+
+    }
+
+  }
+
+
+  /* =========================================
+     AFROVA MUSIC DATA
+     ========================================= */
 
   const songs = [
+
     {
       title: "Afrova Sunrise",
       artist: "Afrova",
       cover: "one",
       audio: ""
     },
+
     {
       title: "Lagos Nights",
       artist: "Afro Artist",
       cover: "two",
       audio: ""
     },
+
     {
       title: "African Dreams",
       artist: "Kora",
       cover: "three",
       audio: ""
     },
+
     {
       title: "Golden Vibes",
       artist: "Melody",
       cover: "four",
       audio: ""
     },
+
     {
       title: "New Energy",
       artist: "Soul Africa",
       cover: "five",
       audio: ""
     }
+
   ];
 
+
   let currentSong = 0;
+
   let liked = [];
+
   let isPlaying = false;
 
-  const audio = document.getElementById("audio");
 
-  /* CREATE SONG CARDS */
+  const audio =
+    document.getElementById("audio");
 
-  function renderSongs(list = songs, container = "songCards") {
 
-    const box = document.getElementById(container);
+  /* =========================================
+     CREATE SONG CARDS
+     ========================================= */
+
+  function renderSongs(
+    list = songs,
+    container = "songCards"
+  ) {
+
+    const box =
+      document.getElementById(container);
+
 
     if (!box) return;
 
+
     box.innerHTML = "";
 
+
     if (list.length === 0) {
+
       box.innerHTML =
         '<p style="color:#999;">No music found.</p>';
+
       return;
+
     }
 
-    list.forEach((song, index) => {
 
-      const realIndex = songs.indexOf(song);
+    list.forEach((song) => {
 
-      const card = document.createElement("div");
+      const realIndex =
+        songs.indexOf(song);
+
+
+      const card =
+        document.createElement("div");
+
 
       card.className = "card";
 
+
       card.innerHTML = `
+
         <div class="cover ${song.cover}">
           ♪
         </div>
@@ -1128,169 +2205,312 @@ async function logout() {
 
         <div class="card-bottom">
 
-          <button class="play-small"
+          <button
+            class="play-small"
             onclick="playSong(${realIndex})">
             ▶
           </button>
 
           <button
-            class="heart ${liked.includes(realIndex) ? "liked" : ""}"
+            class="heart ${
+              liked.includes(realIndex)
+                ? "liked"
+                : ""
+            }"
             onclick="toggleLike(${realIndex})">
             ♥
           </button>
 
         </div>
+
       `;
 
+
       box.appendChild(card);
+
     });
+
   }
 
-  /* PLAY SONG */
+
+  /* =========================================
+     PLAY SONG
+     ========================================= */
 
   function playSong(index) {
 
     currentSong = index;
 
-    const song = songs[index];
 
-    document.getElementById("nowTitle").textContent = song.title;
-    document.getElementById("nowArtist").textContent = song.artist;
+    const song =
+      songs[index];
+
+
+    document
+      .getElementById("nowTitle")
+      .textContent =
+        song.title;
+
+
+    document
+      .getElementById("nowArtist")
+      .textContent =
+        song.artist;
+
 
     if (song.audio) {
 
       if (audio.src !== song.audio) {
-        audio.src = song.audio;
+
+        audio.src =
+          song.audio;
+
       }
+
 
       audio.play()
         .then(() => {
+
           isPlaying = true;
+
           updatePlayButton();
+
         })
         .catch(() => {
-          showMessage("Add a legal audio file URL to this song first.");
+
+          showMessage(
+            "The audio could not be played."
+          );
+
         });
+
 
     } else {
 
       showMessage(
-        "This song is a demo. Add your legal audio file URL in the code."
+        "This song is a demo. Add your legal audio file URL."
       );
 
+
       isPlaying = false;
+
       updatePlayButton();
+
     }
+
   }
 
-  /* PLAY / PAUSE */
+
+  /* =========================================
+     PLAY / PAUSE
+     ========================================= */
 
   function togglePlay() {
 
     if (!songs[currentSong].audio) {
-      showMessage("Add an audio file URL to play this song.");
+
+      showMessage(
+        "Add an audio file URL to play this song."
+      );
+
       return;
+
     }
+
 
     if (isPlaying) {
+
       audio.pause();
+
       isPlaying = false;
+
     } else {
+
       audio.play();
+
       isPlaying = true;
+
     }
 
+
     updatePlayButton();
+
   }
+
 
   function updatePlayButton() {
-    document.getElementById("playButton").textContent =
-      isPlaying ? "Ⅱ" : "▶";
+
+    document
+      .getElementById("playButton")
+      .textContent =
+        isPlaying ? "Ⅱ" : "▶";
+
   }
 
-  /* NEXT */
+
+  /* =========================================
+     NEXT
+     ========================================= */
 
   function nextSong() {
 
     currentSong++;
 
-    if (currentSong >= songs.length) {
+
+    if (
+      currentSong >= songs.length
+    ) {
+
       currentSong = 0;
+
     }
 
+
     playSong(currentSong);
+
   }
 
-  /* PREVIOUS */
+
+  /* =========================================
+     PREVIOUS
+     ========================================= */
 
   function previousSong() {
 
     currentSong--;
 
+
     if (currentSong < 0) {
-      currentSong = songs.length - 1;
+
+      currentSong =
+        songs.length - 1;
+
     }
 
+
     playSong(currentSong);
+
   }
 
-  /* LIKE */
+
+  /* =========================================
+     LIKE
+     ========================================= */
 
   function toggleLike(index) {
 
     if (liked.includes(index)) {
-      liked = liked.filter(i => i !== index);
-      showMessage("Removed from Liked Songs");
+
+      liked =
+        liked.filter(
+          i => i !== index
+        );
+
+      showMessage(
+        "Removed from Liked Songs"
+      );
+
     } else {
+
       liked.push(index);
-      showMessage("Added to Liked Songs ♥");
+
+      showMessage(
+        "Added to Liked Songs ♥"
+      );
+
     }
+
 
     renderSongs();
 
     renderLiked();
+
   }
 
-  /* LIKED SONGS */
+
+  /* =========================================
+     LIKED SONGS
+     ========================================= */
 
   function renderLiked() {
 
-    const likedSongs = songs.filter(
-      (_, index) => liked.includes(index)
+    const likedSongs =
+      songs.filter(
+        (_, index) =>
+          liked.includes(index)
+      );
+
+
+    renderSongs(
+      likedSongs,
+      "likedSongs"
     );
 
-    renderSongs(likedSongs, "likedSongs");
   }
 
-  /* SEARCH */
+
+  /* =========================================
+     SEARCH
+     ========================================= */
 
   function searchMusic() {
 
     const query =
-      document.getElementById("searchInput").value
-      .toLowerCase()
-      .trim();
+      document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
 
     if (!query) {
-      renderSongs(songs, "searchResults");
+
+      renderSongs(
+        songs,
+        "searchResults"
+      );
+
       return;
+
     }
+
 
     showSection("search");
 
-    const results = songs.filter(song =>
-      song.title.toLowerCase().includes(query) ||
-      song.artist.toLowerCase().includes(query)
+
+    const results =
+      songs.filter(song =>
+
+        song.title
+          .toLowerCase()
+          .includes(query) ||
+
+        song.artist
+          .toLowerCase()
+          .includes(query)
+
+      );
+
+
+    renderSongs(
+      results,
+      "searchResults"
     );
 
-    renderSongs(results, "searchResults");
   }
 
-  /* NAVIGATION */
 
-  function showSection(section, button = null) {
+  /* =========================================
+     NAVIGATION
+     ========================================= */
+
+  function showSection(
+    section,
+    button = null
+  ) {
 
     const sections = [
+
       "home",
       "search",
       "library",
@@ -1299,65 +2519,112 @@ async function logout() {
       "albums",
       "artist",
       "premium"
+
     ];
+
 
     sections.forEach(id => {
 
-      const element = document.getElementById(id);
+      const element =
+        document.getElementById(id);
+
 
       if (element) {
+
         element.classList.toggle(
           "hidden",
           id !== section
         );
+
       }
+
     });
 
-    document.querySelectorAll(".nav-btn")
-      .forEach(btn => btn.classList.remove("active"));
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(btn =>
+        btn.classList.remove("active")
+      );
+
 
     if (button) {
+
       button.classList.add("active");
+
     }
+
 
     if (section === "liked") {
+
       renderLiked();
+
     }
+
 
     if (section === "search") {
-      renderSongs(songs, "searchResults");
+
+      renderSongs(
+        songs,
+        "searchResults"
+      );
+
     }
+
 
     if (section === "albums") {
+
       renderAlbums();
+
     }
 
+
     window.scrollTo({
+
       top: 0,
+
       behavior: "smooth"
+
     });
+
   }
 
-  /* ALBUMS */
+
+  /* =========================================
+     ALBUMS
+     ========================================= */
 
   function renderAlbums() {
 
-    const box = document.getElementById("albumCards");
+    const box =
+      document.getElementById(
+        "albumCards"
+      );
+
+
+    if (!box) return;
+
 
     box.innerHTML = "";
+
 
     songs.forEach((song, index) => {
 
       box.innerHTML += `
+
         <div class="card">
 
           <div class="cover ${song.cover}">
             ▣
           </div>
 
-          <h3>${song.title} — EP</h3>
+          <h3>
+            ${song.title} — EP
+          </h3>
 
-          <p>${song.artist}</p>
+          <p>
+            ${song.artist}
+          </p>
 
           <div class="card-bottom">
 
@@ -1370,129 +2637,256 @@ async function logout() {
           </div>
 
         </div>
+
       `;
+
     });
+
   }
 
-  /* CREATE PLAYLIST */
+
+  /* =========================================
+     CREATE PLAYLIST
+     ========================================= */
 
   function createPlaylist() {
 
     const name =
-      prompt("Enter your playlist name:");
+      prompt(
+        "Enter your playlist name:"
+      );
+
 
     if (!name) return;
+
 
     showMessage(
       `"${name}" playlist created.`
     );
+
   }
 
-  /* ARTIST */
+
+  /* =========================================
+     ARTIST
+     ========================================= */
 
   function artistMessage() {
 
     showMessage(
       "Artist Studio will connect to the Afrova backend next."
     );
+
   }
 
-  /* PREMIUM */
+
+  /* =========================================
+     PREMIUM
+     ========================================= */
 
   function subscribe(plan) {
 
     showMessage(
       `${plan} selected. Paystack payment will be connected next.`
     );
+
   }
 
-  /* MESSAGE */
+
+  /* =========================================
+     MESSAGE
+     ========================================= */
 
   function showMessage(text) {
 
     const box =
-      document.getElementById("message");
+      document.getElementById(
+        "message"
+      );
+
 
     box.textContent = text;
 
-    box.style.display = "block";
+    box.style.display =
+      "block";
+
 
     setTimeout(() => {
-      box.style.display = "none";
-    }, 3000);
+
+      box.style.display =
+        "none";
+
+    }, 3500);
+
   }
 
-  /* AUDIO EVENTS */
 
-  audio.addEventListener("timeupdate", () => {
+  /* =========================================
+     AUDIO EVENTS
+     ========================================= */
 
-    if (!audio.duration) return;
+  audio.addEventListener(
+    "timeupdate",
+    () => {
 
-    const percent =
-      (audio.currentTime / audio.duration) * 100;
+      if (!audio.duration) return;
 
-    document.getElementById("progressFill")
-      .style.width = percent + "%";
 
-    document.getElementById("currentTime")
-      .textContent = formatTime(audio.currentTime);
-  });
+      const percent =
+        (audio.currentTime /
+          audio.duration) * 100;
 
-  audio.addEventListener("loadedmetadata", () => {
 
-    document.getElementById("duration")
-      .textContent = formatTime(audio.duration);
-  });
+      document
+        .getElementById(
+          "progressFill"
+        )
+        .style.width =
+          percent + "%";
 
-  audio.addEventListener("ended", () => {
 
-    isPlaying = false;
-    updatePlayButton();
+      document
+        .getElementById(
+          "currentTime"
+        )
+        .textContent =
+          formatTime(
+            audio.currentTime
+          );
 
-    nextSong();
-  });
+    }
+  );
 
-  /* SEEK */
+
+  audio.addEventListener(
+    "loadedmetadata",
+    () => {
+
+      document
+        .getElementById(
+          "duration"
+        )
+        .textContent =
+          formatTime(
+            audio.duration
+          );
+
+    }
+  );
+
+
+  audio.addEventListener(
+    "ended",
+    () => {
+
+      isPlaying = false;
+
+      updatePlayButton();
+
+      nextSong();
+
+    }
+  );
+
+
+  /* =========================================
+     SEEK
+     ========================================= */
 
   function seek(event) {
 
     if (!audio.duration) return;
 
+
     const rect =
-      event.currentTarget.getBoundingClientRect();
+      event.currentTarget
+        .getBoundingClientRect();
+
 
     const percent =
-      (event.clientX - rect.left) / rect.width;
+      (event.clientX -
+        rect.left) /
+      rect.width;
+
 
     audio.currentTime =
-      percent * audio.duration;
+      percent *
+      audio.duration;
+
   }
 
-  /* FORMAT TIME */
+
+  /* =========================================
+     FORMAT TIME
+     ========================================= */
 
   function formatTime(seconds) {
 
-    if (!seconds || isNaN(seconds)) {
+    if (
+      !seconds ||
+      isNaN(seconds)
+    ) {
+
       return "0:00";
+
     }
 
+
     const minutes =
-      Math.floor(seconds / 60);
+      Math.floor(
+        seconds / 60
+      );
+
 
     const secs =
-      Math.floor(seconds % 60)
-        .toString()
-        .padStart(2, "0");
+      Math.floor(
+        seconds % 60
+      )
+      .toString()
+      .padStart(2, "0");
+
 
     return `${minutes}:${secs}`;
+
   }
 
-  /* INITIAL LOAD */
+
+  /* =========================================
+     INITIAL LOAD
+     ========================================= */
 
   renderSongs();
-  renderSongs(songs, "searchResults");
+
+  renderSongs(
+    songs,
+    "searchResults"
+  );
+
   renderLiked();
+
   renderAlbums();
+
+  checkLogin();
+
+
+  /* CLOSE AUTH MODAL WHEN CLICKING OUTSIDE */
+
+  document
+    .getElementById("authModal")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target === this
+        ) {
+
+          closeAuth();
+
+        }
+
+      }
+    );
 
 </script>
 
