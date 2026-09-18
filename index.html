@@ -3,119 +3,640 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b0b0f">
-<title>Afrova — Music for Everyone</title>
+<title>Afrova — African Music</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
---bg:#09090d;--panel:#111117;--panel2:#181820;
---text:#fff;--muted:#9b9ba7;--accent:#ff7a00;
---accent2:#ff9d3d;--border:rgba(255,255,255,.08)
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#090909;
+  color:#fff;
+  min-height:100vh;
 }
-body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:95px}
-button{font-family:inherit;cursor:pointer;border:0}
-input,textarea,select{font-family:inherit}
-.app{display:flex;min-height:100vh}
-.sidebar{width:240px;background:#0d0d12;border-right:1px solid var(--border);padding:25px 16px;position:fixed;top:0;bottom:0;left:0;z-index:20}
-.logo{font-size:29px;font-weight:800;letter-spacing:-1px;margin:0 10px 35px}
-.logo span{color:var(--accent)}
-.nav-title{color:#666672;font-size:11px;font-weight:700;text-transform:uppercase;margin:20px 12px 10px;letter-spacing:1px}
-.nav-btn{width:100%;background:transparent;color:var(--muted);padding:12px;border-radius:9px;text-align:left;margin-bottom:4px;font-size:14px}
-.nav-btn:hover,.nav-btn.active{background:var(--panel2);color:#fff}
-.nav-btn.active{color:var(--accent2)}
-.main{margin-left:240px;width:calc(100% - 240px);padding:25px 30px 130px}
-.topbar{display:flex;align-items:center;gap:15px;margin-bottom:35px}
-.search{flex:1;max-width:650px;background:var(--panel2);border:1px solid var(--border);border-radius:25px;padding:13px 18px;color:#fff;outline:none;font-size:14px}
-.search:focus{border-color:var(--accent)}
-.premium-btn{background:var(--accent);color:#fff;padding:12px 18px;border-radius:22px;font-weight:700;white-space:nowrap}
-.profile{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ff7a00,#ffbd70);display:grid;place-items:center;font-weight:800;color:#17100a;cursor:pointer;flex-shrink:0}
-.hero{background:radial-gradient(circle at 85% 20%,rgba(255,122,0,.4),transparent 30%),linear-gradient(120deg,#1b1410,#121218);border:1px solid var(--border);border-radius:22px;padding:42px;margin-bottom:40px;overflow:hidden}
-.hero small{color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:2px}
-.hero h1{font-size:clamp(35px,5vw,62px);line-height:1;margin:15px 0;max-width:650px}
-.hero p{color:#c0c0c9;max-width:570px;line-height:1.6;margin-bottom:25px}
-.hero-actions,.artist-actions{display:flex;gap:10px;flex-wrap:wrap}
-.primary{background:var(--accent);color:#fff;padding:13px 22px;border-radius:24px;font-weight:700}
-.secondary{background:rgba(255,255,255,.08);color:#fff;padding:13px 22px;border-radius:24px;font-weight:700}
-.section{margin-bottom:42px}
-.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.section-head h2{font-size:22px}
-.see-all{color:var(--accent2);background:none;font-size:13px}
-.cards{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:18px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:12px;transition:.2s;min-width:0}
-.card:hover{background:var(--panel2);transform:translateY(-3px)}
-.cover{aspect-ratio:1;border-radius:9px;background:linear-gradient(135deg,#ff7a00,#381b08);display:grid;place-items:center;font-size:34px;margin-bottom:12px;overflow:hidden}
-.cover img{width:100%;height:100%;object-fit:cover}
-.cover.two{background:linear-gradient(135deg,#5932a8,#191129)}
-.cover.three{background:linear-gradient(135deg,#007d71,#071e1c)}
-.cover.four{background:linear-gradient(135deg,#ba1945,#270a14)}
-.cover.five{background:linear-gradient(135deg,#b38a00,#241d00)}
-.card h3{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
-.card p{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.play-small{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff}
-.heart{background:none;color:#777783;font-size:19px}
-.heart.liked{color:#ff5b72}
-.artist-card{text-align:center;background:var(--panel);border:1px solid var(--border);padding:18px 10px;border-radius:14px}
-.artist-img{width:95px;height:95px;border-radius:50%;margin:auto auto 12px;display:grid;place-items:center;background:linear-gradient(135deg,#ff7a00,#4a2207);font-size:28px;font-weight:800}
-.artist-card p{color:var(--muted);font-size:12px;margin-top:5px}
-.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
-.plan{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px}
-.plan h3{margin-bottom:10px}
-.price{font-size:27px;font-weight:800;margin-bottom:15px}
-.price span{font-size:12px;color:var(--muted);font-weight:normal}
-.plan p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:18px}
-.plan button{width:100%;padding:11px;border-radius:20px;background:var(--accent);color:#fff;font-weight:700}
-.artist-area{background:linear-gradient(135deg,#17100b,#101016);border:1px solid var(--border);padding:28px;border-radius:18px}
-.artist-area h2{margin-bottom:10px}
-.artist-area p{color:var(--muted);line-height:1.6;margin-bottom:20px}
-.player{position:fixed;bottom:0;left:0;right:0;height:82px;background:rgba(16,16,22,.97);border-top:1px solid var(--border);z-index:50;display:flex;align-items:center;padding:10px 22px;gap:18px}
-.now{width:230px;display:flex;align-items:center;gap:12px}
-.now-cover{width:52px;height:52px;border-radius:7px;background:linear-gradient(135deg,#ff7a00,#3b1803);display:grid;place-items:center;flex-shrink:0;overflow:hidden}
-.now-cover img{width:100%;height:100%;object-fit:cover}
-.now-info{overflow:hidden}
-.now-info strong,.now-info span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.now-info span{color:var(--muted);font-size:12px;margin-top:4px}
-.controls{display:flex;align-items:center;gap:15px}
-.control{background:none;color:#fff;font-size:18px}
-.main-play{width:42px;height:42px;border-radius:50%;background:#fff;color:#000;font-size:16px}
-.progress-area{flex:1;display:flex;align-items:center;gap:10px}
-.progress{height:4px;flex:1;background:#3b3b45;border-radius:5px;cursor:pointer}
-.progress-fill{height:100%;width:0;background:var(--accent);border-radius:5px}
-.time{color:var(--muted);font-size:11px}
-.mobile-nav{display:none}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.show{display:flex}
-.auth-box{width:100%;max-width:450px;max-height:90vh;overflow-y:auto;background:#111117;border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.5)}
-.auth-logo{text-align:center;font-size:30px;font-weight:800;margin-bottom:8px}
-.auth-logo span{color:var(--accent)}
-.auth-subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:25px}
-.auth-box h2{text-align:center;margin-bottom:20px}
-.auth-input{width:100%;padding:14px;margin-bottom:12px;border-radius:10px;border:1px solid var(--border);background:#181820;color:#fff;outline:none}
-textarea.auth-input{min-height:100px;resize:vertical}
-.auth-submit{width:100%;padding:14px;background:var(--accent);color:#fff;border-radius:10px;font-weight:700;margin-top:5px}
-.auth-switch{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
-.auth-switch button{background:none;color:var(--accent2);font-weight:700}
-.close-modal{float:right;background:rgba(255,255,255,.08);color:#fff;width:30px;height:30px;border-radius:50%;font-size:18px}
-.account-info{text-align:center;margin:20px 0}
-.account-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ff7a00,#ffbd70);color:#17100a;display:grid;place-items:center;font-size:25px;font-weight:800;margin:0 auto 12px}
-.account-email{color:var(--muted);font-size:13px;margin-top:5px;word-break:break-word}
-.logout-btn{width:100%;padding:13px;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-weight:700;margin-top:10px}
-#message{position:fixed;top:20px;right:20px;max-width:340px;background:var(--panel2);border:1px solid var(--border);padding:13px 17px;border-radius:10px;z-index:300;display:none;font-size:13px}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
 .hidden{display:none!important}
-.upload-label{display:block;color:#aaa;font-size:12px;margin:4px 0 7px}
-.file-box{width:100%;padding:12px;background:#181820;border:1px dashed #444;border-radius:10px;color:#bbb;margin-bottom:13px}
-.artist-song-list{margin-top:25px}
-.artist-song{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:rgba(255,255,255,.04);border-radius:10px;margin-bottom:8px}
-.artist-song small{color:var(--muted)}
-@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.plans{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){
-.sidebar{display:none}.main{margin-left:0;width:100%;padding:18px 15px 125px}.topbar{margin-bottom:22px}.premium-btn{display:none}
-.hero{padding:28px 22px;border-radius:17px}.cards{grid-template-columns:repeat(2,1fr);gap:10px}.plans{grid-template-columns:1fr}
-.player{height:76px;padding:8px 12px;gap:8px}.now{width:42%}.now-cover{width:45px;height:45px}.controls{gap:8px}
-.control:nth-child(1),.control:nth-child(3){display:none}.progress-area{position:absolute;left:12px;right:12px;bottom:4px}
-.mobile-nav{position:fixed;display:flex;left:0;right:0;bottom:76px;height:48px;background:#0d0d12;border-top:1px solid var(--border);z-index:49;justify-content:space-around;align-items:center}
-.mobile-nav button{background:none;color:var(--muted);font-size:11px}.mobile-nav button.active{color:var(--accent2)}
+
+.app{
+  display:flex;
+  min-height:100vh
+}
+
+.sidebar{
+  width:240px;
+  background:#050505;
+  border-right:1px solid #222;
+  padding:24px 16px;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  z-index:20;
+}
+
+.logo{
+  font-size:30px;
+  font-weight:900;
+  color:#20e060;
+  margin-bottom:35px;
+  padding-left:10px;
+}
+
+.nav-title{
+  color:#777;
+  font-size:11px;
+  font-weight:bold;
+  margin:22px 10px 8px;
+  text-transform:uppercase;
+}
+
+.nav-btn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#bbb;
+  text-align:left;
+  padding:12px 10px;
+  border-radius:8px;
+  margin-bottom:3px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:#181818;
+  color:#fff;
+}
+
+.main{
+  margin-left:240px;
+  width:calc(100% - 240px);
+  padding-bottom:100px;
+}
+
+.topbar{
+  min-height:70px;
+  border-bottom:1px solid #222;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 28px;
+  position:sticky;
+  top:0;
+  background:rgba(9,9,9,.95);
+  backdrop-filter:blur(10px);
+  z-index:10;
+}
+
+.search{
+  flex:1;
+  max-width:600px;
+  background:#181818;
+  border:1px solid #292929;
+  color:#fff;
+  border-radius:25px;
+  padding:12px 18px;
+  outline:none;
+}
+
+.search:focus{
+  border-color:#20e060
+}
+
+.account-btn{
+  background:#20e060;
+  color:#000;
+  border:0;
+  border-radius:22px;
+  padding:11px 18px;
+  font-weight:bold;
+}
+
+.plan-badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  background:#181818;
+  border:1px solid #292929;
+  color:#ddd;
+  border-radius:20px;
+  padding:9px 13px;
+  font-size:12px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.plan-badge.premium{
+  color:#20e060;
+  border-color:#245a32;
+  background:#101b13;
+}
+
+.plan-badge.free{
+  color:#ddd;
+}
+
+.content{
+  padding:30px
+}
+
+.hero{
+  min-height:280px;
+  border-radius:18px;
+  padding:45px;
+  display:flex;
+  align-items:center;
+  background:
+    radial-gradient(circle at 80% 20%,rgba(32,224,96,.25),transparent 35%),
+    linear-gradient(135deg,#151515,#0b0b0b);
+  border:1px solid #252525;
+}
+
+.hero h1{
+  font-size:48px;
+  margin-bottom:12px;
+}
+
+.hero p{
+  color:#aaa;
+  max-width:600px;
+  line-height:1.6;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:25px;
+}
+
+.primary{
+  background:#20e060;
+  color:#000;
+  border:0;
+  border-radius:25px;
+  padding:12px 20px;
+  font-weight:bold;
+}
+
+.secondary{
+  background:#242424;
+  color:#fff;
+  border:0;
+  border-radius:25px;
+  padding:12px 20px;
+}
+
+.section{
+  margin-top:35px;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.section-head h2{
+  font-size:22px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:18px;
+}
+
+.card{
+  background:#111;
+  border:1px solid #202020;
+  border-radius:12px;
+  padding:12px;
+  transition:.2s;
+}
+
+.card:hover{
+  background:#181818;
+  transform:translateY(-2px);
+}
+
+.cover{
+  width:100%;
+  aspect-ratio:1;
+  border-radius:9px;
+  background:linear-gradient(135deg,#222,#111);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:45px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.song-title{
+  font-weight:bold;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.artist-name{
+  color:#888;
+  font-size:13px;
+  margin-top:5px;
+}
+
+.card-actions{
+  display:flex;
+  gap:7px;
+  margin-top:12px;
+}
+
+.small-btn{
+  border:0;
+  background:#252525;
+  color:#fff;
+  border-radius:20px;
+  padding:8px 12px;
+  font-size:12px;
+}
+
+.small-btn.play{
+  background:#20e060;
+  color:#000;
+}
+
+.empty{
+  padding:35px;
+  text-align:center;
+  color:#777;
+  border:1px dashed #333;
+  border-radius:12px;
+}
+
+.player{
+  position:fixed;
+  left:240px;
+  right:0;
+  bottom:0;
+  height:76px;
+  background:#101010;
+  border-top:1px solid #292929;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  padding:10px 20px;
+  gap:15px;
+}
+
+.player-cover{
+  width:52px;
+  height:52px;
+  border-radius:6px;
+  background:#222;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.player-cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.player-info{
+  width:220px;
+  min-width:120px;
+}
+
+.player-title{
+  font-weight:bold;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.player-artist{
+  color:#888;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.player-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.control{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:#222;
+  color:#fff;
+}
+
+.control.main-control{
+  background:#20e060;
+  color:#000;
+}
+
+.progress-area{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.progress{
+  flex:1;
+}
+
+.volume{
+  width:100px;
+}
+
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.modal{
+  width:100%;
+  max-width:460px;
+  max-height:90vh;
+  overflow:auto;
+  background:#151515;
+  border:1px solid #333;
+  border-radius:16px;
+  padding:25px;
+}
+
+.modal h2{
+  margin-bottom:8px
+}
+
+.modal p.description{
+  color:#888;
+  font-size:14px;
+  line-height:1.5;
+  margin-bottom:20px;
+}
+
+.close{
+  float:right;
+  border:0;
+  background:#292929;
+  color:#fff;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+}
+
+.form-group{
+  margin-bottom:15px;
+}
+
+.form-group label{
+  display:block;
+  font-size:13px;
+  color:#bbb;
+  margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  background:#0d0d0d;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:12px;
+  outline:none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+  border-color:#20e060;
+}
+
+.modal button.full{
+  width:100%;
+  margin-top:8px;
+}
+
+.switch{
+  text-align:center;
+  margin-top:15px;
+  color:#888;
+  font-size:14px;
+}
+
+.switch button{
+  border:0;
+  background:none;
+  color:#20e060;
+}
+
+.code-box{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin:20px 0;
+}
+
+.code-input{
+  width:48px!important;
+  height:55px;
+  text-align:center;
+  font-size:23px;
+  font-weight:bold;
+}
+
+.notice{
+  background:#171f19;
+  border:1px solid #245a32;
+  color:#9ff3b2;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:15px;
+  font-size:13px;
+}
+
+.error{
+  background:#241414;
+  border:1px solid #632b2b;
+  color:#ff9b9b;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:15px;
+  font-size:13px;
+}
+
+.account-info{
+  background:#101010;
+  border:1px solid #292929;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+.account-info strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.price-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:15px;
+}
+
+.price-card{
+  background:#111;
+  border:1px solid #292929;
+  border-radius:14px;
+  padding:22px;
+}
+
+.price{
+  font-size:28px;
+  font-weight:bold;
+  color:#20e060;
+  margin:12px 0;
+}
+
+.price-card p{
+  color:#888;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.artist-panel{
+  background:linear-gradient(135deg,#121212,#0c0c0c);
+  border:1px solid #292929;
+  border-radius:15px;
+  padding:25px;
+}
+
+.artist-panel p{
+  color:#888;
+  margin:8px 0 20px;
+}
+
+.premium-box{
+  background:#111b13;
+  border:1px solid #245a32;
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:18px;
+}
+
+.premium-box h3{
+  color:#20e060;
+  margin-bottom:7px;
+}
+
+.premium-box p{
+  color:#aaa;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.mobile-nav{
+  display:none;
+}
+
+@media(max-width:800px){
+
+  .sidebar{
+    display:none;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .player{
+    left:0;
+  }
+
+  .topbar{
+    padding:10px 15px;
+    gap:7px;
+  }
+
+  .content{
+    padding:18px;
+  }
+
+  .hero{
+    padding:28px;
+  }
+
+  .hero h1{
+    font-size:34px;
+  }
+
+  .player-info{
+    display:none;
+  }
+
+  .volume{
+    display:none;
+  }
+
+  .plan-badge{
+    padding:8px 9px;
+    font-size:10px;
+  }
+
+  .account-btn{
+    padding:10px 12px;
+    font-size:12px;
+  }
+
+  .mobile-nav{
+    display:flex;
+    position:fixed;
+    bottom:76px;
+    left:0;
+    right:0;
+    background:#090909;
+    border-top:1px solid #222;
+    z-index:29;
+    padding:7px;
+    justify-content:space-around;
+  }
+
+  .mobile-nav button{
+    background:none;
+    border:0;
+    color:#aaa;
+    font-size:11px;
+  }
 }
 </style>
 </head>
@@ -125,1438 +646,3673 @@ textarea.auth-input{min-height:100px;resize:vertical}
 <div class="app">
 
 <aside class="sidebar">
-<div class="logo">Afro<span>va</span></div>
 
-<div class="nav-title">Menu</div>
-<button class="nav-btn active" onclick="showSection('home',this)">⌂ &nbsp; Home</button>
-<button class="nav-btn" onclick="showSection('search',this)">⌕ &nbsp; Search</button>
-<button class="nav-btn" onclick="showSection('library',this)">♫ &nbsp; Your Library</button>
+  <div class="logo">AFROVA</div>
 
-<div class="nav-title">Your Music</div>
-<button class="nav-btn" onclick="showSection('liked',this)">♥ &nbsp; Liked Songs</button>
-<button class="nav-btn" onclick="showSection('playlists',this)">☷ &nbsp; Playlists</button>
-<button class="nav-btn" onclick="showSection('albums',this)">▣ &nbsp; Albums</button>
+  <button class="nav-btn active" onclick="showPage('home')">
+    ⌂ Home
+  </button>
 
-<div class="nav-title">For Artists</div>
-<button class="nav-btn" onclick="showSection('artist',this)">♬ &nbsp; Artist Studio</button>
-<button class="nav-btn" onclick="showSection('premium',this)">◆ &nbsp; Premium</button>
+  <button class="nav-btn" onclick="showPage('search')">
+    ⌕ Search
+  </button>
+
+  <div class="nav-title">Your Library</div>
+
+  <button class="nav-btn" onclick="showPage('liked')">
+    ♥ Liked Songs
+  </button>
+
+  <button class="nav-btn" onclick="showPage('playlists')">
+    ☷ Playlists
+  </button>
+
+  <button class="nav-btn" onclick="showPage('albums')">
+    ▣ Albums
+  </button>
+
+  <div class="nav-title">For Artists</div>
+
+  <button class="nav-btn" onclick="openArtistStudio()">
+    ♫ Artist Studio
+  </button>
+
+  <div class="nav-title">Account</div>
+
+  <button class="nav-btn" onclick="showPage('premium')">
+    ★ Premium
+  </button>
+
 </aside>
+
 
 <main class="main">
 
-<div class="topbar">
-<input id="searchInput" class="search" type="search" placeholder="Search songs, artists, albums..." oninput="searchMusic()">
-<button class="premium-btn" onclick="showSection('premium')">Get Premium</button>
-<div class="profile" id="profileButton" onclick="openAccount()">A</div>
-</div>
+<header class="topbar">
 
-<section id="home">
+  <input
+    id="searchInput"
+    class="search"
+    placeholder="Search songs, artists..."
+    oninput="searchSongs()"
+  >
 
-<div class="hero">
-<small>Welcome to Afrova</small>
-<h1>Your sound. Your culture. Your Afrova.</h1>
-<p>Discover new music, follow your favourite artists, create playlists and enjoy the sounds you love.</p>
-<div class="hero-actions">
-<button class="primary" onclick="playSong(0)">▶ Start Listening</button>
-<button class="secondary" onclick="showSection('artist')">For Artists</button>
-</div>
-</div>
+  <div id="planBadge" class="plan-badge free">
+    FREE
+  </div>
 
-<div class="section">
-<div class="section-head"><h2>Trending on Afrova</h2></div>
-<div class="cards" id="songCards"></div>
-</div>
+  <button
+    id="accountButton"
+    class="account-btn"
+    onclick="openAccount()"
+  >
+    Log in
+  </button>
 
-<div class="section">
-<div class="section-head"><h2>Popular Artists</h2></div>
-<div class="cards">
-<div class="artist-card"><div class="artist-img">A</div><h3>Afro Artist</h3><p>Artist</p></div>
-<div class="artist-card"><div class="artist-img">K</div><h3>Kora</h3><p>Artist</p></div>
-<div class="artist-card"><div class="artist-img">L</div><h3>Lagos Boy</h3><p>Artist</p></div>
-<div class="artist-card"><div class="artist-img">M</div><h3>Melody</h3><p>Artist</p></div>
-<div class="artist-card"><div class="artist-img">S</div><h3>Soul Africa</h3><p>Artist</p></div>
-</div>
-</div>
+</header>
 
-<div class="section">
-<div class="section-head"><h2>Made for You</h2></div>
-<div class="cards">
-<div class="card"><div class="cover two">🎧</div><h3>Afrova Mix</h3><p>Music picked for you</p></div>
-<div class="card"><div class="cover three">🌍</div><h3>Afro Vibes</h3><p>Fresh African sounds</p></div>
-<div class="card"><div class="cover four">🔥</div><h3>Hot Right Now</h3><p>What's trending</p></div>
-<div class="card"><div class="cover five">🌙</div><h3>Late Night</h3><p>Relax and listen</p></div>
-<div class="card"><div class="cover">✨</div><h3>New Releases</h3><p>Fresh music</p></div>
-</div>
-</div>
 
-</section>
+<div class="content">
 
-<section id="search" class="hidden">
-<div class="section">
-<div class="section-head"><h2>Search Results</h2></div>
-<div class="cards" id="searchResults"></div>
-</div>
-</section>
+<!-- HOME -->
 
-<section id="library" class="hidden">
-<div class="section">
-<div class="section-head"><h2>Your Library</h2></div>
-<p style="color:var(--muted);line-height:1.7">Your saved songs, albums and playlists will appear here.</p>
-</div>
-</section>
+<section id="homePage">
 
-<section id="liked" class="hidden">
-<div class="section">
-<div class="section-head"><h2>Liked Songs</h2></div>
-<div class="cards" id="likedSongs"></div>
-</div>
-</section>
+  <div class="hero">
 
-<section id="playlists" class="hidden">
-<div class="section">
-<div class="section-head">
-<h2>Your Playlists</h2>
-<button class="primary" onclick="createPlaylist()">+ Create Playlist</button>
-</div>
-<div class="cards">
-<div class="card"><div class="cover">🎵</div><h3>My Afro Playlist</h3><p>Your favourite music</p></div>
-<div class="card"><div class="cover three">🌴</div><h3>Afrobeats</h3><p>Afrobeat collection</p></div>
-</div>
-</div>
-</section>
+    <div>
 
-<section id="albums" class="hidden">
-<div class="section">
-<div class="section-head"><h2>Albums</h2></div>
-<div class="cards" id="albumCards"></div>
-</div>
-</section>
+      <h1>Your sound. Your Africa.</h1>
 
-<section id="artist" class="hidden">
+      <p>
+        Discover African music, support artists and build your own soundtrack
+        with Afrova.
+      </p>
 
-<div class="hero">
-<small>Afrova for Artists</small>
-<h1>Put your music in front of listeners.</h1>
-<p>Create your artist profile, upload music, manage releases and view your listener statistics.</p>
+      <div class="hero-buttons">
 
-<div class="hero-actions">
-<button class="primary" onclick="openArtistAccount()">Create Artist Account</button>
-<button class="secondary" onclick="openUpload()">Upload Music</button>
-</div>
-</div>
+        <button
+          class="primary"
+          onclick="playFirstSong()"
+        >
+          ▶ Start Listening
+        </button>
 
-<div class="artist-area">
-<h2>Artist Studio</h2>
-<p>Upload songs and albums, add cover artwork, manage releases and track how people listen to your music.</p>
+        <button
+          class="secondary"
+          onclick="showPage('premium')"
+        >
+          View Premium
+        </button>
 
-<div class="artist-actions">
-<button class="primary" onclick="openUpload()">＋ Upload Song</button>
-<button class="secondary" onclick="showMessage('Album / EP creation is the next release feature.')">＋ New Album / EP</button>
-<button class="secondary" onclick="showMessage('Artist analytics will be added after song statistics are connected.')">Analytics</button>
-</div>
+      </div>
 
-<div id="artistSongs" class="artist-song-list"></div>
-</div>
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-head">
+      <h2>Trending Songs</h2>
+    </div>
+
+    <div id="songsGrid" class="grid"></div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-head">
+      <h2>Popular Artists</h2>
+    </div>
+
+    <div id="artistsGrid" class="grid"></div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-head">
+      <h2>Made For You</h2>
+    </div>
+
+    <div class="artist-panel">
+
+      <h2>Personalized music is coming</h2>
+
+      <p>
+        Keep listening and Afrova will learn which music you enjoy.
+      </p>
+
+      <button
+        class="primary"
+        onclick="requireLogin()"
+      >
+        Create an account
+      </button>
+
+    </div>
+
+  </div>
 
 </section>
 
-<section id="premium" class="hidden">
 
-<div class="hero">
-<small>Afrova Premium</small>
-<h1>Take your music experience further.</h1>
-<p>Enjoy an enhanced Afrova experience with Premium plans.</p>
-</div>
+<!-- SEARCH -->
 
-<div class="plans">
+<section id="searchPage" class="hidden">
 
-<div class="plan">
-<h3>Student</h3>
-<div class="price">₦400 <span>/ month</span></div>
-<p>Premium access for eligible students.</p>
-<button onclick="subscribe('Student')">Choose Student</button>
-</div>
+  <div class="section">
 
-<div class="plan">
-<h3>Individual</h3>
-<div class="price">₦600 <span>/ month</span></div>
-<p>Premium access for one person.</p>
-<button onclick="subscribe('Individual')">Choose Individual</button>
-</div>
+    <div class="section-head">
+      <h2>Search Results</h2>
+    </div>
 
-<div class="plan">
-<h3>Duo</h3>
-<div class="price">₦1,200 <span>/ month</span></div>
-<p>Premium access for two people.</p>
-<button onclick="subscribe('Duo')">Choose Duo</button>
-</div>
+    <div id="searchResults" class="grid"></div>
 
-<div class="plan">
-<h3>Family</h3>
-<div class="price">₦1,500 <span>/ month</span></div>
-<p>Premium access for your family.</p>
-<button onclick="subscribe('Family')">Choose Family</button>
-</div>
+  </div>
 
-</div>
 </section>
+
+
+<!-- LIKED -->
+
+<section id="likedPage" class="hidden">
+
+  <div class="section">
+
+    <div class="section-head">
+      <h2>Liked Songs</h2>
+    </div>
+
+    <div id="likedGrid" class="grid"></div>
+
+  </div>
+
+</section>
+
+
+<!-- PLAYLISTS -->
+
+<section id="playlistsPage" class="hidden">
+
+  <div class="section">
+
+    <div class="section-head">
+      <h2>Your Playlists</h2>
+    </div>
+
+    <div class="empty">
+      Your playlists will appear here.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ALBUMS -->
+
+<section id="albumsPage" class="hidden">
+
+  <div class="section">
+
+    <div class="section-head">
+      <h2>Your Albums</h2>
+    </div>
+
+    <div class="empty">
+      Albums will appear here.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PREMIUM -->
+
+<section id="premiumPage" class="hidden">
+
+  <div class="section">
+
+    <h1>Afrova Premium</h1>
+
+    <p style="color:#888;margin:10px 0 25px">
+      Enjoy Afrova with premium features.
+    </p>
+
+
+    <div id="premiumStatusBox"></div>
+
+
+    <div class="price-grid">
+
+      <div class="price-card">
+
+        <h3>Student Premium</h3>
+
+        <div class="price">
+          ₦400/mo
+        </div>
+
+        <p>
+          Premium music experience for eligible students.
+        </p>
+
+        <button
+          class="primary full"
+          onclick="subscribe('Student Premium')"
+        >
+          Choose plan
+        </button>
+
+      </div>
+
+
+      <div class="price-card">
+
+        <h3>Individual Premium</h3>
+
+        <div class="price">
+          ₦600/mo
+        </div>
+
+        <p>
+          Premium listening for one person.
+        </p>
+
+        <button
+          class="primary full"
+          onclick="subscribe('Individual Premium')"
+        >
+          Choose plan
+        </button>
+
+      </div>
+
+
+      <div class="price-card">
+
+        <h3>Duo</h3>
+
+        <div class="price">
+          ₦1,200/mo
+        </div>
+
+        <p>
+          Premium access for two people.
+        </p>
+
+        <button
+          class="primary full"
+          onclick="subscribe('Duo')"
+        >
+          Choose plan
+        </button>
+
+      </div>
+
+
+      <div class="price-card">
+
+        <h3>Family</h3>
+
+        <div class="price">
+          ₦1,500/mo
+        </div>
+
+        <p>
+          Premium access for your family.
+        </p>
+
+        <button
+          class="primary full"
+          onclick="subscribe('Family')"
+        >
+          Choose plan
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ARTIST STUDIO -->
+
+<section id="artistPage" class="hidden">
+
+  <div class="section">
+
+    <h1>Artist Studio</h1>
+
+    <div
+      id="artistStudioContent"
+      style="margin-top:20px"
+    ></div>
+
+  </div>
+
+</section>
+
+</div>
 
 </main>
+
 </div>
 
+
+<!-- MOBILE NAV -->
+
 <div class="mobile-nav">
-<button class="active" onclick="showSection('home')">⌂<br>Home</button>
-<button onclick="showSection('search')">⌕<br>Search</button>
-<button onclick="showSection('library')">♫<br>Library</button>
-<button onclick="showSection('premium')">◆<br>Premium</button>
+
+  <button onclick="showPage('home')">
+    ⌂<br>Home
+  </button>
+
+  <button onclick="showPage('search')">
+    ⌕<br>Search
+  </button>
+
+  <button onclick="showPage('liked')">
+    ♥<br>Liked
+  </button>
+
+  <button onclick="showPage('premium')">
+    ★<br>Premium
+  </button>
+
+  <button onclick="openArtistStudio()">
+    ♫<br>Artist
+  </button>
+
 </div>
+
+
+<!-- PLAYER -->
 
 <div class="player">
 
-<div class="now">
-<div class="now-cover" id="nowCover">♪</div>
-<div class="now-info">
-<strong id="nowTitle">Select a song</strong>
-<span id="nowArtist">Afrova</span>
-</div>
+  <div id="playerCover" class="player-cover">
+    ♫
+  </div>
+
+  <div class="player-info">
+
+    <div id="playerTitle" class="player-title">
+      Nothing playing
+    </div>
+
+    <div id="playerArtist" class="player-artist">
+      Afrova
+    </div>
+
+  </div>
+
+
+  <div class="player-controls">
+
+    <button
+      class="control"
+      onclick="previousSong()"
+    >
+      ⏮
+    </button>
+
+    <button
+      id="playButton"
+      class="control main-control"
+      onclick="togglePlay()"
+    >
+      ▶
+    </button>
+
+    <button
+      class="control"
+      onclick="nextSong()"
+    >
+      ⏭
+    </button>
+
+  </div>
+
+
+  <div class="progress-area">
+
+    <span id="currentTime">
+      0:00
+    </span>
+
+    <input
+      id="progress"
+      class="progress"
+      type="range"
+      min="0"
+      max="100"
+      value="0"
+      oninput="seekSong()"
+    >
+
+    <span id="duration">
+      0:00
+    </span>
+
+  </div>
+
+
+  <input
+    id="volume"
+    class="volume"
+    type="range"
+    min="0"
+    max="1"
+    step="0.01"
+    value="1"
+    oninput="changeVolume()"
+  >
+
 </div>
 
-<div class="controls">
-<button class="control" onclick="previousSong()">⏮</button>
-<button class="main-play" id="playButton" onclick="togglePlay()">▶</button>
-<button class="control" onclick="nextSong()">⏭</button>
+
+<!-- ACCOUNT MODAL -->
+
+<div id="accountModal" class="modal-bg hidden">
+
+  <div class="modal">
+
+    <button
+      class="close"
+      onclick="closeModal('accountModal')"
+    >
+      ×
+    </button>
+
+
+    <!-- LOGIN -->
+
+    <div id="loginForm">
+
+      <h2>
+        Welcome to Afrova
+      </h2>
+
+      <p class="description">
+        Log in to your Afrova account to listen to music.
+      </p>
+
+      <div id="loginError"></div>
+
+      <div class="form-group">
+
+        <label>Email</label>
+
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="you@example.com"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Password</label>
+
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Password"
+        >
+
+      </div>
+
+
+      <button
+        class="primary full"
+        onclick="handleLogin()"
+      >
+        Log in
+      </button>
+
+
+      <div class="switch">
+
+        Don't have an account?
+
+        <button onclick="showSignup()">
+          Create account
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- SIGNUP -->
+
+    <div id="signupForm" class="hidden">
+
+      <h2>
+        Create your Afrova account
+      </h2>
+
+      <p class="description">
+        Create your account and verify your email with the code we send you.
+      </p>
+
+      <div id="signupError"></div>
+
+
+      <div class="form-group">
+
+        <label>Display name</label>
+
+        <input
+          id="signupName"
+          type="text"
+          placeholder="Your name"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Email</label>
+
+        <input
+          id="signupEmail"
+          type="email"
+          placeholder="you@example.com"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Password</label>
+
+        <input
+          id="signupPassword"
+          type="password"
+          placeholder="At least 6 characters"
+        >
+
+      </div>
+
+
+      <button
+        class="primary full"
+        onclick="handleSignup()"
+      >
+        Create account
+      </button>
+
+
+      <div class="switch">
+
+        Already have an account?
+
+        <button onclick="showLogin()">
+          Log in
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- VERIFY -->
+
+    <div id="verifyForm" class="hidden">
+
+      <h2>
+        Verify your email
+      </h2>
+
+      <p class="description">
+
+        We sent a verification code to
+
+        <strong id="verifyEmailText"></strong>.
+
+        Enter the code below to activate your Afrova account.
+
+      </p>
+
+      <div id="verifyMessage"></div>
+
+
+      <div class="code-box">
+
+        <input
+          class="code-input"
+          maxlength="1"
+          inputmode="numeric"
+          id="code1"
+        >
+
+        <input
+          class="code-input"
+          maxlength="1"
+          inputmode="numeric"
+          id="code2"
+        >
+
+        <input
+          class="code-input"
+          maxlength="1"
+          inputmode="numeric"
+          id="code3"
+        >
+
+        <input
+          class="code-input"
+          maxlength="1"
+          inputmode="numeric"
+          id="code4"
+        >
+
+        <input
+          class="code-input"
+          maxlength="1"
+          inputmode="numeric"
+          id="code5"
+        >
+
+        <input
+          class="code-input"
+          maxlength="1"
+          inputmode="numeric"
+          id="code6"
+        >
+
+      </div>
+
+
+      <button
+        class="primary full"
+        onclick="verifyEmailCode()"
+      >
+        Verify email
+      </button>
+
+
+      <button
+        class="secondary full"
+        style="margin-top:10px"
+        onclick="resendVerificationCode()"
+      >
+        Resend code
+      </button>
+
+    </div>
+
+
+    <!-- LOGGED ACCOUNT -->
+
+    <div id="loggedForm" class="hidden">
+
+      <h2>
+        Your Afrova Account
+      </h2>
+
+      <div
+        id="accountDetails"
+        class="account-info"
+      ></div>
+
+
+      <button
+        class="primary full"
+        onclick="openArtistStudio();closeModal('accountModal')"
+      >
+        Artist Studio
+      </button>
+
+
+      <button
+        class="secondary full"
+        onclick="logout()"
+      >
+        Log out
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div class="progress-area">
-<span class="time" id="currentTime">0:00</span>
-<div class="progress" onclick="seek(event)">
-<div class="progress-fill" id="progressFill"></div>
-</div>
-<span class="time" id="duration">0:00</span>
-</div>
-
-</div>
-
-<!-- AUTH MODAL -->
-
-<div class="modal-overlay" id="authModal">
-<div class="auth-box">
-
-<button class="close-modal" onclick="closeModal('authModal')">×</button>
-
-<div class="auth-logo">Afro<span>va</span></div>
-<div class="auth-subtitle">Your sound. Your culture. Your Afrova.</div>
-
-<div id="loginForm">
-<h2>Welcome back</h2>
-<input id="loginEmail" class="auth-input" type="email" placeholder="Email address">
-<input id="loginPassword" class="auth-input" type="password" placeholder="Password">
-<button class="auth-submit" onclick="handleLogin()">Log In</button>
-<div class="auth-switch">Don't have an account? <button onclick="showSignup()">Sign Up</button></div>
-</div>
-
-<div id="signupForm" class="hidden">
-<h2>Create your account</h2>
-<input id="signupName" class="auth-input" type="text" placeholder="Display name">
-<input id="signupEmail" class="auth-input" type="email" placeholder="Email address">
-<input id="signupPassword" class="auth-input" type="password" placeholder="Password">
-<button class="auth-submit" onclick="handleSignup()">Create Account</button>
-<div class="auth-switch">Already have an account? <button onclick="showLogin()">Log In</button></div>
-</div>
-
-<div id="accountForm" class="hidden">
-<h2>Your Account</h2>
-<div class="account-info">
-<div class="account-avatar" id="accountAvatar">A</div>
-<strong id="accountName">Afrova User</strong>
-<div class="account-email" id="accountEmail">-</div>
-</div>
-<button class="logout-btn" onclick="logout()">Log Out</button>
-</div>
-
-</div>
-</div>
 
 <!-- ARTIST ACCOUNT MODAL -->
 
-<div class="modal-overlay" id="artistModal">
-<div class="auth-box">
+<div id="artistAccountModal" class="modal-bg hidden">
 
-<button class="close-modal" onclick="closeModal('artistModal')">×</button>
+  <div class="modal">
 
-<div class="auth-logo">Afro<span>va</span></div>
-<div class="auth-subtitle">Create your Afrova artist profile</div>
+    <button
+      class="close"
+      onclick="closeModal('artistAccountModal')"
+    >
+      ×
+    </button>
 
-<h2>Artist Account</h2>
+    <h2>
+      Create Artist Account
+    </h2>
 
-<input id="artistName" class="auth-input" type="text" placeholder="Artist name">
+    <p class="description">
+      Create your artist profile so you can upload and manage your music on Afrova.
+    </p>
 
-<textarea id="artistBio" class="auth-input" placeholder="Tell listeners about yourself"></textarea>
+    <div id="artistAccountError"></div>
 
-<button class="auth-submit" onclick="createArtistAccount()">Create Artist Profile</button>
+
+    <div class="form-group">
+
+      <label>Artist name</label>
+
+      <input
+        id="artistName"
+        type="text"
+        placeholder="Your artist name"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Bio</label>
+
+      <textarea
+        id="artistBio"
+        rows="4"
+        placeholder="Tell listeners about yourself"
+      ></textarea>
+
+    </div>
+
+
+    <button
+      class="primary full"
+      onclick="createArtistAccount()"
+    >
+      Create Artist Account
+    </button>
+
+  </div>
 
 </div>
-</div>
+
 
 <!-- UPLOAD MODAL -->
 
-<div class="modal-overlay" id="uploadModal">
-<div class="auth-box">
+<div id="uploadModal" class="modal-bg hidden">
 
-<button class="close-modal" onclick="closeModal('uploadModal')">×</button>
+  <div class="modal">
 
-<div class="auth-logo">Afro<span>va</span></div>
-<div class="auth-subtitle">Upload your music to Afrova</div>
+    <button
+      class="close"
+      onclick="closeModal('uploadModal')"
+    >
+      ×
+    </button>
 
-<h2>Upload Song</h2>
+    <h2>
+      Upload Song
+    </h2>
 
-<input id="songTitle" class="auth-input" type="text" placeholder="Song title">
+    <p class="description">
+      Upload music that you own or have permission to distribute.
+    </p>
 
-<input id="songGenre" class="auth-input" type="text" placeholder="Genre">
+    <div id="uploadError"></div>
 
-<label class="upload-label">Audio file</label>
-<input id="songFile" class="file-box" type="file" accept="audio/*">
 
-<label class="upload-label">Cover artwork</label>
-<input id="coverFile" class="file-box" type="file" accept="image/*">
+    <div class="form-group">
 
-<button class="auth-submit" id="uploadButton" onclick="uploadSong()">Upload Song</button>
+      <label>Song title</label>
+
+      <input
+        id="songTitle"
+        type="text"
+        placeholder="Song title"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Genre</label>
+
+      <select id="songGenre">
+
+        <option value="Afrobeats">
+          Afrobeats
+        </option>
+
+        <option value="Afropop">
+          Afropop
+        </option>
+
+        <option value="Amapiano">
+          Amapiano
+        </option>
+
+        <option value="Highlife">
+          Highlife
+        </option>
+
+        <option value="Hip Hop">
+          Hip Hop
+        </option>
+
+        <option value="R&B">
+          R&B
+        </option>
+
+        <option value="Gospel">
+          Gospel
+        </option>
+
+        <option value="Other">
+          Other
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Audio file</label>
+
+      <input
+        id="songAudio"
+        type="file"
+        accept="audio/*"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Cover artwork</label>
+
+      <input
+        id="songCover"
+        type="file"
+        accept="image/*"
+      >
+
+    </div>
+
+
+    <button
+      class="primary full"
+      onclick="uploadSong()"
+    >
+      Upload Song
+    </button>
+
+  </div>
 
 </div>
-</div>
 
-<div id="message"></div>
-
-<audio id="audio"></audio>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-/* =========================
+/* ================================
    SUPABASE
-========================= */
-
-const SUPABASE_URL="https://eeurywspkbqbxayoyexi.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
-
-const supabaseClient=window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_PUBLISHABLE_KEY
-);
-
-
-/* =========================
-   AUTH
-========================= */
-
-async function createProfile(user){
-
-if(!user)return;
-
-const {data:existing}=await supabaseClient
-.from("profiles")
-.select("id")
-.eq("id",user.id)
-.maybeSingle();
-
-if(existing)return;
-
-const displayName=
-user.user_metadata?.display_name||
-user.email?.split("@")[0]||
-"Afrova User";
-
-const {error}=await supabaseClient
-.from("profiles")
-.insert({
-id:user.id,
-display_name:displayName,
-role:"listener"
-});
-
-if(error)console.error(error.message);
-
-}
-
-
-async function handleSignup(){
-
-const name=document.getElementById("signupName").value.trim();
-const email=document.getElementById("signupEmail").value.trim();
-const password=document.getElementById("signupPassword").value;
-
-if(!name||!email||password.length<6){
-showMessage("Enter your name, email and a password of at least 6 characters.");
-return;
-}
-
-const {data,error}=await supabaseClient.auth.signUp({
-email,
-password,
-options:{data:{display_name:name}}
-});
-
-if(error){
-showMessage(error.message);
-return;
-}
-
-if(data.session&&data.user){
-await createProfile(data.user);
-showMessage("Account created successfully!");
-showAccount(data.user);
-}else{
-showMessage("Account created. Check your email to confirm your account.");
-}
-
-}
-
-
-async function handleLogin(){
-
-const email=document.getElementById("loginEmail").value.trim();
-const password=document.getElementById("loginPassword").value;
-
-if(!email||!password){
-showMessage("Enter your email and password.");
-return;
-}
-
-const {data,error}=await supabaseClient.auth.signInWithPassword({
-email,
-password
-});
-
-if(error){
-showMessage(error.message);
-return;
-}
-
-await createProfile(data.user);
-showAccount(data.user);
-showMessage("Welcome back to Afrova!");
-
-}
-
-
-async function logout(){
-
-const {error}=await supabaseClient.auth.signOut();
-
-if(error){
-showMessage(error.message);
-return;
-}
-
-closeModal("authModal");
-updateAccountButton(null);
-showMessage("You have been logged out.");
-
-}
-
-
-async function checkLogin(){
-
-const {data}=await supabaseClient.auth.getSession();
-
-if(data.session){
-await createProfile(data.session.user);
-updateAccountButton(data.session.user);
-}else{
-updateAccountButton(null);
-}
-
-}
-
-
-supabaseClient.auth.onAuthStateChange((event,session)=>{
-
-if(session){
-updateAccountButton(session.user);
-}else{
-updateAccountButton(null);
-}
-
-});
-
-
-function openAccount(){
-
-document.getElementById("authModal").classList.add("show");
-
-supabaseClient.auth.getSession().then(({data})=>{
-
-if(data.session){
-showAccount(data.session.user);
-}else{
-showLogin();
-}
-
-});
-
-}
-
-
-function showLogin(){
-document.getElementById("loginForm").classList.remove("hidden");
-document.getElementById("signupForm").classList.add("hidden");
-document.getElementById("accountForm").classList.add("hidden");
-}
-
-
-function showSignup(){
-document.getElementById("loginForm").classList.add("hidden");
-document.getElementById("signupForm").classList.remove("hidden");
-document.getElementById("accountForm").classList.add("hidden");
-}
-
-
-function showAccount(user){
-
-document.getElementById("loginForm").classList.add("hidden");
-document.getElementById("signupForm").classList.add("hidden");
-document.getElementById("accountForm").classList.remove("hidden");
-
-const name=user.user_metadata?.display_name||user.email?.split("@")[0]||"Afrova User";
-
-document.getElementById("accountName").textContent=name;
-document.getElementById("accountEmail").textContent=user.email||"";
-document.getElementById("accountAvatar").textContent=name.charAt(0).toUpperCase();
-
-}
-
-
-function updateAccountButton(user){
-
-const button=document.getElementById("profileButton");
-
-if(!button)return;
-
-if(user){
-
-const name=user.user_metadata?.display_name||user.email?.split("@")[0]||"A";
-
-button.textContent=name.charAt(0).toUpperCase();
-
-}else{
-button.textContent="A";
-}
-
-}
-
-
-/* =========================
-   ARTIST ACCOUNT
-========================= */
-
-async function openArtistAccount(){
-
-const {data}=await supabaseClient.auth.getSession();
-
-if(!data.session){
-showMessage("Please log in or create an Afrova account first.");
-openAccount();
-return;
-}
-
-const user=data.session.user;
-
-const {data:artist}=await supabaseClient
-.from("artist_profiles")
-.select("*")
-.eq("id",user.id)
-.maybeSingle();
-
-if(artist){
-
-showMessage("You already have an Artist Account.");
-loadArtistSongs();
-return;
-
-}
-
-document.getElementById("artistModal").classList.add("show");
-
-}
-
-
-async function createArtistAccount(){
-
-const {data}=await supabaseClient.auth.getSession();
-
-if(!data.session){
-showMessage("Please log in first.");
-closeModal("artistModal");
-openAccount();
-return;
-}
-
-const user=data.session.user;
-
-const artistName=document.getElementById("artistName").value.trim();
-const bio=document.getElementById("artistBio").value.trim();
-
-if(!artistName){
-showMessage("Enter your artist name.");
-return;
-}
-
-const {error:artistError}=await supabaseClient
-.from("artist_profiles")
-.insert({
-id:user.id,
-artist_name:artistName,
-bio:bio
-});
-
-if(artistError){
-
-if(artistError.code==="23505"){
-showMessage("You already have an Artist Account.");
-}else{
-showMessage(artistError.message);
-}
-
-return;
-}
-
+================================ */
+
+const SUPABASE_URL =
+  "https://eeurywspkbqbxayoyexi.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* ================================
+   APP DATA
+================================ */
+
+const demoSongs = [
+
+  {
+    id:"demo1",
+    title:"Afro Energy",
+    artist:"Afrova",
+    genre:"Afrobeats",
+    cover:"",
+    audio:"",
+    remote:false
+  },
+
+  {
+    id:"demo2",
+    title:"African Sunrise",
+    artist:"Afrova",
+    genre:"Afropop",
+    cover:"",
+    audio:"",
+    remote:false
+  },
+
+  {
+    id:"demo3",
+    title:"Lagos Nights",
+    artist:"Afrova",
+    genre:"Afrobeats",
+    cover:"",
+    audio:"",
+    remote:false
+  },
+
+  {
+    id:"demo4",
+    title:"Amapiano Vibe",
+    artist:"Afrova",
+    genre:"Amapiano",
+    cover:"",
+    audio:"",
+    remote:false
+  },
+
+  {
+    id:"demo5",
+    title:"Golden Sound",
+    artist:"Afrova",
+    genre:"R&B",
+    cover:"",
+    audio:"",
+    remote:false
+  },
+
+  {
+    id:"demo6",
+    title:"African Rhythm",
+    artist:"Afrova",
+    genre:"Highlife",
+    cover:"",
+    audio:"",
+    remote:false
+  }
+
+];
+
+
+let songs=[...demoSongs];
+
+let likedSongs=[];
+
+let currentSongIndex=-1;
+
+let audio=new Audio();
+
+let currentUser=null;
+
+let currentArtist=null;
+
+let pendingVerificationEmail="";
+
+let pendingDisplayName="";
+
+
+/* ================================
+   FREE / PREMIUM SYSTEM
+================================ */
 
 /*
-Update the profile role.
+  Change this number later if you want.
+  Example:
+  30 = 30 minutes
+  60 = 1 hour
 */
 
-const {error:roleError}=await supabaseClient
-.from("profiles")
-.update({role:"artist"})
-.eq("id",user.id);
+const FREE_DAILY_MINUTES=30;
 
-if(roleError){
-console.error("Role update:",roleError.message);
-}
+let subscriptionPlan="free";
 
-closeModal("artistModal");
+let subscriptionStatus="inactive";
 
-showMessage("Artist Account created successfully!");
-
-loadArtistSongs();
-
-}
-
-
-/* =========================
-   UPLOAD SONG
-========================= */
-
-async function openUpload(){
-
-const {data}=await supabaseClient.auth.getSession();
-
-if(!data.session){
-showMessage("Please log in first.");
-openAccount();
-return;
-}
-
-const {data:artist}=await supabaseClient
-.from("artist_profiles")
-.select("*")
-.eq("id",data.session.user.id)
-.maybeSingle();
-
-if(!artist){
-showMessage("Create your Artist Account first.");
-openArtistAccount();
-return;
-}
-
-document.getElementById("uploadModal").classList.add("show");
-
-}
-
-
-async function uploadSong(){
-
-const {data}=await supabaseClient.auth.getSession();
-
-if(!data.session){
-showMessage("Please log in first.");
-return;
-}
-
-const user=data.session.user;
-
-const title=document.getElementById("songTitle").value.trim();
-const genre=document.getElementById("songGenre").value.trim();
-
-const audioFile=document.getElementById("songFile").files[0];
-const coverFile=document.getElementById("coverFile").files[0];
-
-if(!title){
-showMessage("Enter the song title.");
-return;
-}
-
-if(!audioFile){
-showMessage("Choose an audio file.");
-return;
-}
-
-const button=document.getElementById("uploadButton");
-
-button.disabled=true;
-button.textContent="Uploading...";
-
-try{
-
-const safeAudioName=
-audioFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-
-const audioPath=
-`${user.id}/${Date.now()}-${safeAudioName}`;
-
-const {error:audioError}=await supabaseClient
-.storage
-.from("music")
-.upload(audioPath,audioFile,{
-contentType:audioFile.type||"audio/mpeg",
-upsert:false
-});
-
-if(audioError)throw audioError;
-
-let coverPath=null;
-
-if(coverFile){
-
-const safeCoverName=
-coverFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-
-coverPath=
-`${user.id}/${Date.now()}-${safeCoverName}`;
-
-const {error:coverError}=await supabaseClient
-.storage
-.from("covers")
-.upload(coverPath,coverFile,{
-contentType:coverFile.type||"image/jpeg",
-upsert:false
-});
-
-if(coverError)throw coverError;
-
-}
-
-const {data:artist}=await supabaseClient
-.from("artist_profiles")
-.select("artist_name")
-.eq("id",user.id)
-.single();
-
-if(!artist)throw new Error("Artist profile not found.");
-
-const {error:dbError}=await supabaseClient
-.from("songs")
-.insert({
-artist_id:user.id,
-title:title,
-audio_path:audioPath,
-cover_path:coverPath,
-genre:genre||null,
-status:"published"
-});
-
-if(dbError)throw dbError;
-
-closeModal("uploadModal");
-
-document.getElementById("songTitle").value="";
-document.getElementById("songGenre").value="";
-document.getElementById("songFile").value="";
-document.getElementById("coverFile").value="";
-
-showMessage("Song uploaded successfully!");
-
-await loadArtistSongs();
-await loadPublishedSongs();
-
-}catch(error){
-
-console.error(error);
-showMessage("Upload failed: "+error.message);
-
-}finally{
-
-button.disabled=false;
-button.textContent="Upload Song";
-
-}
-
-}
-
-
-/* =========================
-   SONG DATABASE
-========================= */
-
-async function loadPublishedSongs(){
-
-const {data,error}=await supabaseClient
-.from("songs")
-.select("id,title,artist_id,audio_path,cover_path,genre,status,created_at")
-.eq("status","published")
-.order("created_at",{ascending:false});
-
-if(error){
-console.error("Song loading:",error.message);
-return;
-}
-
-if(!data||!data.length)return;
-
-const artistIds=[...new Set(data.map(song=>song.artist_id))];
-
-const {data:artists}=await supabaseClient
-.from("artist_profiles")
-.select("id,artist_name")
-.in("id",artistIds);
-
-const artistMap={};
-
-(artists||[]).forEach(a=>{
-artistMap[a.id]=a.artist_name;
-});
-
-const uploadedSongs=data.map(song=>{
-
-const audioUrl=supabaseClient
-.storage
-.from("music")
-.getPublicUrl(song.audio_path).data.publicUrl;
-
-let coverUrl="";
-
-if(song.cover_path){
-coverUrl=supabaseClient
-.storage
-.from("covers")
-.getPublicUrl(song.cover_path).data.publicUrl;
-}
-
-return {
-id:song.id,
-title:song.title,
-artist:artistMap[song.artist_id]||"Afrova Artist",
-audio:audioUrl,
-coverUrl:coverUrl,
-cover:"one",
-remote:true
-};
-
-});
-
-window.uploadedSongs=uploadedSongs;
-
-songs.splice(0,songs.length,...uploadedSongs,...demoSongs);
-
-renderSongs();
-renderAlbums();
-
-}
-
-
-async function loadArtistSongs(){
-
-const {data}=await supabaseClient.auth.getSession();
-
-if(!data.session)return;
-
-const {data:artist}=await supabaseClient
-.from("artist_profiles")
-.select("artist_name")
-.eq("id",data.session.user.id)
-.maybeSingle();
-
-const box=document.getElementById("artistSongs");
-
-if(!box)return;
-
-if(!artist){
-
-box.innerHTML=
-'<p style="color:#999">Create your Artist Account to see your songs here.</p>';
-
-return;
-
-}
-
-const {data:songData,error}=await supabaseClient
-.from("songs")
-.select("*")
-.eq("artist_id",data.session.user.id)
-.order("created_at",{ascending:false});
-
-if(error){
-box.innerHTML=`<p style="color:#ff8b8b">${error.message}</p>`;
-return;
-}
-
-if(!songData||!songData.length){
-
-box.innerHTML=
-'<p style="color:#999">You have not uploaded any songs yet.</p>';
-
-return;
-
-}
-
-box.innerHTML=
-`<h3 style="margin-bottom:12px">Your Uploaded Songs</h3>`+
-songData.map(song=>`
-
-<div class="artist-song">
-
-<div>
-<strong>${escapeHtml(song.title)}</strong>
-<br>
-<small>${escapeHtml(song.genre||"No genre")} · ${song.status}</small>
-</div>
-
-<button class="play-small" onclick="playRemoteSong('${song.id}')">▶</button>
-
-</div>
-
-`).join("");
-
-}
-
-
-async function playRemoteSong(id){
-
-const {data,error}=await supabaseClient
-.from("songs")
-.select("*,artist_profiles(artist_name)")
-.eq("id",id)
-.single();
-
-if(error){
-showMessage(error.message);
-return;
-}
-
-const audioUrl=supabaseClient
-.storage
-.from("music")
-.getPublicUrl(data.audio_path).data.publicUrl;
-
-currentSong={
-id:data.id,
-title:data.title,
-artist:data.artist_profiles?.artist_name||"Afrova Artist",
-audio:audioUrl,
-coverUrl:data.cover_path
-?supabaseClient.storage.from("covers").getPublicUrl(data.cover_path).data.publicUrl
-:""
-};
-
-document.getElementById("nowTitle").textContent=currentSong.title;
-document.getElementById("nowArtist").textContent=currentSong.artist;
-
-setNowCover(currentSong);
-
-audio.src=currentSong.audio;
-
-try{
-await audio.play();
-isPlaying=true;
-updatePlayButton();
-}catch{
-showMessage("The audio could not be played.");
-}
-
-}
-
-
-/* =========================
-   DEMO MUSIC
-========================= */
-
-const demoSongs=[
-{
-title:"Afrova Sunrise",
-artist:"Afrova",
-cover:"one",
-audio:""
-},
-{
-title:"Lagos Nights",
-artist:"Afro Artist",
-cover:"two",
-audio:""
-},
-{
-title:"African Dreams",
-artist:"Kora",
-cover:"three",
-audio:""
-},
-{
-title:"Golden Vibes",
-artist:"Melody",
-cover:"four",
-audio:""
-},
-{
-title:"New Energy",
-artist:"Soul Africa",
-cover:"five",
-audio:""
-}
-];
-
-const songs=[...demoSongs];
-
-let currentSong=0;
-let liked=[];
-let isPlaying=false;
-
-const audio=document.getElementById("audio");
-
-
-function renderSongs(list=songs,container="songCards"){
-
-const box=document.getElementById(container);
-
-if(!box)return;
-
-box.innerHTML="";
-
-if(!list.length){
-box.innerHTML='<p style="color:#999">No music found.</p>';
-return;
-}
-
-list.forEach((song)=>{
-
-const realIndex=songs.indexOf(song);
-
-const card=document.createElement("div");
-card.className="card";
-
-const cover=song.coverUrl
-?`<div class="cover"><img src="${song.coverUrl}" alt=""></div>`
-:`<div class="cover ${song.cover||"one"}">♪</div>`;
-
-card.innerHTML=`
-
-${cover}
-
-<h3>${escapeHtml(song.title)}</h3>
-<p>${escapeHtml(song.artist)}</p>
-
-<div class="card-bottom">
-
-<button class="play-small" onclick="playSong(${realIndex})">▶</button>
-
-<button class="heart ${liked.includes(realIndex)?"liked":""}" onclick="toggleLike(${realIndex})">♥</button>
-
-</div>
-`;
-
-box.appendChild(card);
-
-});
-
-}
-
-
-function playSong(index){
-
-if(index<0||index>=songs.length)return;
-
-currentSong=index;
-
-const song=songs[index];
-
-document.getElementById("nowTitle").textContent=song.title;
-document.getElementById("nowArtist").textContent=song.artist;
-
-setNowCover(song);
-
-if(!song.audio){
-
-showMessage("This demo song has no audio file yet.");
-isPlaying=false;
-updatePlayButton();
-return;
-
-}
-
-audio.src=song.audio;
-
-audio.play().then(()=>{
-
-isPlaying=true;
-updatePlayButton();
-
-}).catch(()=>{
-showMessage("The audio could not be played.");
-});
-
-}
-
-
-function setNowCover(song){
-
-const box=document.getElementById("nowCover");
-
-if(song.coverUrl){
-box.innerHTML=`<img src="${song.coverUrl}" alt="">`;
-}else{
-box.innerHTML="♪";
-}
-
-}
-
-
-function togglePlay(){
-
-const song=songs[currentSong];
-
-if(!song||!song.audio){
-
-showMessage("Select an uploaded song to play it.");
-return;
-
-}
-
-if(isPlaying){
-
-audio.pause();
-isPlaying=false;
-
-}else{
-
-audio.play();
-isPlaying=true;
-
-}
-
-updatePlayButton();
-
-}
-
-
-function updatePlayButton(){
-
-document.getElementById("playButton").textContent=
-isPlaying?"Ⅱ":"▶";
-
-}
-
-
-function nextSong(){
-
-if(!songs.length)return;
-
-currentSong++;
-
-if(currentSong>=songs.length)currentSong=0;
-
-playSong(currentSong);
-
-}
-
-
-function previousSong(){
-
-if(!songs.length)return;
-
-currentSong--;
-
-if(currentSong<0)currentSong=songs.length-1;
-
-playSong(currentSong);
-
-}
-
-
-function toggleLike(index){
-
-if(liked.includes(index)){
-
-liked=liked.filter(i=>i!==index);
-showMessage("Removed from Liked Songs");
-
-}else{
-
-liked.push(index);
-showMessage("Added to Liked Songs ♥");
-
-}
-
-renderSongs();
-renderLiked();
-
-}
-
-
-function renderLiked(){
-
-const likedSongs=songs.filter((_,i)=>liked.includes(i));
-
-renderSongs(likedSongs,"likedSongs");
-
-}
-
-
-function searchMusic(){
-
-const query=document
-.getElementById("searchInput")
-.value.toLowerCase()
-.trim();
-
-if(!query){
-renderSongs(songs,"searchResults");
-return;
-}
-
-showSection("search");
-
-const results=songs.filter(song=>
-song.title.toLowerCase().includes(query)||
-song.artist.toLowerCase().includes(query)
+let freeListeningSeconds=Number(
+  localStorage.getItem(
+    "afrova_free_listening_seconds"
+  ) || 0
 );
 
-renderSongs(results,"searchResults");
+let freeListeningDate=
+  localStorage.getItem(
+    "afrova_free_listening_date"
+  ) || "";
 
-}
-
-
-function showSection(section,button=null){
-
-const sections=[
-"home","search","library","liked",
-"playlists","albums","artist","premium"
-];
-
-sections.forEach(id=>{
-
-const el=document.getElementById(id);
-
-if(el)el.classList.toggle("hidden",id!==section);
-
-});
-
-document.querySelectorAll(".nav-btn")
-.forEach(btn=>btn.classList.remove("active"));
-
-if(button)button.classList.add("active");
-
-if(section==="liked")renderLiked();
-
-if(section==="search")renderSongs(songs,"searchResults");
-
-if(section==="albums")renderAlbums();
-
-if(section==="artist")loadArtistSongs();
-
-window.scrollTo({top:0,behavior:"smooth"});
-
-}
+let freeTimer=null;
 
 
-function renderAlbums(){
+/* ================================
+   HELPERS
+================================ */
 
-const box=document.getElementById("albumCards");
-
-if(!box)return;
-
-box.innerHTML="";
-
-songs.forEach((song,index)=>{
-
-box.innerHTML+=`
-
-<div class="card">
-
-${song.coverUrl
-?`<div class="cover"><img src="${song.coverUrl}" alt=""></div>`
-:`<div class="cover ${song.cover||"one"}">▣</div>`}
-
-<h3>${escapeHtml(song.title)} — EP</h3>
-<p>${escapeHtml(song.artist)}</p>
-
-<div class="card-bottom">
-<button class="play-small" onclick="playSong(${index})">▶</button>
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-
-function createPlaylist(){
-
-const name=prompt("Enter your playlist name:");
-
-if(name)showMessage(`"${name}" playlist created.`);
-
-}
-
-
-/* =========================
-   PREMIUM
-========================= */
-
-function subscribe(plan){
-
-showMessage(`${plan} selected. Paystack payment will be connected next.`);
-
-}
-
-
-/* =========================
-   MODALS
-========================= */
-
-function closeModal(id){
-
-document.getElementById(id).classList.remove("show");
-
-}
-
-
-document.querySelectorAll(".modal-overlay")
-.forEach(modal=>{
-
-modal.addEventListener("click",function(event){
-
-if(event.target===this){
-this.classList.remove("show");
-}
-
-});
-
-});
-
-
-/* =========================
-   MESSAGE
-========================= */
-
-function showMessage(text){
-
-const box=document.getElementById("message");
-
-box.textContent=text;
-box.style.display="block";
-
-clearTimeout(window.messageTimer);
-
-window.messageTimer=setTimeout(()=>{
-box.style.display="none";
-},3500);
-
+function $(id){
+  return document.getElementById(id);
 }
 
 
 function escapeHtml(value){
 
-return String(value??"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
 
-/* =========================
-   AUDIO
-========================= */
+function showModal(id){
 
-audio.addEventListener("timeupdate",()=>{
-
-if(!audio.duration)return;
-
-const percent=
-audio.currentTime/audio.duration*100;
-
-document.getElementById("progressFill")
-.style.width=percent+"%";
-
-document.getElementById("currentTime")
-.textContent=formatTime(audio.currentTime);
-
-});
+  $(id).classList.remove("hidden");
+}
 
 
-audio.addEventListener("loadedmetadata",()=>{
+function closeModal(id){
 
-document.getElementById("duration")
-.textContent=formatTime(audio.duration);
-
-});
+  $(id).classList.add("hidden");
+}
 
 
-audio.addEventListener("ended",()=>{
+function showMessage(
+  id,
+  message,
+  type="notice"
+){
 
-isPlaying=false;
-updatePlayButton();
-nextSong();
-
-});
+  $(id).innerHTML=
+    `<div class="${type}">${escapeHtml(message)}</div>`;
+}
 
 
-function seek(event){
+function clearMessage(id){
 
-if(!audio.duration)return;
-
-const rect=event.currentTarget.getBoundingClientRect();
-
-const percent=
-(event.clientX-rect.left)/rect.width;
-
-audio.currentTime=percent*audio.duration;
-
+  $(id).innerHTML="";
 }
 
 
 function formatTime(seconds){
 
-if(!seconds||isNaN(seconds))return"0:00";
+  if(!seconds || isNaN(seconds)){
+    return "0:00";
+  }
 
-const minutes=Math.floor(seconds/60);
+  const mins=
+    Math.floor(seconds/60);
 
-const secs=Math.floor(seconds%60)
-.toString()
-.padStart(2,"0");
+  const secs=
+    Math.floor(seconds%60)
+      .toString()
+      .padStart(2,"0");
 
-return`${minutes}:${secs}`;
-
+  return `${mins}:${secs}`;
 }
 
 
-/* =========================
-   START APP
-========================= */
+/* ================================
+   FREE TIME
+================================ */
 
-renderSongs();
-renderSongs(songs,"searchResults");
-renderLiked();
-renderAlbums();
+function resetDailyFreeListening(){
+
+  const today=
+    new Date()
+      .toISOString()
+      .slice(0,10);
+
+  if(freeListeningDate!==today){
+
+    freeListeningDate=today;
+
+    freeListeningSeconds=0;
+
+    localStorage.setItem(
+      "afrova_free_listening_date",
+      today
+    );
+
+    localStorage.setItem(
+      "afrova_free_listening_seconds",
+      "0"
+    );
+  }
+}
+
+
+function getRemainingFreeSeconds(){
+
+  resetDailyFreeListening();
+
+  const maximum=
+    FREE_DAILY_MINUTES*60;
+
+  return Math.max(
+    0,
+    maximum-freeListeningSeconds
+  );
+}
+
+
+function isPremium(){
+
+  return(
+    subscriptionStatus==="active" &&
+    subscriptionPlan!=="free"
+  );
+}
+
+
+function canListen(){
+
+  if(!currentUser){
+    return false;
+  }
+
+  if(isPremium()){
+    return true;
+  }
+
+  return getRemainingFreeSeconds()>0;
+}
+
+
+/* ================================
+   SUBSCRIPTION
+================================ */
+
+async function loadSubscription(){
+
+  if(!currentUser){
+
+    subscriptionPlan="free";
+
+    subscriptionStatus="inactive";
+
+    updatePlanBadge();
+
+    renderPremiumStatus();
+
+    return;
+  }
+
+
+  const {data,error}=
+    await supabaseClient
+      .from("subscriptions")
+      .select("plan,status")
+      .eq("user_id",currentUser.id)
+      .maybeSingle();
+
+
+  if(error){
+
+    console.warn(
+      "Subscription:",
+      error.message
+    );
+
+    subscriptionPlan="free";
+
+    subscriptionStatus="inactive";
+
+  }else if(
+    data &&
+    data.status==="active" &&
+    data.plan!=="free"
+  ){
+
+    subscriptionPlan=data.plan;
+
+    subscriptionStatus=data.status;
+
+  }else{
+
+    subscriptionPlan="free";
+
+    subscriptionStatus=
+      data?.status || "inactive";
+  }
+
+
+  updatePlanBadge();
+
+  renderPremiumStatus();
+}
+
+
+function updatePlanBadge(){
+
+  const badge=$("planBadge");
+
+  if(!badge) return;
+
+
+  if(isPremium()){
+
+    badge.textContent="★ PREMIUM";
+
+    badge.className=
+      "plan-badge premium";
+
+  }else{
+
+    badge.textContent="FREE";
+
+    badge.className=
+      "plan-badge free";
+  }
+}
+
+
+function renderPremiumStatus(){
+
+  const box=$("premiumStatusBox");
+
+  if(!box) return;
+
+
+  if(!currentUser){
+
+    box.innerHTML=`
+      <div class="premium-box">
+
+        <h3>FREE</h3>
+
+        <p>
+          Log in or create an account to start listening.
+        </p>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  if(isPremium()){
+
+    box.innerHTML=`
+      <div class="premium-box">
+
+        <h3>★ PREMIUM ACTIVE</h3>
+
+        <p>
+          Your ${escapeHtml(subscriptionPlan)}
+          subscription is active. You have unlimited listening access.
+        </p>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  const remaining=
+    getRemainingFreeSeconds();
+
+  const minutes=
+    Math.floor(remaining/60);
+
+  const seconds=
+    remaining%60;
+
+  box.innerHTML=`
+    <div class="premium-box">
+
+      <h3>FREE PLAN</h3>
+
+      <p>
+        You have approximately
+        <strong>${minutes}m ${seconds}s</strong>
+        of free listening remaining today.
+      </p>
+
+      <p style="margin-top:8px">
+        Upgrade to Afrova Premium for unlimited listening.
+      </p>
+
+    </div>
+  `;
+}
+
+
+/* ================================
+   FREE TIMER
+================================ */
+
+function startFreeTimer(){
+
+  stopFreeTimer();
+
+  if(!currentUser) return;
+
+  if(isPremium()) return;
+
+  if(!canListen()){
+
+    showPremiumLimit();
+
+    return;
+  }
+
+
+  freeTimer=setInterval(()=>{
+
+    if(audio.paused){
+      return;
+    }
+
+
+    freeListeningSeconds++;
+
+
+    localStorage.setItem(
+      "afrova_free_listening_seconds",
+      String(freeListeningSeconds)
+    );
+
+
+    if(getRemainingFreeSeconds()<=0){
+
+      stopFreeTimer();
+
+      audio.pause();
+
+      $("playButton").textContent="▶";
+
+      showPremiumLimit();
+    }
+
+  },1000);
+}
+
+
+function stopFreeTimer(){
+
+  if(freeTimer){
+
+    clearInterval(freeTimer);
+
+    freeTimer=null;
+  }
+}
+
+
+function showPremiumLimit(){
+
+  audio.pause();
+
+  $("playButton").textContent="▶";
+
+  alert(
+    "Your free listening time has ended for today. Subscribe to Afrova Premium to continue listening."
+  );
+
+  showPage("premium");
+
+  renderPremiumStatus();
+}
+
+
+/* ================================
+   PAGE NAVIGATION
+================================ */
+
+function showPage(page){
+
+  const pages=[
+    "home",
+    "search",
+    "liked",
+    "playlists",
+    "albums",
+    "premium",
+    "artist"
+  ];
+
+
+  pages.forEach(name=>{
+
+    const el=$(name+"Page");
+
+    if(el){
+      el.classList.add("hidden");
+    }
+
+  });
+
+
+  const target=$(page+"Page");
+
+  if(target){
+    target.classList.remove("hidden");
+  }
+
+
+  if(page==="liked"){
+    renderLikedSongs();
+  }
+
+
+  if(page==="artist"){
+    renderArtistStudio();
+  }
+
+
+  if(page==="premium"){
+    renderPremiumStatus();
+  }
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* ================================
+   ACCOUNT
+================================ */
+
+async function openAccount(){
+
+  const {
+    data:{session}
+  }=
+    await supabaseClient.auth.getSession();
+
+
+  if(session?.user){
+
+    currentUser=session.user;
+
+    await loadSubscription();
+
+    renderLoggedAccount();
+
+    showModal("accountModal");
+
+  }else{
+
+    showLogin();
+
+    showModal("accountModal");
+  }
+}
+
+
+function showLogin(){
+
+  $("loginForm").classList.remove("hidden");
+
+  $("signupForm").classList.add("hidden");
+
+  $("verifyForm").classList.add("hidden");
+
+  $("loggedForm").classList.add("hidden");
+
+  clearMessage("loginError");
+}
+
+
+function showSignup(){
+
+  $("loginForm").classList.add("hidden");
+
+  $("signupForm").classList.remove("hidden");
+
+  $("verifyForm").classList.add("hidden");
+
+  $("loggedForm").classList.add("hidden");
+
+  clearMessage("signupError");
+}
+
+
+function showVerification(email){
+
+  $("loginForm").classList.add("hidden");
+
+  $("signupForm").classList.add("hidden");
+
+  $("verifyForm").classList.remove("hidden");
+
+  $("loggedForm").classList.add("hidden");
+
+  $("verifyEmailText").textContent=email;
+
+
+  setTimeout(()=>{
+
+    $("code1").focus();
+
+  },100);
+}
+
+
+/* ================================
+   SIGN UP
+================================ */
+
+async function handleSignup(){
+
+  const name=
+    $("signupName").value.trim();
+
+  const email=
+    $("signupEmail").value.trim();
+
+  const password=
+    $("signupPassword").value;
+
+
+  clearMessage("signupError");
+
+
+  if(!name || !email || !password){
+
+    showMessage(
+      "signupError",
+      "Please complete all fields.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(password.length<6){
+
+    showMessage(
+      "signupError",
+      "Your password must be at least 6 characters.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const {data,error}=
+    await supabaseClient.auth.signUp({
+
+      email,
+
+      password,
+
+      options:{
+        data:{
+          display_name:name
+        }
+      }
+
+    });
+
+
+  if(error){
+
+    showMessage(
+      "signupError",
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  pendingVerificationEmail=email;
+
+  pendingDisplayName=name;
+
+
+  showVerification(email);
+
+
+  showMessage(
+    "verifyMessage",
+    "Check your email for the Afrova verification code.",
+    "notice"
+  );
+}
+
+
+/* ================================
+   VERIFY EMAIL
+================================ */
+
+function getVerificationCode(){
+
+  return[
+    $("code1").value,
+    $("code2").value,
+    $("code3").value,
+    $("code4").value,
+    $("code5").value,
+    $("code6").value
+  ].join("");
+}
+
+
+async function verifyEmailCode(){
+
+  const email=
+    pendingVerificationEmail;
+
+  const token=
+    getVerificationCode();
+
+
+  clearMessage("verifyMessage");
+
+
+  if(!email){
+
+    showMessage(
+      "verifyMessage",
+      "Your verification session has expired. Please create the account again.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(token.length<6){
+
+    showMessage(
+      "verifyMessage",
+      "Please enter the complete verification code.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const {data,error}=
+    await supabaseClient.auth.verifyOtp({
+
+      email,
+
+      token,
+
+      type:"email"
+
+    });
+
+
+  if(error){
+
+    showMessage(
+      "verifyMessage",
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  currentUser=data.user;
+
+
+  resetDailyFreeListening();
+
+  await createProfileIfNeeded(
+    currentUser
+  );
+
+  await loadSubscription();
+
+
+  showMessage(
+    "verifyMessage",
+    "Email verified successfully. Welcome to Afrova!",
+    "notice"
+  );
+
+
+  setTimeout(()=>{
+
+    closeModal("accountModal");
+
+    showPage("home");
+
+    updateAccountButton();
+
+    loadPublishedSongs();
+
+  },700);
+}
+
+
+/* ================================
+   RESEND CODE
+================================ */
+
+async function resendVerificationCode(){
+
+  const email=
+    pendingVerificationEmail;
+
+
+  if(!email){
+    return;
+  }
+
+
+  const {error}=
+    await supabaseClient.auth.resend({
+
+      type:"signup",
+
+      email
+
+    });
+
+
+  if(error){
+
+    showMessage(
+      "verifyMessage",
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "verifyMessage",
+    "A new verification code has been sent.",
+    "notice"
+  );
+}
+
+
+/* ================================
+   LOGIN
+================================ */
+
+async function handleLogin(){
+
+  const email=
+    $("loginEmail").value.trim();
+
+  const password=
+    $("loginPassword").value;
+
+
+  clearMessage("loginError");
+
+
+  if(!email || !password){
+
+    showMessage(
+      "loginError",
+      "Enter your email and password.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const {data,error}=
+    await supabaseClient.auth.signInWithPassword({
+
+      email,
+
+      password
+
+    });
+
+
+  if(error){
+
+    showMessage(
+      "loginError",
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  currentUser=data.user;
+
+
+  resetDailyFreeListening();
+
+  await createProfileIfNeeded(
+    currentUser
+  );
+
+  await loadSubscription();
+
+
+  closeModal("accountModal");
+
+  showPage("home");
+
+  updateAccountButton();
+
+  await loadPublishedSongs();
+}
+
+
+/* ================================
+   PROFILE
+================================ */
+
+async function createProfileIfNeeded(user){
+
+  if(!user) return;
+
+
+  const name=
+    user.user_metadata?.display_name ||
+    user.user_metadata?.name ||
+    "Afrova User";
+
+
+  const {data,error}=
+    await supabaseClient
+      .from("profiles")
+      .upsert({
+
+        id:user.id,
+
+        display_name:name
+
+      },{
+        onConflict:"id"
+      })
+      .select()
+      .maybeSingle();
+
+
+  if(error){
+
+    console.warn(
+      "Profile:",
+      error.message
+    );
+  }
+
+
+  return data;
+}
+
+
+/* ================================
+   LOGOUT
+================================ */
+
+async function logout(){
+
+  stopFreeTimer();
+
+
+  await supabaseClient.auth.signOut();
+
+
+  currentUser=null;
+
+  currentArtist=null;
+
+  subscriptionPlan="free";
+
+  subscriptionStatus="inactive";
+
+
+  closeModal("accountModal");
+
+  updateAccountButton();
+
+  updatePlanBadge();
+
+  renderPremiumStatus();
+
+  showPage("home");
+}
+
+
+/* ================================
+   SESSION
+================================ */
+
+async function checkLogin(){
+
+  const {
+    data:{session}
+  }=
+    await supabaseClient.auth.getSession();
+
+
+  if(session?.user){
+
+    currentUser=session.user;
+
+
+    resetDailyFreeListening();
+
+
+    await createProfileIfNeeded(
+      currentUser
+    );
+
+
+    await loadSubscription();
+
+  }else{
+
+    currentUser=null;
+
+    subscriptionPlan="free";
+
+    subscriptionStatus="inactive";
+  }
+
+
+  updateAccountButton();
+
+  updatePlanBadge();
+
+  renderPremiumStatus();
+
+  await loadPublishedSongs();
+}
+
+
+supabaseClient.auth.onAuthStateChange(
+  async(event,session)=>{
+
+    currentUser=
+      session?.user || null;
+
+
+    if(currentUser){
+
+      resetDailyFreeListening();
+
+      await loadSubscription();
+
+    }else{
+
+      subscriptionPlan="free";
+
+      subscriptionStatus="inactive";
+
+      stopFreeTimer();
+
+      updatePlanBadge();
+
+      renderPremiumStatus();
+    }
+
+
+    updateAccountButton();
+
+  }
+);
+
+
+function updateAccountButton(){
+
+  const btn=$("accountButton");
+
+  if(currentUser){
+
+    const name=
+      currentUser.user_metadata?.display_name ||
+      currentUser.email?.split("@")[0] ||
+      "Account";
+
+
+    btn.textContent=name;
+
+  }else{
+
+    btn.textContent="Log in";
+  }
+}
+
+
+function renderLoggedAccount(){
+
+  const name=
+    currentUser?.user_metadata?.display_name ||
+    "Afrova User";
+
+
+  const planText=
+    isPremium()
+      ? `★ PREMIUM — ${subscriptionPlan}`
+      : "FREE";
+
+
+  $("accountDetails").innerHTML=`
+
+    <strong>
+      ${escapeHtml(name)}
+    </strong>
+
+    <span>
+      ${escapeHtml(currentUser?.email || "")}
+    </span>
+
+    <div style="margin-top:10px;color:#20e060;font-weight:bold">
+      ${escapeHtml(planText)}
+    </div>
+
+  `;
+
+
+  $("loginForm").classList.add("hidden");
+
+  $("signupForm").classList.add("hidden");
+
+  $("verifyForm").classList.add("hidden");
+
+  $("loggedForm").classList.remove("hidden");
+}
+
+
+/* ================================
+   REQUIRE LOGIN
+================================ */
+
+function requireLogin(){
+
+  if(!currentUser){
+
+    showLogin();
+
+    showModal("accountModal");
+
+
+    showMessage(
+      "loginError",
+      "Please log in or create an account before listening to music.",
+      "notice"
+    );
+
+
+    return false;
+  }
+
+
+  return true;
+}
+
+
+/* ================================
+   SONG DISPLAY
+================================ */
+
+function renderSongs(){
+
+  const grid=$("songsGrid");
+
+
+  if(!songs.length){
+
+    grid.innerHTML=
+      `<div class="empty">No songs available yet.</div>`;
+
+    return;
+  }
+
+
+  grid.innerHTML=
+    songs.map((song,index)=>{
+
+      const cover=
+        song.cover
+          ? `<img src="${escapeHtml(song.cover)}" alt="">`
+          : "♫";
+
+
+      const liked=
+        likedSongs.some(
+          x=>x.id===song.id
+        )
+          ? "♥"
+          : "♡";
+
+
+      return `
+
+        <div class="card">
+
+          <div class="cover">
+            ${cover}
+          </div>
+
+          <div class="song-title">
+            ${escapeHtml(song.title)}
+          </div>
+
+          <div class="artist-name">
+            ${escapeHtml(song.artist)}
+          </div>
+
+          <div class="card-actions">
+
+            <button
+              class="small-btn play"
+              onclick="playSong(${index})"
+            >
+              ▶ Play
+            </button>
+
+            <button
+              class="small-btn"
+              onclick="toggleLike('${escapeHtml(song.id)}')"
+            >
+              ${liked}
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+}
+
+
+function renderArtists(){
+
+  const grid=$("artistsGrid");
+
+
+  const artists=[
+    "Afrova Artists",
+    "Afrobeats Artists",
+    "Amapiano Artists",
+    "African Sounds"
+  ];
+
+
+  grid.innerHTML=
+    artists.map(name=>`
+
+      <div class="card">
+
+        <div class="cover">
+          ♪
+        </div>
+
+        <div class="song-title">
+          ${name}
+        </div>
+
+        <div class="artist-name">
+          Explore music
+        </div>
+
+      </div>
+
+    `).join("");
+}
+
+
+/* ================================
+   PLAY SONG
+================================ */
+
+function playSong(index){
+
+  if(!requireLogin()) return;
+
+
+  if(!canListen()){
+
+    showPremiumLimit();
+
+    return;
+  }
+
+
+  if(
+    index<0 ||
+    index>=songs.length
+  ){
+    return;
+  }
+
+
+  const song=songs[index];
+
+
+  currentSongIndex=index;
+
+
+  $("playerTitle").textContent=
+    song.title;
+
+
+  $("playerArtist").textContent=
+    song.artist;
+
+
+  $("playerCover").innerHTML=
+    song.cover
+      ? `<img src="${escapeHtml(song.cover)}" alt="">`
+      : "♫";
+
+
+  if(!song.audio){
+
+    audio.pause();
+
+    stopFreeTimer();
+
+    $("playButton").textContent="▶";
+
+
+    alert(
+      "This demo song does not have an audio file yet. Uploaded Afrova songs can be played here."
+    );
+
+
+    return;
+  }
+
+
+  audio.src=song.audio;
+
+
+  audio.play()
+    .then(()=>{
+
+      $("playButton").textContent="Ⅱ";
+
+      startFreeTimer();
+
+    })
+    .catch(err=>{
+
+      console.error(err);
+
+    });
+}
+
+
+/* ================================
+   PLAYER
+================================ */
+
+function togglePlay(){
+
+  if(!requireLogin()) return;
+
+
+  if(!canListen()){
+
+    showPremiumLimit();
+
+    return;
+  }
+
+
+  if(currentSongIndex<0){
+
+    playFirstSong();
+
+    return;
+  }
+
+
+  if(audio.paused){
+
+    if(!audio.src){
+
+      playSong(currentSongIndex);
+
+      return;
+    }
+
+
+    audio.play()
+      .then(()=>{
+
+        $("playButton").textContent="Ⅱ";
+
+        startFreeTimer();
+
+      })
+      .catch(err=>{
+
+        console.error(err);
+
+      });
+
+  }else{
+
+    audio.pause();
+
+    $("playButton").textContent="▶";
+
+    stopFreeTimer();
+  }
+}
+
+
+function playFirstSong(){
+
+  if(!requireLogin()) return;
+
+
+  if(!canListen()){
+
+    showPremiumLimit();
+
+    return;
+  }
+
+
+  if(songs.length){
+
+    playSong(0);
+
+  }
+}
+
+
+function nextSong(){
+
+  if(!requireLogin()) return;
+
+
+  if(!canListen()){
+
+    showPremiumLimit();
+
+    return;
+  }
+
+
+  if(!songs.length) return;
+
+
+  let next=
+    currentSongIndex+1;
+
+
+  if(next>=songs.length){
+
+    next=0;
+
+  }
+
+
+  playSong(next);
+}
+
+
+function previousSong(){
+
+  if(!requireLogin()) return;
+
+
+  if(!canListen()){
+
+    showPremiumLimit();
+
+    return;
+  }
+
+
+  if(!songs.length) return;
+
+
+  let previous=
+    currentSongIndex-1;
+
+
+  if(previous<0){
+
+    previous=
+      songs.length-1;
+  }
+
+
+  playSong(previous);
+}
+
+
+function seekSong(){
+
+  if(audio.duration){
+
+    audio.currentTime=
+      (Number($("progress").value)/100) *
+      audio.duration;
+  }
+}
+
+
+function changeVolume(){
+
+  audio.volume=
+    Number($("volume").value);
+}
+
+
+audio.addEventListener(
+  "timeupdate",
+  ()=>{
+
+    if(!audio.duration) return;
+
+
+    $("progress").value=
+      (audio.currentTime/audio.duration)*100;
+
+
+    $("currentTime").textContent=
+      formatTime(audio.currentTime);
+
+  }
+);
+
+
+audio.addEventListener(
+  "loadedmetadata",
+  ()=>{
+
+    $("duration").textContent=
+      formatTime(audio.duration);
+
+  }
+);
+
+
+audio.addEventListener(
+  "play",
+  ()=>{
+
+    if(currentUser && !isPremium()){
+
+      startFreeTimer();
+    }
+
+  }
+);
+
+
+audio.addEventListener(
+  "pause",
+  ()=>{
+
+    stopFreeTimer();
+
+  }
+);
+
+
+audio.addEventListener(
+  "ended",
+  ()=>{
+
+    $("playButton").textContent="▶";
+
+    stopFreeTimer();
+
+    nextSong();
+
+  }
+);
+
+
+/* ================================
+   LIKE
+================================ */
+
+function toggleLike(id){
+
+  if(!requireLogin()) return;
+
+
+  const song=
+    songs.find(x=>x.id===id);
+
+
+  if(!song) return;
+
+
+  const exists=
+    likedSongs.some(x=>x.id===id);
+
+
+  if(exists){
+
+    likedSongs=
+      likedSongs.filter(
+        x=>x.id!==id
+      );
+
+  }else{
+
+    likedSongs.push(song);
+  }
+
+
+  renderSongs();
+}
+
+
+function renderLikedSongs(){
+
+  const grid=$("likedGrid");
+
+
+  if(!currentUser){
+
+    grid.innerHTML=`
+
+      <div class="empty">
+
+        Log in to see your liked songs.
+
+        <br><br>
+
+        <button
+          class="primary"
+          onclick="openAccount()"
+        >
+          Log in
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  if(!likedSongs.length){
+
+    grid.innerHTML=`
+
+      <div class="empty">
+        You haven't liked any songs yet.
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  grid.innerHTML=
+    likedSongs.map(song=>{
+
+      const index=
+        songs.findIndex(
+          x=>x.id===song.id
+        );
+
+
+      return `
+
+        <div class="card">
+
+          <div class="cover">
+
+            ${
+              song.cover
+                ? `<img src="${escapeHtml(song.cover)}">`
+                : "♫"
+            }
+
+          </div>
+
+          <div class="song-title">
+            ${escapeHtml(song.title)}
+          </div>
+
+          <div class="artist-name">
+            ${escapeHtml(song.artist)}
+          </div>
+
+          <button
+            class="small-btn play"
+            style="margin-top:12px"
+            onclick="playSong(${index})"
+          >
+            ▶ Play
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* ================================
+   SEARCH
+================================ */
+
+function searchSongs(){
+
+  const q=
+    $("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  if(!q){
+
+    showPage("home");
+
+    return;
+  }
+
+
+  showPage("search");
+
+
+  const results=
+    songs.filter(song=>
+
+      song.title
+        .toLowerCase()
+        .includes(q) ||
+
+      song.artist
+        .toLowerCase()
+        .includes(q) ||
+
+      (song.genre || "")
+        .toLowerCase()
+        .includes(q)
+
+    );
+
+
+  const grid=$("searchResults");
+
+
+  if(!results.length){
+
+    grid.innerHTML=
+      `<div class="empty">No music found.</div>`;
+
+    return;
+  }
+
+
+  grid.innerHTML=
+    results.map(song=>{
+
+      const index=
+        songs.findIndex(
+          x=>x.id===song.id
+        );
+
+
+      return `
+
+        <div class="card">
+
+          <div class="cover">
+
+            ${
+              song.cover
+                ? `<img src="${escapeHtml(song.cover)}">`
+                : "♫"
+            }
+
+          </div>
+
+          <div class="song-title">
+            ${escapeHtml(song.title)}
+          </div>
+
+          <div class="artist-name">
+            ${escapeHtml(song.artist)}
+          </div>
+
+          <button
+            class="small-btn play"
+            style="margin-top:12px"
+            onclick="playSong(${index})"
+          >
+            ▶ Play
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* ================================
+   LOAD PUBLISHED SONGS
+================================ */
+
+async function loadPublishedSongs(){
+
+  const {data,error}=
+    await supabaseClient
+      .from("songs")
+      .select("*")
+      .eq("status","published")
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    console.warn(
+      "Published songs:",
+      error.message
+    );
+
+
+    renderSongs();
+
+    renderArtists();
+
+    return;
+  }
+
+
+  if(!data || !data.length){
+
+    songs=[...demoSongs];
+
+    renderSongs();
+
+    renderArtists();
+
+    return;
+  }
+
+
+  const artistIds=[
+    ...new Set(
+      data.map(song=>song.artist_id)
+    )
+  ];
+
+
+  let artists=[];
+
+
+  if(artistIds.length){
+
+    const result=
+      await supabaseClient
+        .from("artist_profiles")
+        .select(
+          "id,artist_name"
+        )
+        .in(
+          "id",
+          artistIds
+        );
+
+
+    artists=result.data || [];
+  }
+
+
+  const uploaded=
+    data.map(song=>{
+
+      const artist=
+        artists.find(
+          a=>a.id===song.artist_id
+        );
+
+
+      const audioUrl=
+        supabaseClient.storage
+          .from("music")
+          .getPublicUrl(
+            song.audio_path
+          )
+          .data.publicUrl;
+
+
+      let coverUrl="";
+
+
+      if(song.cover_path){
+
+        coverUrl=
+          supabaseClient.storage
+            .from("covers")
+            .getPublicUrl(
+              song.cover_path
+            )
+            .data.publicUrl;
+      }
+
+
+      return{
+
+        id:song.id,
+
+        title:song.title,
+
+        artist:
+          artist?.artist_name ||
+          "Afrova Artist",
+
+        genre:
+          song.genre ||
+          "Music",
+
+        audio:audioUrl,
+
+        cover:coverUrl,
+
+        remote:true
+
+      };
+
+    });
+
+
+  songs=[
+    ...uploaded,
+    ...demoSongs
+  ];
+
+
+  renderSongs();
+
+  renderArtists();
+}
+
+
+/* ================================
+   ARTIST STUDIO
+================================ */
+
+async function openArtistStudio(){
+
+  if(!requireLogin()) return;
+
+
+  await loadArtistProfile();
+
+
+  showPage("artist");
+
+  renderArtistStudio();
+}
+
+
+async function loadArtistProfile(){
+
+  if(!currentUser){
+
+    currentArtist=null;
+
+    return;
+  }
+
+
+  const {data,error}=
+    await supabaseClient
+      .from("artist_profiles")
+      .select("*")
+      .eq("id",currentUser.id)
+      .maybeSingle();
+
+
+  if(error){
+
+    console.warn(
+      "Artist profile:",
+      error.message
+    );
+
+
+    currentArtist=null;
+
+    return;
+  }
+
+
+  currentArtist=data || null;
+}
+
+
+function renderArtistStudio(){
+
+  const container=
+    $("artistStudioContent");
+
+
+  if(!currentUser){
+
+    container.innerHTML=`
+
+      <div class="empty">
+        Please log in first.
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  if(!currentArtist){
+
+    container.innerHTML=`
+
+      <div class="artist-panel">
+
+        <h2>
+          Become an Afrova Artist
+        </h2>
+
+        <p>
+          Create your artist profile to upload your own music,
+          manage releases and build your audience.
+        </p>
+
+        <button
+          class="primary"
+          onclick="openArtistAccount()"
+        >
+          Create Artist Account
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML=`
+
+    <div class="artist-panel">
+
+      <h2>
+        ${escapeHtml(
+          currentArtist.artist_name
+        )}
+      </h2>
+
+      <p>
+        ${escapeHtml(
+          currentArtist.bio ||
+          "Welcome to your artist studio."
+        )}
+      </p>
+
+      <button
+        class="primary"
+        onclick="openUpload()"
+      >
+        + Upload Song
+      </button>
+
+    </div>
+
+
+    <div class="section">
+
+      <div class="section-head">
+
+        <h2>
+          Your Songs
+        </h2>
+
+      </div>
+
+      <div
+        id="artistSongsGrid"
+        class="grid"
+      >
+
+        <div class="empty">
+          Loading songs...
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  loadArtistSongs();
+}
+
+
+/* ================================
+   CREATE ARTIST ACCOUNT
+================================ */
+
+async function openArtistAccount(){
+
+  if(!requireLogin()) return;
+
+
+  await loadArtistProfile();
+
+
+  if(currentArtist){
+
+    renderArtistStudio();
+
+    return;
+  }
+
+
+  clearMessage(
+    "artistAccountError"
+  );
+
+
+  showModal(
+    "artistAccountModal"
+  );
+}
+
+
+async function createArtistAccount(){
+
+  if(!currentUser){
+
+    closeModal(
+      "artistAccountModal"
+    );
+
+    requireLogin();
+
+    return;
+  }
+
+
+  const artistName=
+    $("artistName").value.trim();
+
+  const bio=
+    $("artistBio").value.trim();
+
+
+  clearMessage(
+    "artistAccountError"
+  );
+
+
+  if(!artistName){
+
+    showMessage(
+      "artistAccountError",
+      "Enter your artist name.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  await createProfileIfNeeded(
+    currentUser
+  );
+
+
+  const {data,error}=
+    await supabaseClient
+      .from("artist_profiles")
+      .insert({
+
+        id:currentUser.id,
+
+        artist_name:artistName,
+
+        bio:bio
+
+      })
+      .select()
+      .single();
+
+
+  if(error){
+
+    showMessage(
+      "artistAccountError",
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  const {error:roleError}=
+    await supabaseClient
+      .from("profiles")
+      .update({
+        role:"artist"
+      })
+      .eq(
+        "id",
+        currentUser.id
+      );
+
+
+  if(roleError){
+
+    console.warn(
+      "Role update:",
+      roleError.message
+    );
+  }
+
+
+  currentArtist=data;
+
+
+  closeModal(
+    "artistAccountModal"
+  );
+
+
+  showPage("home");
+
+
+  alert(
+    "Your Afrova Artist Account has been created successfully."
+  );
+}
+
+
+/* ================================
+   ARTIST SONGS
+================================ */
+
+async function loadArtistSongs(){
+
+  if(!currentUser) return;
+
+
+  const grid=
+    $("artistSongsGrid");
+
+
+  if(!grid) return;
+
+
+  const {data,error}=
+    await supabaseClient
+      .from("songs")
+      .select("*")
+      .eq(
+        "artist_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    grid.innerHTML=`
+
+      <div class="empty">
+        ${escapeHtml(
+          error.message
+        )}
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  if(!data || !data.length){
+
+    grid.innerHTML=`
+
+      <div class="empty">
+        You haven't uploaded any songs yet.
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  grid.innerHTML=
+    data.map(song=>{
+
+      let cover="";
+
+
+      if(song.cover_path){
+
+        cover=
+          supabaseClient.storage
+            .from("covers")
+            .getPublicUrl(
+              song.cover_path
+            )
+            .data.publicUrl;
+      }
+
+
+      return `
+
+        <div class="card">
+
+          <div class="cover">
+
+            ${
+              cover
+                ? `<img src="${escapeHtml(cover)}">`
+                : "♫"
+            }
+
+          </div>
+
+          <div class="song-title">
+            ${escapeHtml(song.title)}
+          </div>
+
+          <div class="artist-name">
+            ${escapeHtml(
+              song.genre ||
+              "Music"
+            )}
+          </div>
+
+          <div
+            style="margin-top:10px;color:#888;font-size:12px"
+          >
+            Status:
+            ${escapeHtml(song.status)}
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* ================================
+   UPLOAD SONG
+================================ */
+
+async function openUpload(){
+
+  if(!requireLogin()) return;
+
+
+  await loadArtistProfile();
+
+
+  if(!currentArtist){
+
+    closeModal("uploadModal");
+
+    openArtistAccount();
+
+    return;
+  }
+
+
+  clearMessage("uploadError");
+
+  showModal("uploadModal");
+}
+
+
+async function uploadSong(){
+
+  if(!currentUser){
+
+    closeModal("uploadModal");
+
+    requireLogin();
+
+    return;
+  }
+
+
+  await loadArtistProfile();
+
+
+  if(!currentArtist){
+
+    closeModal("uploadModal");
+
+    openArtistAccount();
+
+    return;
+  }
+
+
+  const title=
+    $("songTitle").value.trim();
+
+  const genre=
+    $("songGenre").value;
+
+  const audioFile=
+    $("songAudio").files[0];
+
+  const coverFile=
+    $("songCover").files[0];
+
+
+  clearMessage("uploadError");
+
+
+  if(!title || !audioFile){
+
+    showMessage(
+      "uploadError",
+      "Song title and audio file are required.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const extension=
+      audioFile.name
+        .split(".")
+        .pop() ||
+      "audio";
+
+
+    const audioPath=
+      `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+
+    const audioUpload=
+      await supabaseClient.storage
+        .from("music")
+        .upload(
+          audioPath,
+          audioFile,
+          {
+            cacheControl:"3600",
+            upsert:false
+          }
+        );
+
+
+    if(audioUpload.error){
+
+      throw audioUpload.error;
+    }
+
+
+    let coverPath=null;
+
+
+    if(coverFile){
+
+      const coverExtension=
+        coverFile.name
+          .split(".")
+          .pop() ||
+        "jpg";
+
+
+      coverPath=
+        `${currentUser.id}/${crypto.randomUUID()}.${coverExtension}`;
+
+
+      const coverUpload=
+        await supabaseClient.storage
+          .from("covers")
+          .upload(
+            coverPath,
+            coverFile,
+            {
+              cacheControl:"3600",
+              upsert:false
+            }
+          );
+
+
+      if(coverUpload.error){
+
+        throw coverUpload.error;
+      }
+    }
+
+
+    const {error:insertError}=
+      await supabaseClient
+        .from("songs")
+        .insert({
+
+          artist_id:
+            currentUser.id,
+
+          title:title,
+
+          audio_path:
+            audioPath,
+
+          cover_path:
+            coverPath,
+
+          genre:genre,
+
+          status:"published"
+
+        });
+
+
+    if(insertError){
+
+      throw insertError;
+    }
+
+
+    closeModal(
+      "uploadModal"
+    );
+
+
+    $("songTitle").value="";
+
+    $("songAudio").value="";
+
+    $("songCover").value="";
+
+
+    await loadPublishedSongs();
+
+
+    showPage("artist");
+
+
+    await loadArtistSongs();
+
+
+    alert(
+      "Your song has been uploaded successfully."
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    showMessage(
+      "uploadError",
+      error.message ||
+      "Upload failed.",
+      "error"
+    );
+  }
+}
+
+
+/* ================================
+   PREMIUM
+================================ */
+
+function subscribe(plan){
+
+  if(!requireLogin()) return;
+
+
+  alert(
+    `${plan} selected. Paystack payment will be connected next.`
+  );
+}
+
+
+/* ================================
+   OTP INPUT
+================================ */
+
+const codeInputs=[
+  "code1",
+  "code2",
+  "code3",
+  "code4",
+  "code5",
+  "code6"
+];
+
+
+codeInputs.forEach(
+  (id,index)=>{
+
+    const input=$(id);
+
+
+    input.addEventListener(
+      "input",
+      ()=>{
+
+        input.value=
+          input.value.replace(
+            /\D/g,
+            ""
+          );
+
+
+        if(
+          input.value &&
+          index<
+            codeInputs.length-1
+        ){
+
+          $(
+            codeInputs[index+1]
+          ).focus();
+
+        }
+
+      }
+    );
+
+
+    input.addEventListener(
+      "keydown",
+      event=>{
+
+        if(
+          event.key==="Backspace" &&
+          !input.value &&
+          index>0
+        ){
+
+          $(
+            codeInputs[index-1]
+          ).focus();
+
+        }
+
+      }
+    );
+
+  }
+);
+
+
+/* ================================
+   START APP
+================================ */
+
+audio.volume=1;
+
+resetDailyFreeListening();
 
 checkLogin();
 
-loadPublishedSongs();
+renderSongs();
+
+renderArtists();
+
+renderPremiumStatus();
 
 </script>
 
