@@ -3,12 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Afrova — African Music</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
   font-family:Arial,Helvetica,sans-serif;
@@ -17,13 +22,24 @@ body{
   min-height:100vh;
 }
 
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
 
 .app{
   display:flex;
-  min-height:100vh
+  min-height:100vh;
 }
 
 .sidebar{
@@ -103,7 +119,7 @@ button{cursor:pointer}
 }
 
 .search:focus{
-  border-color:#20e060
+  border-color:#20e060;
 }
 
 .account-btn{
@@ -113,6 +129,10 @@ button{cursor:pointer}
   border-radius:22px;
   padding:11px 18px;
   font-weight:bold;
+  max-width:180px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .plan-badge{
@@ -141,7 +161,7 @@ button{cursor:pointer}
 }
 
 .content{
-  padding:30px
+  padding:30px;
 }
 
 .hero{
@@ -151,7 +171,11 @@ button{cursor:pointer}
   display:flex;
   align-items:center;
   background:
-    radial-gradient(circle at 80% 20%,rgba(32,224,96,.25),transparent 35%),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(32,224,96,.25),
+      transparent 35%
+    ),
     linear-gradient(135deg,#151515,#0b0b0b);
   border:1px solid #252525;
 }
@@ -190,6 +214,14 @@ button{cursor:pointer}
   padding:12px 20px;
 }
 
+.danger{
+  background:#351818;
+  color:#ffaaaa;
+  border:1px solid #633030;
+  border-radius:25px;
+  padding:12px 20px;
+}
+
 .section{
   margin-top:35px;
 }
@@ -202,12 +234,13 @@ button{cursor:pointer}
 }
 
 .section-head h2{
-  font-size:22px
+  font-size:22px;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  grid-template-columns:
+    repeat(auto-fill,minmax(170px,1fr));
   gap:18px;
 }
 
@@ -308,6 +341,7 @@ button{cursor:pointer}
   display:flex;
   align-items:center;
   justify-content:center;
+  flex-shrink:0;
 }
 
 .player-cover img{
@@ -359,6 +393,7 @@ button{cursor:pointer}
   display:flex;
   align-items:center;
   gap:10px;
+  min-width:120px;
 }
 
 .progress{
@@ -392,7 +427,7 @@ button{cursor:pointer}
 }
 
 .modal h2{
-  margin-bottom:8px
+  margin-bottom:8px;
 }
 
 .modal p.description{
@@ -459,21 +494,6 @@ button{cursor:pointer}
   color:#20e060;
 }
 
-.code-box{
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  margin:20px 0;
-}
-
-.code-input{
-  width:48px!important;
-  height:55px;
-  text-align:center;
-  font-size:23px;
-  font-weight:bold;
-}
-
 .notice{
   background:#171f19;
   border:1px solid #245a32;
@@ -509,7 +529,8 @@ button{cursor:pointer}
 
 .price-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  grid-template-columns:
+    repeat(auto-fit,minmax(210px,1fr));
   gap:15px;
 }
 
@@ -518,6 +539,11 @@ button{cursor:pointer}
   border:1px solid #292929;
   border-radius:14px;
   padding:22px;
+}
+
+.price-card.active{
+  border-color:#20e060;
+  background:#101b13;
 }
 
 .price{
@@ -562,10 +588,51 @@ button{cursor:pointer}
   color:#aaa;
   line-height:1.5;
   font-size:14px;
+  margin-top:6px;
+}
+
+.plan-note{
+  color:#777;
+  font-size:12px;
+  line-height:1.5;
+  margin-top:10px;
+}
+
+.verify-box{
+  background:#171717;
+  border:1px solid #303030;
+  border-radius:12px;
+  padding:15px;
+  margin-top:15px;
+}
+
+.verify-box h4{
+  margin-bottom:7px;
+}
+
+.verify-box p{
+  color:#888;
+  font-size:13px;
+  line-height:1.5;
 }
 
 .mobile-nav{
   display:none;
+}
+
+.status-pill{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:15px;
+  background:#252525;
+  color:#aaa;
+  font-size:11px;
+  margin-top:8px;
+}
+
+.status-pill.published{
+  color:#20e060;
+  background:#102015;
 }
 
 @media(max-width:800px){
@@ -649,37 +716,50 @@ button{cursor:pointer}
 
   <div class="logo">AFROVA</div>
 
-  <button class="nav-btn active" onclick="showPage('home')">
+  <button class="nav-btn active"
+          onclick="showPage('home')">
     ⌂ Home
   </button>
 
-  <button class="nav-btn" onclick="showPage('search')">
+  <button class="nav-btn"
+          onclick="showPage('search')">
     ⌕ Search
   </button>
 
-  <div class="nav-title">Your Library</div>
+  <div class="nav-title">
+    Your Library
+  </div>
 
-  <button class="nav-btn" onclick="showPage('liked')">
+  <button class="nav-btn"
+          onclick="showPage('liked')">
     ♥ Liked Songs
   </button>
 
-  <button class="nav-btn" onclick="showPage('playlists')">
+  <button class="nav-btn"
+          onclick="showPage('playlists')">
     ☷ Playlists
   </button>
 
-  <button class="nav-btn" onclick="showPage('albums')">
+  <button class="nav-btn"
+          onclick="showPage('albums')">
     ▣ Albums
   </button>
 
-  <div class="nav-title">For Artists</div>
+  <div class="nav-title">
+    For Artists
+  </div>
 
-  <button class="nav-btn" onclick="openArtistStudio()">
+  <button class="nav-btn"
+          onclick="openArtistStudio()">
     ♫ Artist Studio
   </button>
 
-  <div class="nav-title">Account</div>
+  <div class="nav-title">
+    Account
+  </div>
 
-  <button class="nav-btn" onclick="showPage('premium')">
+  <button class="nav-btn"
+          onclick="showPage('premium')">
     ★ Premium
   </button>
 
@@ -697,15 +777,15 @@ button{cursor:pointer}
     oninput="searchSongs()"
   >
 
-  <div id="planBadge" class="plan-badge free">
+  <div id="planBadge"
+       class="plan-badge free">
     FREE
   </div>
 
   <button
     id="accountButton"
     class="account-btn"
-    onclick="openAccount()"
-  >
+    onclick="openAccount()">
     Log in
   </button>
 
@@ -714,34 +794,32 @@ button{cursor:pointer}
 
 <div class="content">
 
-<!-- HOME -->
-
 <section id="homePage">
 
   <div class="hero">
 
     <div>
 
-      <h1>Your sound. Your Africa.</h1>
+      <h1>
+        Your sound. Your Africa.
+      </h1>
 
       <p>
-        Discover African music, support artists and build your own soundtrack
-        with Afrova.
+        Discover African music, support artists and build
+        your own soundtrack with Afrova.
       </p>
 
       <div class="hero-buttons">
 
         <button
           class="primary"
-          onclick="playFirstSong()"
-        >
+          onclick="playFirstSong()">
           ▶ Start Listening
         </button>
 
         <button
           class="secondary"
-          onclick="showPage('premium')"
-        >
+          onclick="showPage('premium')">
           View Premium
         </button>
 
@@ -758,7 +836,8 @@ button{cursor:pointer}
       <h2>Trending Songs</h2>
     </div>
 
-    <div id="songsGrid" class="grid"></div>
+    <div id="songsGrid"
+         class="grid"></div>
 
   </div>
 
@@ -769,7 +848,8 @@ button{cursor:pointer}
       <h2>Popular Artists</h2>
     </div>
 
-    <div id="artistsGrid" class="grid"></div>
+    <div id="artistsGrid"
+         class="grid"></div>
 
   </div>
 
@@ -782,16 +862,18 @@ button{cursor:pointer}
 
     <div class="artist-panel">
 
-      <h2>Personalized music is coming</h2>
+      <h2>
+        Personalized music is coming
+      </h2>
 
       <p>
-        Keep listening and Afrova will learn which music you enjoy.
+        Keep listening and Afrova will learn which
+        music you enjoy.
       </p>
 
       <button
         class="primary"
-        onclick="requireLogin()"
-      >
+        onclick="requireLogin()">
         Create an account
       </button>
 
@@ -802,9 +884,8 @@ button{cursor:pointer}
 </section>
 
 
-<!-- SEARCH -->
-
-<section id="searchPage" class="hidden">
+<section id="searchPage"
+         class="hidden">
 
   <div class="section">
 
@@ -812,16 +893,16 @@ button{cursor:pointer}
       <h2>Search Results</h2>
     </div>
 
-    <div id="searchResults" class="grid"></div>
+    <div id="searchResults"
+         class="grid"></div>
 
   </div>
 
 </section>
 
 
-<!-- LIKED -->
-
-<section id="likedPage" class="hidden">
+<section id="likedPage"
+         class="hidden">
 
   <div class="section">
 
@@ -829,16 +910,16 @@ button{cursor:pointer}
       <h2>Liked Songs</h2>
     </div>
 
-    <div id="likedGrid" class="grid"></div>
+    <div id="likedGrid"
+         class="grid"></div>
 
   </div>
 
 </section>
 
 
-<!-- PLAYLISTS -->
-
-<section id="playlistsPage" class="hidden">
+<section id="playlistsPage"
+         class="hidden">
 
   <div class="section">
 
@@ -855,9 +936,8 @@ button{cursor:pointer}
 </section>
 
 
-<!-- ALBUMS -->
-
-<section id="albumsPage" class="hidden">
+<section id="albumsPage"
+         class="hidden">
 
   <div class="section">
 
@@ -874,27 +954,29 @@ button{cursor:pointer}
 </section>
 
 
-<!-- PREMIUM -->
-
-<section id="premiumPage" class="hidden">
+<section id="premiumPage"
+         class="hidden">
 
   <div class="section">
 
-    <h1>Afrova Premium</h1>
+    <h1>
+      Afrova Premium
+    </h1>
 
     <p style="color:#888;margin:10px 0 25px">
-      Enjoy Afrova with premium features.
+      Unlimited listening with Afrova Premium.
     </p>
-
 
     <div id="premiumStatusBox"></div>
 
-
     <div class="price-grid">
 
-      <div class="price-card">
+      <div id="studentCard"
+           class="price-card">
 
-        <h3>Student Premium</h3>
+        <h3>
+          Student Premium
+        </h3>
 
         <div class="price">
           ₦400/mo
@@ -904,19 +986,31 @@ button{cursor:pointer}
           Premium music experience for eligible students.
         </p>
 
+        <div class="plan-note">
+          Student eligibility requires school verification.
+        </div>
+
         <button
           class="primary full"
-          onclick="subscribe('Student Premium')"
-        >
+          onclick="subscribe('Student Premium')">
           Choose plan
+        </button>
+
+        <button
+          class="secondary full"
+          onclick="openStudentVerification()">
+          Student verification
         </button>
 
       </div>
 
 
-      <div class="price-card">
+      <div id="individualCard"
+           class="price-card">
 
-        <h3>Individual Premium</h3>
+        <h3>
+          Individual Premium
+        </h3>
 
         <div class="price">
           ₦600/mo
@@ -928,17 +1022,19 @@ button{cursor:pointer}
 
         <button
           class="primary full"
-          onclick="subscribe('Individual Premium')"
-        >
+          onclick="subscribe('Individual Premium')">
           Choose plan
         </button>
 
       </div>
 
 
-      <div class="price-card">
+      <div id="duoCard"
+           class="price-card">
 
-        <h3>Duo</h3>
+        <h3>
+          Duo
+        </h3>
 
         <div class="price">
           ₦1,200/mo
@@ -950,17 +1046,19 @@ button{cursor:pointer}
 
         <button
           class="primary full"
-          onclick="subscribe('Duo')"
-        >
+          onclick="subscribe('Duo')">
           Choose plan
         </button>
 
       </div>
 
 
-      <div class="price-card">
+      <div id="familyCard"
+           class="price-card">
 
-        <h3>Family</h3>
+        <h3>
+          Family
+        </h3>
 
         <div class="price">
           ₦1,500/mo
@@ -972,8 +1070,7 @@ button{cursor:pointer}
 
         <button
           class="primary full"
-          onclick="subscribe('Family')"
-        >
+          onclick="subscribe('Family')">
           Choose plan
         </button>
 
@@ -986,18 +1083,18 @@ button{cursor:pointer}
 </section>
 
 
-<!-- ARTIST STUDIO -->
-
-<section id="artistPage" class="hidden">
+<section id="artistPage"
+         class="hidden">
 
   <div class="section">
 
-    <h1>Artist Studio</h1>
+    <h1>
+      Artist Studio
+    </h1>
 
-    <div
-      id="artistStudioContent"
-      style="margin-top:20px"
-    ></div>
+    <div id="artistStudioContent"
+         style="margin-top:20px">
+    </div>
 
   </div>
 
@@ -1009,8 +1106,6 @@ button{cursor:pointer}
 
 </div>
 
-
-<!-- MOBILE NAV -->
 
 <div class="mobile-nav">
 
@@ -1037,53 +1132,49 @@ button{cursor:pointer}
 </div>
 
 
-<!-- PLAYER -->
-
 <div class="player">
 
-  <div id="playerCover" class="player-cover">
+  <div id="playerCover"
+       class="player-cover">
     ♫
   </div>
 
   <div class="player-info">
 
-    <div id="playerTitle" class="player-title">
+    <div id="playerTitle"
+         class="player-title">
       Nothing playing
     </div>
 
-    <div id="playerArtist" class="player-artist">
+    <div id="playerArtist"
+         class="player-artist">
       Afrova
     </div>
 
   </div>
 
-
   <div class="player-controls">
 
     <button
       class="control"
-      onclick="previousSong()"
-    >
+      onclick="previousSong()">
       ⏮
     </button>
 
     <button
       id="playButton"
       class="control main-control"
-      onclick="togglePlay()"
-    >
+      onclick="togglePlay()">
       ▶
     </button>
 
     <button
       class="control"
-      onclick="nextSong()"
-    >
+      onclick="nextSong()">
       ⏭
     </button>
 
   </div>
-
 
   <div class="progress-area">
 
@@ -1107,7 +1198,6 @@ button{cursor:pointer}
 
   </div>
 
-
   <input
     id="volume"
     class="volume"
@@ -1124,19 +1214,17 @@ button{cursor:pointer}
 
 <!-- ACCOUNT MODAL -->
 
-<div id="accountModal" class="modal-bg hidden">
+<div id="accountModal"
+     class="modal-bg hidden">
 
   <div class="modal">
 
     <button
       class="close"
-      onclick="closeModal('accountModal')"
-    >
+      onclick="closeModal('accountModal')">
       ×
     </button>
 
-
-    <!-- LOGIN -->
 
     <div id="loginForm">
 
@@ -1162,7 +1250,6 @@ button{cursor:pointer}
 
       </div>
 
-
       <div class="form-group">
 
         <label>Password</label>
@@ -1175,14 +1262,11 @@ button{cursor:pointer}
 
       </div>
 
-
       <button
         class="primary full"
-        onclick="handleLogin()"
-      >
+        onclick="handleLogin()">
         Log in
       </button>
-
 
       <div class="switch">
 
@@ -1197,20 +1281,19 @@ button{cursor:pointer}
     </div>
 
 
-    <!-- SIGNUP -->
-
-    <div id="signupForm" class="hidden">
+    <div id="signupForm"
+         class="hidden">
 
       <h2>
         Create your Afrova account
       </h2>
 
       <p class="description">
-        Create your account and verify your email with the code we send you.
+        Create your account. We'll send a confirmation
+        link to your email address.
       </p>
 
       <div id="signupError"></div>
-
 
       <div class="form-group">
 
@@ -1224,7 +1307,6 @@ button{cursor:pointer}
 
       </div>
 
-
       <div class="form-group">
 
         <label>Email</label>
@@ -1236,7 +1318,6 @@ button{cursor:pointer}
         >
 
       </div>
-
 
       <div class="form-group">
 
@@ -1250,14 +1331,11 @@ button{cursor:pointer}
 
       </div>
 
-
       <button
         class="primary full"
-        onclick="handleSignup()"
-      >
+        onclick="handleSignup()">
         Create account
       </button>
-
 
       <div class="switch">
 
@@ -1272,119 +1350,67 @@ button{cursor:pointer}
     </div>
 
 
-    <!-- VERIFY -->
-
-    <div id="verifyForm" class="hidden">
+    <div id="confirmationForm"
+         class="hidden">
 
       <h2>
-        Verify your email
+        Check your email
       </h2>
 
       <p class="description">
-
-        We sent a verification code to
-
-        <strong id="verifyEmailText"></strong>.
-
-        Enter the code below to activate your Afrova account.
-
+        We've sent a confirmation link to
+        <strong id="confirmationEmail"></strong>.
+        Open the email and click the confirmation button.
+        You will be returned to Afrova automatically.
       </p>
 
-      <div id="verifyMessage"></div>
-
-
-      <div class="code-box">
-
-        <input
-          class="code-input"
-          maxlength="1"
-          inputmode="numeric"
-          id="code1"
-        >
-
-        <input
-          class="code-input"
-          maxlength="1"
-          inputmode="numeric"
-          id="code2"
-        >
-
-        <input
-          class="code-input"
-          maxlength="1"
-          inputmode="numeric"
-          id="code3"
-        >
-
-        <input
-          class="code-input"
-          maxlength="1"
-          inputmode="numeric"
-          id="code4"
-        >
-
-        <input
-          class="code-input"
-          maxlength="1"
-          inputmode="numeric"
-          id="code5"
-        >
-
-        <input
-          class="code-input"
-          maxlength="1"
-          inputmode="numeric"
-          id="code6"
-        >
-
-      </div>
-
-
-      <button
-        class="primary full"
-        onclick="verifyEmailCode()"
-      >
-        Verify email
-      </button>
-
+      <div id="confirmationMessage"></div>
 
       <button
         class="secondary full"
-        style="margin-top:10px"
-        onclick="resendVerificationCode()"
-      >
-        Resend code
+        onclick="resendConfirmation()">
+        Resend confirmation email
       </button>
+
+      <div class="switch">
+
+        Already confirmed?
+
+        <button onclick="showLogin()">
+          Log in
+        </button>
+
+      </div>
 
     </div>
 
 
-    <!-- LOGGED ACCOUNT -->
-
-    <div id="loggedForm" class="hidden">
+    <div id="loggedForm"
+         class="hidden">
 
       <h2>
         Your Afrova Account
       </h2>
 
-      <div
-        id="accountDetails"
-        class="account-info"
-      ></div>
-
+      <div id="accountDetails"
+           class="account-info">
+      </div>
 
       <button
         class="primary full"
-        onclick="openArtistStudio();closeModal('accountModal')"
-      >
-        Artist Studio
+        onclick="showPage('premium');closeModal('accountModal')">
+        View Premium
       </button>
-
 
       <button
         class="secondary full"
-        onclick="logout()"
-      >
+        onclick="openArtistStudio();closeModal('accountModal')">
+        Artist Studio
+      </button>
+
+      <button
+        class="secondary full"
+        onclick="logout()">
         Log out
       </button>
 
@@ -1397,14 +1423,14 @@ button{cursor:pointer}
 
 <!-- ARTIST ACCOUNT MODAL -->
 
-<div id="artistAccountModal" class="modal-bg hidden">
+<div id="artistAccountModal"
+     class="modal-bg hidden">
 
   <div class="modal">
 
     <button
       class="close"
-      onclick="closeModal('artistAccountModal')"
-    >
+      onclick="closeModal('artistAccountModal')">
       ×
     </button>
 
@@ -1413,11 +1439,11 @@ button{cursor:pointer}
     </h2>
 
     <p class="description">
-      Create your artist profile so you can upload and manage your music on Afrova.
+      Create your artist profile so you can upload
+      and manage your music on Afrova.
     </p>
 
     <div id="artistAccountError"></div>
-
 
     <div class="form-group">
 
@@ -1431,7 +1457,6 @@ button{cursor:pointer}
 
     </div>
 
-
     <div class="form-group">
 
       <label>Bio</label>
@@ -1439,16 +1464,13 @@ button{cursor:pointer}
       <textarea
         id="artistBio"
         rows="4"
-        placeholder="Tell listeners about yourself"
-      ></textarea>
+        placeholder="Tell listeners about yourself"></textarea>
 
     </div>
 
-
     <button
       class="primary full"
-      onclick="createArtistAccount()"
-    >
+      onclick="createArtistAccount()">
       Create Artist Account
     </button>
 
@@ -1459,14 +1481,14 @@ button{cursor:pointer}
 
 <!-- UPLOAD MODAL -->
 
-<div id="uploadModal" class="modal-bg hidden">
+<div id="uploadModal"
+     class="modal-bg hidden">
 
   <div class="modal">
 
     <button
       class="close"
-      onclick="closeModal('uploadModal')"
-    >
+      onclick="closeModal('uploadModal')">
       ×
     </button>
 
@@ -1480,7 +1502,6 @@ button{cursor:pointer}
 
     <div id="uploadError"></div>
 
-
     <div class="form-group">
 
       <label>Song title</label>
@@ -1492,7 +1513,6 @@ button{cursor:pointer}
       >
 
     </div>
-
 
     <div class="form-group">
 
@@ -1536,7 +1556,6 @@ button{cursor:pointer}
 
     </div>
 
-
     <div class="form-group">
 
       <label>Audio file</label>
@@ -1548,7 +1567,6 @@ button{cursor:pointer}
       >
 
     </div>
-
 
     <div class="form-group">
 
@@ -1562,12 +1580,119 @@ button{cursor:pointer}
 
     </div>
 
+    <button
+      class="primary full"
+      onclick="uploadSong()">
+      Upload Song
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- STUDENT VERIFICATION MODAL -->
+
+<div id="studentVerificationModal"
+     class="modal-bg hidden">
+
+  <div class="modal">
+
+    <button
+      class="close"
+      onclick="closeModal('studentVerificationModal')">
+      ×
+    </button>
+
+    <h2>
+      Student Verification
+    </h2>
+
+    <p class="description">
+      Student Premium requires proof of current student
+      eligibility. Use an admission letter or school ID.
+    </p>
+
+    <div id="studentVerificationMessage"></div>
+
+    <div class="form-group">
+
+      <label>Document type</label>
+
+      <select id="studentDocumentType">
+
+        <option value="school_id">
+          School ID card
+        </option>
+
+        <option value="admission_letter">
+          Admission letter
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Document</label>
+
+      <input
+        id="studentDocument"
+        type="file"
+        accept=".jpg,.jpeg,.png,.pdf"
+      >
+
+    </div>
 
     <button
       class="primary full"
-      onclick="uploadSong()"
-    >
-      Upload Song
+      onclick="submitStudentVerification()">
+      Submit for verification
+    </button>
+
+    <p class="plan-note">
+      Your document should only be submitted through
+      the secure verification system configured by Afrova.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- PREMIUM LIMIT MODAL -->
+
+<div id="premiumLimitModal"
+     class="modal-bg hidden">
+
+  <div class="modal">
+
+    <button
+      class="close"
+      onclick="closeModal('premiumLimitModal')">
+      ×
+    </button>
+
+    <h2>
+      Your free listening time has ended
+    </h2>
+
+    <p class="description">
+      You've used today's free listening allowance.
+      Upgrade to Afrova Premium to continue listening.
+    </p>
+
+    <button
+      class="primary full"
+      onclick="closeModal('premiumLimitModal');showPage('premium')">
+      View Premium
+    </button>
+
+    <button
+      class="secondary full"
+      onclick="closeModal('premiumLimitModal')">
+      Maybe later
     </button>
 
   </div>
@@ -1577,9 +1702,9 @@ button{cursor:pointer}
 
 <script>
 
-/* ================================
+/* =====================================================
    SUPABASE
-================================ */
+===================================================== */
 
 const SUPABASE_URL =
   "https://eeurywspkbqbxayoyexi.supabase.co";
@@ -1594,9 +1719,58 @@ const supabaseClient =
   );
 
 
-/* ================================
-   APP DATA
-================================ */
+/* =====================================================
+   AFROVA SETTINGS
+===================================================== */
+
+const FREE_DAILY_MINUTES = 30;
+
+
+/*
+  IMPORTANT:
+  These are the Paystack payment links supplied for Afrova.
+*/
+
+const PAYSTACK_LINKS = {
+
+  "Student Premium":
+    "https://paystack.shop/pay/k0jf1wizby",
+
+  "Individual Premium":
+    "https://paystack.shop/pay/w0ov-s1tir",
+
+  "Duo":
+    "https://paystack.shop/pay/7a78ikzfmy",
+
+  "Family":
+    "https://paystack.shop/pay/47wwryj73v"
+
+};
+
+
+/*
+  The confirmation redirect is automatically based
+  on the current Afrova page.
+
+  Make sure this URL is also present in:
+  Supabase Dashboard
+  → Authentication
+  → URL Configuration
+  → Redirect URLs
+*/
+
+function getEmailRedirectUrl(){
+
+  return window.location.href
+    .split("#")[0]
+    .split("?")[0];
+
+}
+
+
+/* =====================================================
+   DEMO MUSIC
+===================================================== */
 
 const demoSongs = [
 
@@ -1663,60 +1837,51 @@ const demoSongs = [
 ];
 
 
-let songs=[...demoSongs];
+let songs = [...demoSongs];
 
-let likedSongs=[];
+let likedSongs = [];
 
-let currentSongIndex=-1;
+let currentSongIndex = -1;
 
-let audio=new Audio();
+let audio = new Audio();
 
-let currentUser=null;
+let currentUser = null;
 
-let currentArtist=null;
-
-let pendingVerificationEmail="";
-
-let pendingDisplayName="";
+let currentArtist = null;
 
 
-/* ================================
-   FREE / PREMIUM SYSTEM
-================================ */
+/* =====================================================
+   SUBSCRIPTION STATE
+===================================================== */
 
-/*
-  Change this number later if you want.
-  Example:
-  30 = 30 minutes
-  60 = 1 hour
-*/
+let subscriptionPlan = "free";
 
-const FREE_DAILY_MINUTES=30;
+let subscriptionStatus = "inactive";
 
-let subscriptionPlan="free";
-
-let subscriptionStatus="inactive";
-
-let freeListeningSeconds=Number(
-  localStorage.getItem(
-    "afrova_free_listening_seconds"
-  ) || 0
-);
-
-let freeListeningDate=
-  localStorage.getItem(
-    "afrova_free_listening_date"
-  ) || "";
-
-let freeTimer=null;
+let subscriptionPeriodEnd = null;
 
 
-/* ================================
+/* =====================================================
+   FREE LISTENING STATE
+===================================================== */
+
+let freeListeningSeconds = 0;
+
+let freeListeningDate = "";
+
+let freeTimer = null;
+
+let subscriptionRefreshTimer = null;
+
+
+/* =====================================================
    HELPERS
-================================ */
+===================================================== */
 
 function $(id){
+
   return document.getElementById(id);
+
 }
 
 
@@ -1728,18 +1893,29 @@ function escapeHtml(value){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+
 }
 
 
 function showModal(id){
 
-  $(id).classList.remove("hidden");
+  const element = $(id);
+
+  if(element){
+    element.classList.remove("hidden");
+  }
+
 }
 
 
 function closeModal(id){
 
-  $(id).classList.add("hidden");
+  const element = $(id);
+
+  if(element){
+    element.classList.add("hidden");
+  }
+
 }
 
 
@@ -1749,85 +1925,207 @@ function showMessage(
   type="notice"
 ){
 
-  $(id).innerHTML=
-    `<div class="${type}">${escapeHtml(message)}</div>`;
+  const element = $(id);
+
+  if(!element) return;
+
+  element.innerHTML =
+    `<div class="${type}">
+      ${escapeHtml(message)}
+    </div>`;
+
 }
 
 
 function clearMessage(id){
 
-  $(id).innerHTML="";
+  const element = $(id);
+
+  if(element){
+    element.innerHTML = "";
+  }
+
 }
 
 
 function formatTime(seconds){
 
-  if(!seconds || isNaN(seconds)){
+  if(
+    !seconds ||
+    isNaN(seconds) ||
+    seconds < 0
+  ){
     return "0:00";
   }
 
-  const mins=
-    Math.floor(seconds/60);
+  const mins =
+    Math.floor(seconds / 60);
 
-  const secs=
-    Math.floor(seconds%60)
+  const secs =
+    Math.floor(seconds % 60)
       .toString()
       .padStart(2,"0");
 
   return `${mins}:${secs}`;
+
 }
 
 
-/* ================================
-   FREE TIME
-================================ */
+/* =====================================================
+   USER-SPECIFIC FREE LISTENING STORAGE
+===================================================== */
 
-function resetDailyFreeListening(){
+function getFreeStorageKey(){
 
-  const today=
+  if(!currentUser){
+    return null;
+  }
+
+  return `afrova_free_listening_${currentUser.id}`;
+
+}
+
+
+function loadFreeListeningState(){
+
+  if(!currentUser){
+
+    freeListeningSeconds = 0;
+    freeListeningDate = "";
+
+    return;
+  }
+
+
+  const key =
+    getFreeStorageKey();
+
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem(key) || "null"
+    );
+
+
+  const today =
     new Date()
       .toISOString()
       .slice(0,10);
 
-  if(freeListeningDate!==today){
 
-    freeListeningDate=today;
+  if(
+    saved &&
+    saved.date === today
+  ){
 
-    freeListeningSeconds=0;
+    freeListeningDate =
+      saved.date;
 
-    localStorage.setItem(
-      "afrova_free_listening_date",
-      today
-    );
+    freeListeningSeconds =
+      Number(saved.seconds || 0);
 
-    localStorage.setItem(
-      "afrova_free_listening_seconds",
-      "0"
-    );
+  }else{
+
+    freeListeningDate = today;
+
+    freeListeningSeconds = 0;
+
+    saveFreeListeningState();
+
   }
+
+}
+
+
+function saveFreeListeningState(){
+
+  const key =
+    getFreeStorageKey();
+
+  if(!key) return;
+
+
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+
+      date:
+        freeListeningDate,
+
+      seconds:
+        freeListeningSeconds
+
+    })
+  );
+
+}
+
+
+function resetDailyFreeListening(){
+
+  loadFreeListeningState();
+
 }
 
 
 function getRemainingFreeSeconds(){
 
-  resetDailyFreeListening();
+  if(!currentUser){
+    return 0;
+  }
 
-  const maximum=
-    FREE_DAILY_MINUTES*60;
+
+  loadFreeListeningState();
+
+
+  const maximum =
+    FREE_DAILY_MINUTES * 60;
+
 
   return Math.max(
     0,
-    maximum-freeListeningSeconds
+    maximum - freeListeningSeconds
   );
+
 }
 
 
+/* =====================================================
+   PREMIUM
+===================================================== */
+
 function isPremium(){
 
-  return(
-    subscriptionStatus==="active" &&
-    subscriptionPlan!=="free"
-  );
+  if(
+    subscriptionStatus !== "active" ||
+    subscriptionPlan === "free"
+  ){
+    return false;
+  }
+
+
+  if(subscriptionPeriodEnd){
+
+    const end =
+      new Date(
+        subscriptionPeriodEnd
+      ).getTime();
+
+
+    if(
+      !isNaN(end) &&
+      end <= Date.now()
+    ){
+
+      return false;
+
+    }
+
+  }
+
+
+  return true;
+
 }
 
 
@@ -1837,39 +2135,55 @@ function canListen(){
     return false;
   }
 
+
   if(isPremium()){
     return true;
   }
 
-  return getRemainingFreeSeconds()>0;
+
+  return getRemainingFreeSeconds() > 0;
+
 }
 
 
-/* ================================
-   SUBSCRIPTION
-================================ */
+/* =====================================================
+   SUBSCRIPTION LOADING
+===================================================== */
 
 async function loadSubscription(){
 
   if(!currentUser){
 
-    subscriptionPlan="free";
+    subscriptionPlan = "free";
 
-    subscriptionStatus="inactive";
+    subscriptionStatus = "inactive";
+
+    subscriptionPeriodEnd = null;
 
     updatePlanBadge();
 
     renderPremiumStatus();
 
     return;
+
   }
 
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("subscriptions")
-      .select("plan,status")
-      .eq("user_id",currentUser.id)
+      .select(`
+        plan,
+        status,
+        current_period_end
+      `)
+      .eq(
+        "user_id",
+        currentUser.id
+      )
       .maybeSingle();
 
 
@@ -1880,180 +2194,433 @@ async function loadSubscription(){
       error.message
     );
 
-    subscriptionPlan="free";
 
-    subscriptionStatus="inactive";
+    subscriptionPlan = "free";
 
-  }else if(
-    data &&
-    data.status==="active" &&
-    data.plan!=="free"
-  ){
+    subscriptionStatus = "inactive";
 
-    subscriptionPlan=data.plan;
+    subscriptionPeriodEnd = null;
 
-    subscriptionStatus=data.status;
+  }else if(data){
+
+    subscriptionPlan =
+      data.plan || "free";
+
+    subscriptionStatus =
+      data.status || "inactive";
+
+    subscriptionPeriodEnd =
+      data.current_period_end || null;
 
   }else{
 
-    subscriptionPlan="free";
+    subscriptionPlan = "free";
 
-    subscriptionStatus=
-      data?.status || "inactive";
+    subscriptionStatus = "inactive";
+
+    subscriptionPeriodEnd = null;
+
+  }
+
+
+  if(!isPremium()){
+
+    if(
+      subscriptionStatus === "active" &&
+      subscriptionPlan !== "free" &&
+      subscriptionPeriodEnd
+    ){
+
+      const end =
+        new Date(
+          subscriptionPeriodEnd
+        ).getTime();
+
+
+      if(
+        !isNaN(end) &&
+        end <= Date.now()
+      ){
+
+        subscriptionStatus = "expired";
+
+      }
+
+    }
+
   }
 
 
   updatePlanBadge();
 
   renderPremiumStatus();
+
+  updatePremiumCards();
+
 }
 
 
+/* =====================================================
+   PLAN BADGE
+===================================================== */
+
 function updatePlanBadge(){
 
-  const badge=$("planBadge");
+  const badge =
+    $("planBadge");
 
   if(!badge) return;
 
 
   if(isPremium()){
 
-    badge.textContent="★ PREMIUM";
+    badge.textContent =
+      `★ PREMIUM`;
 
-    badge.className=
+    badge.className =
       "plan-badge premium";
 
   }else{
 
-    badge.textContent="FREE";
+    badge.textContent =
+      "FREE";
 
-    badge.className=
+    badge.className =
       "plan-badge free";
+
   }
+
 }
 
 
+/* =====================================================
+   PREMIUM PAGE
+===================================================== */
+
 function renderPremiumStatus(){
 
-  const box=$("premiumStatusBox");
+  const box =
+    $("premiumStatusBox");
 
   if(!box) return;
 
 
   if(!currentUser){
 
-    box.innerHTML=`
+    box.innerHTML = `
+
       <div class="premium-box">
 
-        <h3>FREE</h3>
+        <h3>
+          FREE
+        </h3>
 
         <p>
-          Log in or create an account to start listening.
+          Create or log in to an Afrova account
+          to start listening.
         </p>
 
       </div>
+
     `;
 
     return;
+
   }
 
 
   if(isPremium()){
 
-    box.innerHTML=`
+    const endText =
+      subscriptionPeriodEnd
+        ? `<p>
+             Current period ends:
+             <strong>
+               ${escapeHtml(
+                 new Date(
+                   subscriptionPeriodEnd
+                 ).toLocaleDateString()
+               )}
+             </strong>
+           </p>`
+        : "";
+
+
+    box.innerHTML = `
+
       <div class="premium-box">
 
-        <h3>★ PREMIUM ACTIVE</h3>
+        <h3>
+          ★ PREMIUM ACTIVE
+        </h3>
 
         <p>
-          Your ${escapeHtml(subscriptionPlan)}
-          subscription is active. You have unlimited listening access.
+          Your
+          <strong>
+            ${escapeHtml(subscriptionPlan)}
+          </strong>
+          subscription is active.
         </p>
 
+        <p>
+          You have unlimited listening access.
+        </p>
+
+        ${endText}
+
+        <button
+          class="secondary"
+          style="margin-top:12px"
+          onclick="showPlanChange()">
+          Change plan
+        </button>
+
       </div>
+
     `;
 
     return;
+
   }
 
 
-  const remaining=
+  const remaining =
     getRemainingFreeSeconds();
 
-  const minutes=
-    Math.floor(remaining/60);
 
-  const seconds=
-    remaining%60;
+  const minutes =
+    Math.floor(
+      remaining / 60
+    );
 
-  box.innerHTML=`
+
+  const seconds =
+    remaining % 60;
+
+
+  let message =
+    "Upgrade to Afrova Premium for unlimited listening.";
+
+
+  if(
+    subscriptionStatus === "cancelled"
+  ){
+
+    message =
+      "Your Premium subscription is no longer active. Choose a plan below to subscribe again.";
+
+  }
+
+
+  if(
+    subscriptionStatus === "expired"
+  ){
+
+    message =
+      "Your Premium subscription has expired. Choose a plan below to subscribe again.";
+
+  }
+
+
+  box.innerHTML = `
+
     <div class="premium-box">
 
-      <h3>FREE PLAN</h3>
+      <h3>
+        FREE PLAN
+      </h3>
 
       <p>
         You have approximately
-        <strong>${minutes}m ${seconds}s</strong>
+        <strong>
+          ${minutes}m ${seconds}s
+        </strong>
         of free listening remaining today.
       </p>
 
-      <p style="margin-top:8px">
-        Upgrade to Afrova Premium for unlimited listening.
+      <p>
+        ${escapeHtml(message)}
       </p>
 
     </div>
+
   `;
+
 }
 
 
-/* ================================
+/* =====================================================
+   PREMIUM CARD STATE
+===================================================== */
+
+function updatePremiumCards(){
+
+  const cards = [
+
+    {
+      id:"studentCard",
+      plan:"student"
+    },
+
+    {
+      id:"individualCard",
+      plan:"individual"
+    },
+
+    {
+      id:"duoCard",
+      plan:"duo"
+    },
+
+    {
+      id:"familyCard",
+      plan:"family"
+    }
+
+  ];
+
+
+  cards.forEach(item=>{
+
+    const card =
+      $(item.id);
+
+    if(!card) return;
+
+
+    card.classList.remove(
+      "active"
+    );
+
+
+    if(
+      isPremium() &&
+      subscriptionPlan === item.plan
+    ){
+
+      card.classList.add(
+        "active"
+      );
+
+    }
+
+  });
+
+}
+
+
+/* =====================================================
+   CHANGE PLAN
+===================================================== */
+
+function showPlanChange(){
+
+  if(!currentUser){
+
+    requireLogin();
+
+    return;
+
+  }
+
+
+  const box =
+    $("premiumStatusBox");
+
+
+  if(!box) return;
+
+
+  box.innerHTML = `
+
+    <div class="premium-box">
+
+      <h3>
+        Change your Premium plan
+      </h3>
+
+      <p>
+        Select another plan below.
+        Your existing subscription remains controlled
+        by Paystack until its billing state changes.
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
    FREE TIMER
-================================ */
+===================================================== */
 
 function startFreeTimer(){
 
   stopFreeTimer();
 
-  if(!currentUser) return;
 
-  if(isPremium()) return;
-
-  if(!canListen()){
-
-    showPremiumLimit();
-
+  if(!currentUser){
     return;
   }
 
 
-  freeTimer=setInterval(()=>{
-
-    if(audio.paused){
-      return;
-    }
+  if(isPremium()){
+    return;
+  }
 
 
-    freeListeningSeconds++;
+  if(
+    getRemainingFreeSeconds() <= 0
+  ){
+
+    showPremiumLimit();
+
+    return;
+
+  }
 
 
-    localStorage.setItem(
-      "afrova_free_listening_seconds",
-      String(freeListeningSeconds)
-    );
+  freeTimer =
+    setInterval(()=>{
+
+      if(audio.paused){
+        return;
+      }
 
 
-    if(getRemainingFreeSeconds()<=0){
+      if(isPremium()){
 
-      stopFreeTimer();
+        stopFreeTimer();
 
-      audio.pause();
+        return;
 
-      $("playButton").textContent="▶";
+      }
 
-      showPremiumLimit();
-    }
 
-  },1000);
+      freeListeningSeconds++;
+
+      saveFreeListeningState();
+
+
+      if(
+        getRemainingFreeSeconds() <= 0
+      ){
+
+        stopFreeTimer();
+
+        audio.pause();
+
+        $("playButton").textContent =
+          "▶";
+
+        showPremiumLimit();
+
+      }
+
+    },1000);
+
 }
 
 
@@ -2061,10 +2628,14 @@ function stopFreeTimer(){
 
   if(freeTimer){
 
-    clearInterval(freeTimer);
+    clearInterval(
+      freeTimer
+    );
 
-    freeTimer=null;
+    freeTimer = null;
+
   }
+
 }
 
 
@@ -2072,25 +2643,174 @@ function showPremiumLimit(){
 
   audio.pause();
 
-  $("playButton").textContent="▶";
+  $("playButton").textContent =
+    "▶";
 
-  alert(
-    "Your free listening time has ended for today. Subscribe to Afrova Premium to continue listening."
+
+  showModal(
+    "premiumLimitModal"
   );
 
-  showPage("premium");
-
-  renderPremiumStatus();
 }
 
 
-/* ================================
+/* =====================================================
+   PAYSTACK
+===================================================== */
+
+function subscribe(plan){
+
+  if(!requireLogin()){
+    return;
+  }
+
+
+  if(
+    plan === "Student Premium"
+  ){
+
+    openStudentVerification();
+
+    return;
+
+  }
+
+
+  const link =
+    PAYSTACK_LINKS[plan];
+
+
+  if(!link){
+
+    alert(
+      "This Premium plan is not configured yet."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Paystack collects the customer's email.
+    The user should use the SAME email as their Afrova
+    account so the webhook can match the payment
+    to the correct Afrova account.
+  */
+
+  const confirmed =
+    confirm(
+      `${plan}\n\n` +
+      `You will be redirected to Paystack to complete your subscription.\n\n` +
+      `Use this Afrova account email:\n` +
+      `${currentUser.email || ""}\n\n` +
+      `Continue?`
+    );
+
+
+  if(!confirmed){
+    return;
+  }
+
+
+  window.location.href =
+    link;
+
+}
+
+
+/* =====================================================
+   STUDENT VERIFICATION
+===================================================== */
+
+function openStudentVerification(){
+
+  if(!requireLogin()){
+    return;
+  }
+
+
+  clearMessage(
+    "studentVerificationMessage"
+  );
+
+
+  showModal(
+    "studentVerificationModal"
+  );
+
+}
+
+
+/*
+  Student document processing is intentionally not pretending
+  to be active yet.
+
+  It requires a dedicated PRIVATE Supabase Storage bucket
+  and a student_verifications table.
+
+  The existing public music/covers buckets should NOT be used
+  for school documents.
+*/
+
+async function submitStudentVerification(){
+
+  if(!currentUser){
+
+    closeModal(
+      "studentVerificationModal"
+    );
+
+    requireLogin();
+
+    return;
+
+  }
+
+
+  const file =
+    $("studentDocument").files[0];
+
+
+  const type =
+    $("studentDocumentType").value;
+
+
+  clearMessage(
+    "studentVerificationMessage"
+  );
+
+
+  if(!file){
+
+    showMessage(
+      "studentVerificationMessage",
+      "Please choose your school ID or admission letter.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "studentVerificationMessage",
+    "Student verification storage is not enabled yet. The private verification table and storage bucket must be created before school documents can be uploaded.",
+    "notice"
+  );
+
+}
+
+
+/* =====================================================
    PAGE NAVIGATION
-================================ */
+===================================================== */
 
 function showPage(page){
 
-  const pages=[
+  const pages = [
+
     "home",
     "search",
     "liked",
@@ -2098,149 +2818,195 @@ function showPage(page){
     "albums",
     "premium",
     "artist"
+
   ];
 
 
   pages.forEach(name=>{
 
-    const el=$(name+"Page");
+    const el =
+      $(name + "Page");
 
     if(el){
-      el.classList.add("hidden");
+      el.classList.add(
+        "hidden"
+      );
     }
 
   });
 
 
-  const target=$(page+"Page");
+  const target =
+    $(page + "Page");
+
 
   if(target){
-    target.classList.remove("hidden");
+
+    target.classList.remove(
+      "hidden"
+    );
+
   }
 
 
-  if(page==="liked"){
+  if(page === "liked"){
     renderLikedSongs();
   }
 
 
-  if(page==="artist"){
+  if(page === "artist"){
     renderArtistStudio();
   }
 
 
-  if(page==="premium"){
+  if(page === "premium"){
     renderPremiumStatus();
+    updatePremiumCards();
   }
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(btn=>{
+      btn.classList.remove(
+        "active"
+      );
+    });
 
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
+
 }
 
 
-/* ================================
-   ACCOUNT
-================================ */
+/* =====================================================
+   ACCOUNT UI
+===================================================== */
 
 async function openAccount(){
 
-  const {
-    data:{session}
-  }=
-    await supabaseClient.auth.getSession();
-
-
-  if(session?.user){
-
-    currentUser=session.user;
+  if(currentUser){
 
     await loadSubscription();
 
     renderLoggedAccount();
 
-    showModal("accountModal");
+    showModal(
+      "accountModal"
+    );
 
-  }else{
+    return;
 
-    showLogin();
-
-    showModal("accountModal");
   }
+
+
+  showLogin();
+
+  showModal(
+    "accountModal"
+  );
+
 }
 
 
 function showLogin(){
 
-  $("loginForm").classList.remove("hidden");
+  $("loginForm")
+    .classList.remove("hidden");
 
-  $("signupForm").classList.add("hidden");
+  $("signupForm")
+    .classList.add("hidden");
 
-  $("verifyForm").classList.add("hidden");
+  $("confirmationForm")
+    .classList.add("hidden");
 
-  $("loggedForm").classList.add("hidden");
+  $("loggedForm")
+    .classList.add("hidden");
 
-  clearMessage("loginError");
+  clearMessage(
+    "loginError"
+  );
+
 }
 
 
 function showSignup(){
 
-  $("loginForm").classList.add("hidden");
+  $("loginForm")
+    .classList.add("hidden");
 
-  $("signupForm").classList.remove("hidden");
+  $("signupForm")
+    .classList.remove("hidden");
 
-  $("verifyForm").classList.add("hidden");
+  $("confirmationForm")
+    .classList.add("hidden");
 
-  $("loggedForm").classList.add("hidden");
+  $("loggedForm")
+    .classList.add("hidden");
 
-  clearMessage("signupError");
+  clearMessage(
+    "signupError"
+  );
+
 }
 
 
-function showVerification(email){
+function showConfirmation(email){
 
-  $("loginForm").classList.add("hidden");
+  $("loginForm")
+    .classList.add("hidden");
 
-  $("signupForm").classList.add("hidden");
+  $("signupForm")
+    .classList.add("hidden");
 
-  $("verifyForm").classList.remove("hidden");
+  $("confirmationForm")
+    .classList.remove("hidden");
 
-  $("loggedForm").classList.add("hidden");
+  $("loggedForm")
+    .classList.add("hidden");
 
-  $("verifyEmailText").textContent=email;
+  $("confirmationEmail")
+    .textContent = email;
 
-
-  setTimeout(()=>{
-
-    $("code1").focus();
-
-  },100);
 }
 
 
-/* ================================
+/* =====================================================
    SIGN UP
-================================ */
+===================================================== */
 
 async function handleSignup(){
 
-  const name=
-    $("signupName").value.trim();
-
-  const email=
-    $("signupEmail").value.trim();
-
-  const password=
-    $("signupPassword").value;
+  const name =
+    $("signupName")
+      .value
+      .trim();
 
 
-  clearMessage("signupError");
+  const email =
+    $("signupEmail")
+      .value
+      .trim();
 
 
-  if(!name || !email || !password){
+  const password =
+    $("signupPassword")
+      .value;
+
+
+  clearMessage(
+    "signupError"
+  );
+
+
+  if(
+    !name ||
+    !email ||
+    !password
+  ){
 
     showMessage(
       "signupError",
@@ -2249,10 +3015,11 @@ async function handleSignup(){
     );
 
     return;
+
   }
 
 
-  if(password.length<6){
+  if(password.length < 6){
 
     showMessage(
       "signupError",
@@ -2261,10 +3028,18 @@ async function handleSignup(){
     );
 
     return;
+
   }
 
 
-  const {data,error}=
+  const redirectUrl =
+    getEmailRedirectUrl();
+
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth.signUp({
 
       email,
@@ -2272,9 +3047,14 @@ async function handleSignup(){
       password,
 
       options:{
+
         data:{
           display_name:name
-        }
+        },
+
+        emailRedirectTo:
+          redirectUrl
+
       }
 
     });
@@ -2289,156 +3069,89 @@ async function handleSignup(){
     );
 
     return;
+
   }
 
 
-  pendingVerificationEmail=email;
+  /*
+    With email confirmation enabled, Supabase normally
+    returns a user without an active session.
+  */
 
-  pendingDisplayName=name;
+  if(data?.session){
 
+    currentUser =
+      data.user;
 
-  showVerification(email);
-
-
-  showMessage(
-    "verifyMessage",
-    "Check your email for the Afrova verification code.",
-    "notice"
-  );
-}
-
-
-/* ================================
-   VERIFY EMAIL
-================================ */
-
-function getVerificationCode(){
-
-  return[
-    $("code1").value,
-    $("code2").value,
-    $("code3").value,
-    $("code4").value,
-    $("code5").value,
-    $("code6").value
-  ].join("");
-}
-
-
-async function verifyEmailCode(){
-
-  const email=
-    pendingVerificationEmail;
-
-  const token=
-    getVerificationCode();
-
-
-  clearMessage("verifyMessage");
-
-
-  if(!email){
-
-    showMessage(
-      "verifyMessage",
-      "Your verification session has expired. Please create the account again.",
-      "error"
+    await createProfileIfNeeded(
+      currentUser
     );
 
-    return;
-  }
+    await loadSubscription();
 
-
-  if(token.length<6){
-
-    showMessage(
-      "verifyMessage",
-      "Please enter the complete verification code.",
-      "error"
+    closeModal(
+      "accountModal"
     );
-
-    return;
-  }
-
-
-  const {data,error}=
-    await supabaseClient.auth.verifyOtp({
-
-      email,
-
-      token,
-
-      type:"email"
-
-    });
-
-
-  if(error){
-
-    showMessage(
-      "verifyMessage",
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  currentUser=data.user;
-
-
-  resetDailyFreeListening();
-
-  await createProfileIfNeeded(
-    currentUser
-  );
-
-  await loadSubscription();
-
-
-  showMessage(
-    "verifyMessage",
-    "Email verified successfully. Welcome to Afrova!",
-    "notice"
-  );
-
-
-  setTimeout(()=>{
-
-    closeModal("accountModal");
-
-    showPage("home");
 
     updateAccountButton();
 
-    loadPublishedSongs();
-
-  },700);
-}
-
-
-/* ================================
-   RESEND CODE
-================================ */
-
-async function resendVerificationCode(){
-
-  const email=
-    pendingVerificationEmail;
-
-
-  if(!email){
     return;
+
   }
 
 
-  const {error}=
+  showConfirmation(
+    email
+  );
+
+
+  showMessage(
+    "confirmationMessage",
+    "Confirmation email sent. Open it and click the confirmation link.",
+    "notice"
+  );
+
+}
+
+
+/* =====================================================
+   RESEND CONFIRMATION
+===================================================== */
+
+async function resendConfirmation(){
+
+  const email =
+    $("signupEmail")
+      .value
+      .trim();
+
+
+  if(!email){
+
+    showMessage(
+      "confirmationMessage",
+      "Enter your email address again.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
     await supabaseClient.auth.resend({
 
       type:"signup",
 
-      email
+      email,
+
+      options:{
+        emailRedirectTo:
+          getEmailRedirectUrl()
+      }
 
     });
 
@@ -2446,40 +3159,51 @@ async function resendVerificationCode(){
   if(error){
 
     showMessage(
-      "verifyMessage",
+      "confirmationMessage",
       error.message,
       "error"
     );
 
     return;
+
   }
 
 
   showMessage(
-    "verifyMessage",
-    "A new verification code has been sent.",
+    "confirmationMessage",
+    "A new confirmation email has been sent.",
     "notice"
   );
+
 }
 
 
-/* ================================
+/* =====================================================
    LOGIN
-================================ */
+===================================================== */
 
 async function handleLogin(){
 
-  const email=
-    $("loginEmail").value.trim();
-
-  const password=
-    $("loginPassword").value;
-
-
-  clearMessage("loginError");
+  const email =
+    $("loginEmail")
+      .value
+      .trim();
 
 
-  if(!email || !password){
+  const password =
+    $("loginPassword")
+      .value;
+
+
+  clearMessage(
+    "loginError"
+  );
+
+
+  if(
+    !email ||
+    !password
+  ){
 
     showMessage(
       "loginError",
@@ -2488,10 +3212,14 @@ async function handleLogin(){
     );
 
     return;
+
   }
 
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth.signInWithPassword({
 
       email,
@@ -2510,47 +3238,60 @@ async function handleLogin(){
     );
 
     return;
+
   }
 
 
-  currentUser=data.user;
+  currentUser =
+    data.user;
 
 
   resetDailyFreeListening();
+
 
   await createProfileIfNeeded(
     currentUser
   );
 
+
   await loadSubscription();
 
 
-  closeModal("accountModal");
+  closeModal(
+    "accountModal"
+  );
 
-  showPage("home");
 
   updateAccountButton();
 
   await loadPublishedSongs();
+
+  showPage("home");
+
 }
 
 
-/* ================================
+/* =====================================================
    PROFILE
-================================ */
+===================================================== */
 
 async function createProfileIfNeeded(user){
 
-  if(!user) return;
+  if(!user){
+    return;
+  }
 
 
-  const name=
+  const name =
     user.user_metadata?.display_name ||
     user.user_metadata?.name ||
     "Afrova User";
 
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("profiles")
       .upsert({
@@ -2572,35 +3313,58 @@ async function createProfileIfNeeded(user){
       "Profile:",
       error.message
     );
+
   }
 
 
   return data;
+
 }
 
 
-/* ================================
+/* =====================================================
    LOGOUT
-================================ */
+===================================================== */
 
 async function logout(){
 
   stopFreeTimer();
 
 
+  if(subscriptionRefreshTimer){
+
+    clearInterval(
+      subscriptionRefreshTimer
+    );
+
+    subscriptionRefreshTimer =
+      null;
+
+  }
+
+
   await supabaseClient.auth.signOut();
 
 
-  currentUser=null;
+  currentUser = null;
 
-  currentArtist=null;
+  currentArtist = null;
 
-  subscriptionPlan="free";
+  subscriptionPlan = "free";
 
-  subscriptionStatus="inactive";
+  subscriptionStatus = "inactive";
+
+  subscriptionPeriodEnd = null;
+
+  freeListeningSeconds = 0;
+
+  freeListeningDate = "";
 
 
-  closeModal("accountModal");
+  closeModal(
+    "accountModal"
+  );
+
 
   updateAccountButton();
 
@@ -2609,24 +3373,28 @@ async function logout(){
   renderPremiumStatus();
 
   showPage("home");
+
 }
 
 
-/* ================================
-   SESSION
-================================ */
+/* =====================================================
+   AUTH SESSION
+===================================================== */
 
 async function checkLogin(){
 
   const {
-    data:{session}
-  }=
+    data:{
+      session
+    }
+  } =
     await supabaseClient.auth.getSession();
 
 
   if(session?.user){
 
-    currentUser=session.user;
+    currentUser =
+      session.user;
 
 
     resetDailyFreeListening();
@@ -2641,11 +3409,14 @@ async function checkLogin(){
 
   }else{
 
-    currentUser=null;
+    currentUser = null;
 
-    subscriptionPlan="free";
+    subscriptionPlan = "free";
 
-    subscriptionStatus="inactive";
+    subscriptionStatus = "inactive";
+
+    subscriptionPeriodEnd = null;
+
   }
 
 
@@ -2656,13 +3427,64 @@ async function checkLogin(){
   renderPremiumStatus();
 
   await loadPublishedSongs();
+
+
+  /*
+    After Paystack returns, the webhook may take a moment
+    to update Supabase. Refresh the subscription periodically
+    while the page is open.
+  */
+
+  startSubscriptionRefresh();
+
 }
 
+
+/* =====================================================
+   SUBSCRIPTION REFRESH
+===================================================== */
+
+function startSubscriptionRefresh(){
+
+  if(subscriptionRefreshTimer){
+
+    clearInterval(
+      subscriptionRefreshTimer
+    );
+
+  }
+
+
+  if(!currentUser){
+    return;
+  }
+
+
+  subscriptionRefreshTimer =
+    setInterval(async()=>{
+
+      if(!currentUser){
+        return;
+      }
+
+
+      await loadSubscription();
+
+      updateAccountButton();
+
+    },15000);
+
+}
+
+
+/* =====================================================
+   AUTH STATE CHANGE
+===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
   async(event,session)=>{
 
-    currentUser=
+    currentUser =
       session?.user || null;
 
 
@@ -2670,92 +3492,130 @@ supabaseClient.auth.onAuthStateChange(
 
       resetDailyFreeListening();
 
+      await createProfileIfNeeded(
+        currentUser
+      );
+
       await loadSubscription();
+
+      startSubscriptionRefresh();
 
     }else{
 
-      subscriptionPlan="free";
+      subscriptionPlan = "free";
 
-      subscriptionStatus="inactive";
+      subscriptionStatus = "inactive";
+
+      subscriptionPeriodEnd = null;
 
       stopFreeTimer();
 
-      updatePlanBadge();
-
-      renderPremiumStatus();
     }
 
 
     updateAccountButton();
 
+    updatePlanBadge();
+
+    renderPremiumStatus();
+
   }
 );
 
 
+/* =====================================================
+   ACCOUNT BUTTON
+===================================================== */
+
 function updateAccountButton(){
 
-  const btn=$("accountButton");
+  const btn =
+    $("accountButton");
+
+
+  if(!btn){
+    return;
+  }
+
 
   if(currentUser){
 
-    const name=
+    const name =
       currentUser.user_metadata?.display_name ||
       currentUser.email?.split("@")[0] ||
       "Account";
 
 
-    btn.textContent=name;
+    btn.textContent =
+      name;
 
   }else{
 
-    btn.textContent="Log in";
+    btn.textContent =
+      "Log in";
+
   }
+
 }
 
 
+/* =====================================================
+   LOGGED ACCOUNT
+===================================================== */
+
 function renderLoggedAccount(){
 
-  const name=
+  const name =
     currentUser?.user_metadata?.display_name ||
     "Afrova User";
 
 
-  const planText=
+  const planText =
     isPremium()
       ? `★ PREMIUM — ${subscriptionPlan}`
       : "FREE";
 
 
-  $("accountDetails").innerHTML=`
+  $("accountDetails").innerHTML = `
 
     <strong>
       ${escapeHtml(name)}
     </strong>
 
     <span>
-      ${escapeHtml(currentUser?.email || "")}
+      ${escapeHtml(
+        currentUser?.email || ""
+      )}
     </span>
 
-    <div style="margin-top:10px;color:#20e060;font-weight:bold">
+    <div style="
+      margin-top:10px;
+      color:#20e060;
+      font-weight:bold">
       ${escapeHtml(planText)}
     </div>
 
   `;
 
 
-  $("loginForm").classList.add("hidden");
+  $("loginForm")
+    .classList.add("hidden");
 
-  $("signupForm").classList.add("hidden");
+  $("signupForm")
+    .classList.add("hidden");
 
-  $("verifyForm").classList.add("hidden");
+  $("confirmationForm")
+    .classList.add("hidden");
 
-  $("loggedForm").classList.remove("hidden");
+  $("loggedForm")
+    .classList.remove("hidden");
+
 }
 
 
-/* ================================
+/* =====================================================
    REQUIRE LOGIN
-================================ */
+===================================================== */
 
 function requireLogin(){
 
@@ -2763,7 +3623,9 @@ function requireLogin(){
 
     showLogin();
 
-    showModal("accountModal");
+    showModal(
+      "accountModal"
+    );
 
 
     showMessage(
@@ -2774,43 +3636,56 @@ function requireLogin(){
 
 
     return false;
+
   }
 
 
   return true;
+
 }
 
 
-/* ================================
+/* =====================================================
    SONG DISPLAY
-================================ */
+===================================================== */
 
 function renderSongs(){
 
-  const grid=$("songsGrid");
+  const grid =
+    $("songsGrid");
 
 
-  if(!songs.length){
-
-    grid.innerHTML=
-      `<div class="empty">No songs available yet.</div>`;
-
+  if(!grid){
     return;
   }
 
 
-  grid.innerHTML=
+  if(!songs.length){
+
+    grid.innerHTML =
+      `<div class="empty">
+        No songs available yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
     songs.map((song,index)=>{
 
-      const cover=
+      const cover =
         song.cover
-          ? `<img src="${escapeHtml(song.cover)}" alt="">`
+          ? `<img
+               src="${escapeHtml(song.cover)}"
+               alt="">`
           : "♫";
 
 
-      const liked=
+      const liked =
         likedSongs.some(
-          x=>x.id===song.id
+          x=>x.id === song.id
         )
           ? "♥"
           : "♡";
@@ -2836,15 +3711,13 @@ function renderSongs(){
 
             <button
               class="small-btn play"
-              onclick="playSong(${index})"
-            >
+              onclick="playSong(${index})">
               ▶ Play
             </button>
 
             <button
               class="small-btn"
-              onclick="toggleLike('${escapeHtml(song.id)}')"
-            >
+              onclick="toggleLike('${escapeHtml(song.id)}')">
               ${liked}
             </button>
 
@@ -2855,23 +3728,32 @@ function renderSongs(){
       `;
 
     }).join("");
+
 }
 
 
 function renderArtists(){
 
-  const grid=$("artistsGrid");
+  const grid =
+    $("artistsGrid");
 
 
-  const artists=[
+  if(!grid){
+    return;
+  }
+
+
+  const artists = [
+
     "Afrova Artists",
     "Afrobeats Artists",
     "Amapiano Artists",
     "African Sounds"
+
   ];
 
 
-  grid.innerHTML=
+  grid.innerHTML =
     artists.map(name=>`
 
       <div class="card">
@@ -2881,7 +3763,7 @@ function renderArtists(){
         </div>
 
         <div class="song-title">
-          ${name}
+          ${escapeHtml(name)}
         </div>
 
         <div class="artist-name">
@@ -2891,16 +3773,19 @@ function renderArtists(){
       </div>
 
     `).join("");
+
 }
 
 
-/* ================================
+/* =====================================================
    PLAY SONG
-================================ */
+===================================================== */
 
 function playSong(index){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   if(!canListen()){
@@ -2908,34 +3793,39 @@ function playSong(index){
     showPremiumLimit();
 
     return;
+
   }
 
 
   if(
-    index<0 ||
-    index>=songs.length
+    index < 0 ||
+    index >= songs.length
   ){
     return;
   }
 
 
-  const song=songs[index];
+  const song =
+    songs[index];
 
 
-  currentSongIndex=index;
+  currentSongIndex =
+    index;
 
 
-  $("playerTitle").textContent=
+  $("playerTitle").textContent =
     song.title;
 
 
-  $("playerArtist").textContent=
+  $("playerArtist").textContent =
     song.artist;
 
 
-  $("playerCover").innerHTML=
+  $("playerCover").innerHTML =
     song.cover
-      ? `<img src="${escapeHtml(song.cover)}" alt="">`
+      ? `<img
+           src="${escapeHtml(song.cover)}"
+           alt="">`
       : "♫";
 
 
@@ -2945,7 +3835,8 @@ function playSong(index){
 
     stopFreeTimer();
 
-    $("playButton").textContent="▶";
+    $("playButton").textContent =
+      "▶";
 
 
     alert(
@@ -2954,35 +3845,44 @@ function playSong(index){
 
 
     return;
+
   }
 
 
-  audio.src=song.audio;
+  audio.src =
+    song.audio;
 
 
   audio.play()
     .then(()=>{
 
-      $("playButton").textContent="Ⅱ";
+      $("playButton").textContent =
+        "Ⅱ";
 
       startFreeTimer();
 
     })
-    .catch(err=>{
+    .catch(error=>{
 
-      console.error(err);
+      console.error(
+        "Audio playback:",
+        error
+      );
 
     });
+
 }
 
 
-/* ================================
+/* =====================================================
    PLAYER
-================================ */
+===================================================== */
 
 function togglePlay(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   if(!canListen()){
@@ -2990,14 +3890,16 @@ function togglePlay(){
     showPremiumLimit();
 
     return;
+
   }
 
 
-  if(currentSongIndex<0){
+  if(currentSongIndex < 0){
 
     playFirstSong();
 
     return;
+
   }
 
 
@@ -3005,23 +3907,27 @@ function togglePlay(){
 
     if(!audio.src){
 
-      playSong(currentSongIndex);
+      playSong(
+        currentSongIndex
+      );
 
       return;
+
     }
 
 
     audio.play()
       .then(()=>{
 
-        $("playButton").textContent="Ⅱ";
+        $("playButton").textContent =
+          "Ⅱ";
 
         startFreeTimer();
 
       })
-      .catch(err=>{
+      .catch(error=>{
 
-        console.error(err);
+        console.error(error);
 
       });
 
@@ -3029,16 +3935,21 @@ function togglePlay(){
 
     audio.pause();
 
-    $("playButton").textContent="▶";
+    $("playButton").textContent =
+      "▶";
 
     stopFreeTimer();
+
   }
+
 }
 
 
 function playFirstSong(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   if(!canListen()){
@@ -3046,6 +3957,7 @@ function playFirstSong(){
     showPremiumLimit();
 
     return;
+
   }
 
 
@@ -3054,12 +3966,15 @@ function playFirstSong(){
     playSong(0);
 
   }
+
 }
 
 
 function nextSong(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   if(!canListen()){
@@ -3067,30 +3982,34 @@ function nextSong(){
     showPremiumLimit();
 
     return;
+
   }
 
 
-  if(!songs.length) return;
+  if(!songs.length){
+    return;
+  }
 
 
-  let next=
-    currentSongIndex+1;
+  let next =
+    currentSongIndex + 1;
 
 
-  if(next>=songs.length){
-
-    next=0;
-
+  if(next >= songs.length){
+    next = 0;
   }
 
 
   playSong(next);
+
 }
 
 
 function previousSong(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   if(!canListen()){
@@ -3098,24 +4017,29 @@ function previousSong(){
     showPremiumLimit();
 
     return;
+
   }
 
 
-  if(!songs.length) return;
+  if(!songs.length){
+    return;
+  }
 
 
-  let previous=
-    currentSongIndex-1;
+  let previous =
+    currentSongIndex - 1;
 
 
-  if(previous<0){
+  if(previous < 0){
 
-    previous=
-      songs.length-1;
+    previous =
+      songs.length - 1;
+
   }
 
 
   playSong(previous);
+
 }
 
 
@@ -3123,17 +4047,26 @@ function seekSong(){
 
   if(audio.duration){
 
-    audio.currentTime=
-      (Number($("progress").value)/100) *
+    audio.currentTime =
+      (
+        Number(
+          $("progress").value
+        ) / 100
+      ) *
       audio.duration;
+
   }
+
 }
 
 
 function changeVolume(){
 
-  audio.volume=
-    Number($("volume").value);
+  audio.volume =
+    Number(
+      $("volume").value
+    );
+
 }
 
 
@@ -3141,15 +4074,22 @@ audio.addEventListener(
   "timeupdate",
   ()=>{
 
-    if(!audio.duration) return;
+    if(!audio.duration){
+      return;
+    }
 
 
-    $("progress").value=
-      (audio.currentTime/audio.duration)*100;
+    $("progress").value =
+      (
+        audio.currentTime /
+        audio.duration
+      ) * 100;
 
 
-    $("currentTime").textContent=
-      formatTime(audio.currentTime);
+    $("currentTime").textContent =
+      formatTime(
+        audio.currentTime
+      );
 
   }
 );
@@ -3159,8 +4099,10 @@ audio.addEventListener(
   "loadedmetadata",
   ()=>{
 
-    $("duration").textContent=
-      formatTime(audio.duration);
+    $("duration").textContent =
+      formatTime(
+        audio.duration
+      );
 
   }
 );
@@ -3170,9 +4112,13 @@ audio.addEventListener(
   "play",
   ()=>{
 
-    if(currentUser && !isPremium()){
+    if(
+      currentUser &&
+      !isPremium()
+    ){
 
       startFreeTimer();
+
     }
 
   }
@@ -3193,7 +4139,8 @@ audio.addEventListener(
   "ended",
   ()=>{
 
-    $("playButton").textContent="▶";
+    $("playButton").textContent =
+      "▶";
 
     stopFreeTimer();
 
@@ -3203,51 +4150,71 @@ audio.addEventListener(
 );
 
 
-/* ================================
+/* =====================================================
    LIKE
-================================ */
+===================================================== */
 
 function toggleLike(id){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
-  const song=
-    songs.find(x=>x.id===id);
+  const song =
+    songs.find(
+      x=>x.id === id
+    );
 
 
-  if(!song) return;
+  if(!song){
+    return;
+  }
 
 
-  const exists=
-    likedSongs.some(x=>x.id===id);
+  const exists =
+    likedSongs.some(
+      x=>x.id === id
+    );
 
 
   if(exists){
 
-    likedSongs=
+    likedSongs =
       likedSongs.filter(
-        x=>x.id!==id
+        x=>x.id !== id
       );
 
   }else{
 
     likedSongs.push(song);
+
   }
 
 
   renderSongs();
+
 }
 
 
+/* =====================================================
+   LIKED SONGS
+===================================================== */
+
 function renderLikedSongs(){
 
-  const grid=$("likedGrid");
+  const grid =
+    $("likedGrid");
+
+
+  if(!grid){
+    return;
+  }
 
 
   if(!currentUser){
 
-    grid.innerHTML=`
+    grid.innerHTML = `
 
       <div class="empty">
 
@@ -3257,8 +4224,7 @@ function renderLikedSongs(){
 
         <button
           class="primary"
-          onclick="openAccount()"
-        >
+          onclick="openAccount()">
           Log in
         </button>
 
@@ -3267,12 +4233,13 @@ function renderLikedSongs(){
     `;
 
     return;
+
   }
 
 
   if(!likedSongs.length){
 
-    grid.innerHTML=`
+    grid.innerHTML = `
 
       <div class="empty">
         You haven't liked any songs yet.
@@ -3281,15 +4248,16 @@ function renderLikedSongs(){
     `;
 
     return;
+
   }
 
 
-  grid.innerHTML=
+  grid.innerHTML =
     likedSongs.map(song=>{
 
-      const index=
+      const index =
         songs.findIndex(
-          x=>x.id===song.id
+          x=>x.id === song.id
         );
 
 
@@ -3301,7 +4269,9 @@ function renderLikedSongs(){
 
             ${
               song.cover
-                ? `<img src="${escapeHtml(song.cover)}">`
+                ? `<img
+                     src="${escapeHtml(song.cover)}"
+                     alt="">`
                 : "♫"
             }
 
@@ -3318,8 +4288,7 @@ function renderLikedSongs(){
           <button
             class="small-btn play"
             style="margin-top:12px"
-            onclick="playSong(${index})"
-          >
+            onclick="playSong(${index})">
             ▶ Play
           </button>
 
@@ -3328,16 +4297,17 @@ function renderLikedSongs(){
       `;
 
     }).join("");
+
 }
 
 
-/* ================================
+/* =====================================================
    SEARCH
-================================ */
+===================================================== */
 
 function searchSongs(){
 
-  const q=
+  const q =
     $("searchInput")
       .value
       .trim()
@@ -3349,13 +4319,14 @@ function searchSongs(){
     showPage("home");
 
     return;
+
   }
 
 
   showPage("search");
 
 
-  const results=
+  const results =
     songs.filter(song=>
 
       song.title
@@ -3366,31 +4337,37 @@ function searchSongs(){
         .toLowerCase()
         .includes(q) ||
 
-      (song.genre || "")
+      (
+        song.genre || ""
+      )
         .toLowerCase()
         .includes(q)
 
     );
 
 
-  const grid=$("searchResults");
+  const grid =
+    $("searchResults");
 
 
   if(!results.length){
 
-    grid.innerHTML=
-      `<div class="empty">No music found.</div>`;
+    grid.innerHTML =
+      `<div class="empty">
+        No music found.
+      </div>`;
 
     return;
+
   }
 
 
-  grid.innerHTML=
+  grid.innerHTML =
     results.map(song=>{
 
-      const index=
+      const index =
         songs.findIndex(
-          x=>x.id===song.id
+          x=>x.id === song.id
         );
 
 
@@ -3402,7 +4379,9 @@ function searchSongs(){
 
             ${
               song.cover
-                ? `<img src="${escapeHtml(song.cover)}">`
+                ? `<img
+                     src="${escapeHtml(song.cover)}"
+                     alt="">`
                 : "♫"
             }
 
@@ -3419,8 +4398,7 @@ function searchSongs(){
           <button
             class="small-btn play"
             style="margin-top:12px"
-            onclick="playSong(${index})"
-          >
+            onclick="playSong(${index})">
             ▶ Play
           </button>
 
@@ -3429,23 +4407,32 @@ function searchSongs(){
       `;
 
     }).join("");
+
 }
 
 
-/* ================================
+/* =====================================================
    LOAD PUBLISHED SONGS
-================================ */
+===================================================== */
 
 async function loadPublishedSongs(){
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("songs")
       .select("*")
-      .eq("status","published")
+      .eq(
+        "status",
+        "published"
+      )
       .order(
         "created_at",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
 
 
@@ -3457,39 +4444,52 @@ async function loadPublishedSongs(){
     );
 
 
-    renderSongs();
-
-    renderArtists();
-
-    return;
-  }
-
-
-  if(!data || !data.length){
-
-    songs=[...demoSongs];
+    songs =
+      [...demoSongs];
 
     renderSongs();
 
     renderArtists();
 
     return;
+
   }
 
 
-  const artistIds=[
+  if(
+    !data ||
+    !data.length
+  ){
+
+    songs =
+      [...demoSongs];
+
+    renderSongs();
+
+    renderArtists();
+
+    return;
+
+  }
+
+
+  const artistIds = [
+
     ...new Set(
-      data.map(song=>song.artist_id)
+      data.map(
+        song=>song.artist_id
+      )
     )
+
   ];
 
 
-  let artists=[];
+  let artists = [];
 
 
   if(artistIds.length){
 
-    const result=
+    const result =
       await supabaseClient
         .from("artist_profiles")
         .select(
@@ -3501,44 +4501,49 @@ async function loadPublishedSongs(){
         );
 
 
-    artists=result.data || [];
+    artists =
+      result.data || [];
+
   }
 
 
-  const uploaded=
+  const uploaded =
     data.map(song=>{
 
-      const artist=
+      const artist =
         artists.find(
-          a=>a.id===song.artist_id
+          a=>a.id === song.artist_id
         );
 
 
-      const audioUrl=
+      const audioUrl =
         supabaseClient.storage
           .from("music")
           .getPublicUrl(
             song.audio_path
           )
-          .data.publicUrl;
+          .data
+          .publicUrl;
 
 
-      let coverUrl="";
+      let coverUrl = "";
 
 
       if(song.cover_path){
 
-        coverUrl=
+        coverUrl =
           supabaseClient.storage
             .from("covers")
             .getPublicUrl(
               song.cover_path
             )
-            .data.publicUrl;
+            .data
+            .publicUrl;
+
       }
 
 
-      return{
+      return {
 
         id:song.id,
 
@@ -3563,25 +4568,31 @@ async function loadPublishedSongs(){
     });
 
 
-  songs=[
+  songs = [
+
     ...uploaded,
+
     ...demoSongs
+
   ];
 
 
   renderSongs();
 
   renderArtists();
+
 }
 
 
-/* ================================
+/* =====================================================
    ARTIST STUDIO
-================================ */
+===================================================== */
 
 async function openArtistStudio(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   await loadArtistProfile();
@@ -3590,6 +4601,7 @@ async function openArtistStudio(){
   showPage("artist");
 
   renderArtistStudio();
+
 }
 
 
@@ -3597,17 +4609,24 @@ async function loadArtistProfile(){
 
   if(!currentUser){
 
-    currentArtist=null;
+    currentArtist = null;
 
     return;
+
   }
 
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("artist_profiles")
       .select("*")
-      .eq("id",currentUser.id)
+      .eq(
+        "id",
+        currentUser.id
+      )
       .maybeSingle();
 
 
@@ -3619,25 +4638,33 @@ async function loadArtistProfile(){
     );
 
 
-    currentArtist=null;
+    currentArtist = null;
 
     return;
+
   }
 
 
-  currentArtist=data || null;
+  currentArtist =
+    data || null;
+
 }
 
 
 function renderArtistStudio(){
 
-  const container=
+  const container =
     $("artistStudioContent");
+
+
+  if(!container){
+    return;
+  }
 
 
   if(!currentUser){
 
-    container.innerHTML=`
+    container.innerHTML = `
 
       <div class="empty">
         Please log in first.
@@ -3646,12 +4673,13 @@ function renderArtistStudio(){
     `;
 
     return;
+
   }
 
 
   if(!currentArtist){
 
-    container.innerHTML=`
+    container.innerHTML = `
 
       <div class="artist-panel">
 
@@ -3660,14 +4688,14 @@ function renderArtistStudio(){
         </h2>
 
         <p>
-          Create your artist profile to upload your own music,
-          manage releases and build your audience.
+          Create your artist profile to upload
+          your own music, manage releases and
+          build your audience.
         </p>
 
         <button
           class="primary"
-          onclick="openArtistAccount()"
-        >
+          onclick="openArtistAccount()">
           Create Artist Account
         </button>
 
@@ -3676,10 +4704,11 @@ function renderArtistStudio(){
     `;
 
     return;
+
   }
 
 
-  container.innerHTML=`
+  container.innerHTML = `
 
     <div class="artist-panel">
 
@@ -3698,8 +4727,7 @@ function renderArtistStudio(){
 
       <button
         class="primary"
-        onclick="openUpload()"
-      >
+        onclick="openUpload()">
         + Upload Song
       </button>
 
@@ -3718,8 +4746,7 @@ function renderArtistStudio(){
 
       <div
         id="artistSongsGrid"
-        class="grid"
-      >
+        class="grid">
 
         <div class="empty">
           Loading songs...
@@ -3733,16 +4760,19 @@ function renderArtistStudio(){
 
 
   loadArtistSongs();
+
 }
 
 
-/* ================================
+/* =====================================================
    CREATE ARTIST ACCOUNT
-================================ */
+===================================================== */
 
 async function openArtistAccount(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   await loadArtistProfile();
@@ -3753,6 +4783,7 @@ async function openArtistAccount(){
     renderArtistStudio();
 
     return;
+
   }
 
 
@@ -3764,6 +4795,7 @@ async function openArtistAccount(){
   showModal(
     "artistAccountModal"
   );
+
 }
 
 
@@ -3778,14 +4810,20 @@ async function createArtistAccount(){
     requireLogin();
 
     return;
+
   }
 
 
-  const artistName=
-    $("artistName").value.trim();
+  const artistName =
+    $("artistName")
+      .value
+      .trim();
 
-  const bio=
-    $("artistBio").value.trim();
+
+  const bio =
+    $("artistBio")
+      .value
+      .trim();
 
 
   clearMessage(
@@ -3802,6 +4840,7 @@ async function createArtistAccount(){
     );
 
     return;
+
   }
 
 
@@ -3810,14 +4849,18 @@ async function createArtistAccount(){
   );
 
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("artist_profiles")
       .insert({
 
         id:currentUser.id,
 
-        artist_name:artistName,
+        artist_name:
+          artistName,
 
         bio:bio
 
@@ -3835,10 +4878,13 @@ async function createArtistAccount(){
     );
 
     return;
+
   }
 
 
-  const {error:roleError}=
+  const {
+    error:roleError
+  } =
     await supabaseClient
       .from("profiles")
       .update({
@@ -3856,10 +4902,12 @@ async function createArtistAccount(){
       "Role update:",
       roleError.message
     );
+
   }
 
 
-  currentArtist=data;
+  currentArtist =
+    data;
 
 
   closeModal(
@@ -3873,26 +4921,34 @@ async function createArtistAccount(){
   alert(
     "Your Afrova Artist Account has been created successfully."
   );
+
 }
 
 
-/* ================================
+/* =====================================================
    ARTIST SONGS
-================================ */
+===================================================== */
 
 async function loadArtistSongs(){
 
-  if(!currentUser) return;
+  if(!currentUser){
+    return;
+  }
 
 
-  const grid=
+  const grid =
     $("artistSongsGrid");
 
 
-  if(!grid) return;
+  if(!grid){
+    return;
+  }
 
 
-  const {data,error}=
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("songs")
       .select("*")
@@ -3902,13 +4958,15 @@ async function loadArtistSongs(){
       )
       .order(
         "created_at",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
 
 
   if(error){
 
-    grid.innerHTML=`
+    grid.innerHTML = `
 
       <div class="empty">
         ${escapeHtml(
@@ -3919,12 +4977,16 @@ async function loadArtistSongs(){
     `;
 
     return;
+
   }
 
 
-  if(!data || !data.length){
+  if(
+    !data ||
+    !data.length
+  ){
 
-    grid.innerHTML=`
+    grid.innerHTML = `
 
       <div class="empty">
         You haven't uploaded any songs yet.
@@ -3933,25 +4995,34 @@ async function loadArtistSongs(){
     `;
 
     return;
+
   }
 
 
-  grid.innerHTML=
+  grid.innerHTML =
     data.map(song=>{
 
-      let cover="";
+      let cover = "";
 
 
       if(song.cover_path){
 
-        cover=
+        cover =
           supabaseClient.storage
             .from("covers")
             .getPublicUrl(
               song.cover_path
             )
-            .data.publicUrl;
+            .data
+            .publicUrl;
+
       }
+
+
+      const statusClass =
+        song.status === "published"
+          ? "status-pill published"
+          : "status-pill";
 
 
       return `
@@ -3962,7 +5033,9 @@ async function loadArtistSongs(){
 
             ${
               cover
-                ? `<img src="${escapeHtml(cover)}">`
+                ? `<img
+                     src="${escapeHtml(cover)}"
+                     alt="">`
                 : "♫"
             }
 
@@ -3979,28 +5052,28 @@ async function loadArtistSongs(){
             )}
           </div>
 
-          <div
-            style="margin-top:10px;color:#888;font-size:12px"
-          >
-            Status:
+          <span class="${statusClass}">
             ${escapeHtml(song.status)}
-          </div>
+          </span>
 
         </div>
 
       `;
 
     }).join("");
+
 }
 
 
-/* ================================
-   UPLOAD SONG
-================================ */
+/* =====================================================
+   UPLOAD
+===================================================== */
 
 async function openUpload(){
 
-  if(!requireLogin()) return;
+  if(!requireLogin()){
+    return;
+  }
 
 
   await loadArtistProfile();
@@ -4008,17 +5081,26 @@ async function openUpload(){
 
   if(!currentArtist){
 
-    closeModal("uploadModal");
+    closeModal(
+      "uploadModal"
+    );
 
     openArtistAccount();
 
     return;
+
   }
 
 
-  clearMessage("uploadError");
+  clearMessage(
+    "uploadError"
+  );
 
-  showModal("uploadModal");
+
+  showModal(
+    "uploadModal"
+  );
+
 }
 
 
@@ -4026,11 +5108,14 @@ async function uploadSong(){
 
   if(!currentUser){
 
-    closeModal("uploadModal");
+    closeModal(
+      "uploadModal"
+    );
 
     requireLogin();
 
     return;
+
   }
 
 
@@ -4039,31 +5124,47 @@ async function uploadSong(){
 
   if(!currentArtist){
 
-    closeModal("uploadModal");
+    closeModal(
+      "uploadModal"
+    );
 
     openArtistAccount();
 
     return;
+
   }
 
 
-  const title=
-    $("songTitle").value.trim();
-
-  const genre=
-    $("songGenre").value;
-
-  const audioFile=
-    $("songAudio").files[0];
-
-  const coverFile=
-    $("songCover").files[0];
+  const title =
+    $("songTitle")
+      .value
+      .trim();
 
 
-  clearMessage("uploadError");
+  const genre =
+    $("songGenre")
+      .value;
 
 
-  if(!title || !audioFile){
+  const audioFile =
+    $("songAudio")
+      .files[0];
+
+
+  const coverFile =
+    $("songCover")
+      .files[0];
+
+
+  clearMessage(
+    "uploadError"
+  );
+
+
+  if(
+    !title ||
+    !audioFile
+  ){
 
     showMessage(
       "uploadError",
@@ -4072,23 +5173,24 @@ async function uploadSong(){
     );
 
     return;
+
   }
 
 
   try{
 
-    const extension=
+    const extension =
       audioFile.name
         .split(".")
         .pop() ||
       "audio";
 
 
-    const audioPath=
+    const audioPath =
       `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
 
 
-    const audioUpload=
+    const audioUpload =
       await supabaseClient.storage
         .from("music")
         .upload(
@@ -4102,28 +5204,27 @@ async function uploadSong(){
 
 
     if(audioUpload.error){
-
       throw audioUpload.error;
     }
 
 
-    let coverPath=null;
+    let coverPath = null;
 
 
     if(coverFile){
 
-      const coverExtension=
+      const coverExtension =
         coverFile.name
           .split(".")
           .pop() ||
         "jpg";
 
 
-      coverPath=
+      coverPath =
         `${currentUser.id}/${crypto.randomUUID()}.${coverExtension}`;
 
 
-      const coverUpload=
+      const coverUpload =
         await supabaseClient.storage
           .from("covers")
           .upload(
@@ -4137,13 +5238,15 @@ async function uploadSong(){
 
 
       if(coverUpload.error){
-
         throw coverUpload.error;
       }
+
     }
 
 
-    const {error:insertError}=
+    const {
+      error:insertError
+    } =
       await supabaseClient
         .from("songs")
         .insert({
@@ -4167,7 +5270,6 @@ async function uploadSong(){
 
 
     if(insertError){
-
       throw insertError;
     }
 
@@ -4177,18 +5279,19 @@ async function uploadSong(){
     );
 
 
-    $("songTitle").value="";
+    $("songTitle").value =
+      "";
 
-    $("songAudio").value="";
+    $("songAudio").value =
+      "";
 
-    $("songCover").value="";
+    $("songCover").value =
+      "";
 
 
     await loadPublishedSongs();
 
-
     showPage("artist");
-
 
     await loadArtistSongs();
 
@@ -4200,7 +5303,9 @@ async function uploadSong(){
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
 
     showMessage(
@@ -4209,102 +5314,77 @@ async function uploadSong(){
       "Upload failed.",
       "error"
     );
+
   }
+
 }
 
 
-/* ================================
-   PREMIUM
-================================ */
+/* =====================================================
+   PAYSTACK RETURN DETECTION
+===================================================== */
 
-function subscribe(plan){
+function checkPaymentReturn(){
 
-  if(!requireLogin()) return;
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
 
-  alert(
-    `${plan} selected. Paystack payment will be connected next.`
-  );
+  const reference =
+    params.get("reference");
+
+
+  if(!reference){
+    return;
+  }
+
+
+  /*
+    Paystack has returned the user to Afrova.
+
+    We do NOT activate Premium here.
+
+    The webhook must activate Premium after Paystack
+    sends the verified event to Supabase.
+  */
+
+  setTimeout(async()=>{
+
+    if(currentUser){
+
+      await loadSubscription();
+
+      showPage("premium");
+
+
+      if(isPremium()){
+
+        alert(
+          "Payment received. Your Afrova Premium subscription is now active."
+        );
+
+      }else{
+
+        alert(
+          "Payment was returned successfully. Afrova is waiting for the verified Paystack subscription event. Your Premium status will update automatically."
+        );
+
+      }
+
+    }
+
+  },1500);
+
 }
 
 
-/* ================================
-   OTP INPUT
-================================ */
+/* =====================================================
+   INITIALIZE
+===================================================== */
 
-const codeInputs=[
-  "code1",
-  "code2",
-  "code3",
-  "code4",
-  "code5",
-  "code6"
-];
-
-
-codeInputs.forEach(
-  (id,index)=>{
-
-    const input=$(id);
-
-
-    input.addEventListener(
-      "input",
-      ()=>{
-
-        input.value=
-          input.value.replace(
-            /\D/g,
-            ""
-          );
-
-
-        if(
-          input.value &&
-          index<
-            codeInputs.length-1
-        ){
-
-          $(
-            codeInputs[index+1]
-          ).focus();
-
-        }
-
-      }
-    );
-
-
-    input.addEventListener(
-      "keydown",
-      event=>{
-
-        if(
-          event.key==="Backspace" &&
-          !input.value &&
-          index>0
-        ){
-
-          $(
-            codeInputs[index-1]
-          ).focus();
-
-        }
-
-      }
-    );
-
-  }
-);
-
-
-/* ================================
-   START APP
-================================ */
-
-audio.volume=1;
-
-resetDailyFreeListening();
+audio.volume = 1;
 
 checkLogin();
 
@@ -4313,6 +5393,8 @@ renderSongs();
 renderArtists();
 
 renderPremiumStatus();
+
+checkPaymentReturn();
 
 </script>
 
