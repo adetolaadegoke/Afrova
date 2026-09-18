@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0f">
+  <title>Afrova — Music for Everyone</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #09090d;
+      --panel: #111117;
+      --panel2: #181820;
+      --text: #ffffff;
+      --muted: #9b9ba7;
+      --accent: #ff7a00;
+      --accent2: #ff9d3d;
+      --border: rgba(255,255,255,.08);
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 95px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 0;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: #0d0d12;
+      border-right: 1px solid var(--border);
+      padding: 25px 16px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 20;
+    }
+
+    .logo {
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin: 0 10px 35px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-title {
+      color: #666672;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin: 20px 12px 10px;
+      letter-spacing: 1px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      background: transparent;
+      color: var(--muted);
+      padding: 12px;
+      border-radius: 9px;
+      text-align: left;
+      margin-bottom: 4px;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--panel2);
+      color: white;
+    }
+
+    .nav-btn.active {
+      color: var(--accent2);
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 240px;
+      width: calc(100% - 240px);
+      padding: 25px 30px 130px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 35px;
+    }
+
+    .search {
+      flex: 1;
+      max-width: 650px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      padding: 13px 18px;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .search:focus {
+      border-color: var(--accent);
+    }
+
+    .premium-btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 22px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .premium-btn:hover {
+      background: var(--accent2);
+    }
+
+    .profile {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7a00, #ffbd70);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #17100a;
+    }
+
+    /* HERO */
+    .hero {
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,122,0,.4), transparent 30%),
+        linear-gradient(120deg, #1b1410, #121218);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 42px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .hero small {
+      color: var(--accent2);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hero h1 {
+      font-size: clamp(35px, 5vw, 62px);
+      line-height: 1;
+      margin: 15px 0;
+      max-width: 650px;
+    }
+
+    .hero p {
+      color: #c0c0c9;
+      max-width: 570px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+      padding: 13px 22px;
+      border-radius: 24px;
+      font-weight: 700;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,.08);
+      color: white;
+      padding: 13px 22px;
+      border-radius: 24px;
+      font-weight: 700;
+    }
+
+    /* SECTIONS */
+    .section {
+      margin-bottom: 42px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: 22px;
+    }
+
+    .see-all {
+      color: var(--accent2);
+      background: none;
+      font-size: 13px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px;
+      transition: .2s;
+      min-width: 0;
+    }
+
+    .card:hover {
+      background: var(--panel2);
+      transform: translateY(-3px);
+    }
+
+    .cover {
+      aspect-ratio: 1;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #ff7a00, #381b08);
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .cover.two {
+      background: linear-gradient(135deg, #5932a8, #191129);
+    }
+
+    .cover.three {
+      background: linear-gradient(135deg, #007d71, #071e1c);
+    }
+
+    .cover.four {
+      background: linear-gradient(135deg, #ba1945, #270a14);
+    }
+
+    .cover.five {
+      background: linear-gradient(135deg, #b38a00, #241d00);
+    }
+
+    .card h3 {
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 5px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .play-small {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+    }
+
+    .heart {
+      background: none;
+      color: #777783;
+      font-size: 19px;
+    }
+
+    .heart.liked {
+      color: #ff5b72;
+    }
+
+    /* ARTISTS */
+    .artist-card {
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 18px 10px;
+      border-radius: 14px;
+    }
+
+    .artist-img {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      margin: auto auto 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #ff7a00, #4a2207);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .artist-card p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    /* PREMIUM */
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .plan {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 22px;
+    }
+
+    .plan h3 {
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 27px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .price span {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: normal;
+    }
+
+    .plan p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .plan button {
+      width: 100%;
+      padding: 11px;
+      border-radius: 20px;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+
+    /* ARTIST AREA */
+    .artist-area {
+      background: linear-gradient(135deg, #17100b, #101016);
+      border: 1px solid var(--border);
+      padding: 28px;
+      border-radius: 18px;
+    }
+
+    .artist-area h2 {
+      margin-bottom: 10px;
+    }
+
+    .artist-area p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .artist-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* PLAYER */
+    .player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 82px;
+      background: rgba(16,16,22,.97);
+      border-top: 1px solid var(--border);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      padding: 10px 22px;
+      gap: 18px;
+    }
+
+    .now {
+      width: 230px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .now-cover {
+      width: 52px;
+      height: 52px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #ff7a00, #3b1803);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .now-info {
+      overflow: hidden;
+    }
+
+    .now-info strong,
+    .now-info span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .now-info span {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .control {
+      background: none;
+      color: white;
+      font-size: 18px;
+    }
+
+    .main-play {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: white;
+      color: black;
+      font-size: 16px;
+    }
+
+    .progress-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress {
+      height: 4px;
+      flex: 1;
+      background: #3b3b45;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 5px;
+    }
+
+    .time {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* MOBILE */
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 1000px) {
+      .cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .plans {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 18px 15px 125px;
+      }
+
+      .topbar {
+        margin-bottom: 22px;
+      }
+
+      .premium-btn {
+        display: none;
+      }
+
+      .hero {
+        padding: 28px 22px;
+        border-radius: 17px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .plans {
+        grid-template-columns: 1fr;
+      }
+
+      .player {
+        height: 76px;
+        padding: 8px 12px;
+        gap: 8px;
+      }
+
+      .now {
+        width: 42%;
+      }
+
+      .now-cover {
+        width: 45px;
+        height: 45px;
+      }
+
+      .controls {
+        gap: 8px;
+      }
+
+      .control:nth-child(1),
+      .control:nth-child(3) {
+        display: none;
+      }
+
+      .progress-area {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 4px;
+      }
+
+      .mobile-nav {
+        position: fixed;
+        display: flex;
+        left: 0;
+        right: 0;
+        bottom: 76px;
+        height: 48px;
+        background: #0d0d12;
+        border-top: 1px solid var(--border);
+        z-index: 49;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .mobile-nav button {
+        background: none;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .mobile-nav button.active {
+        color: var(--accent2);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 13px 17px;
+      border-radius: 10px;
+      z-index: 100;
+      display: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">Afro<span>va</span></div>
+
+    <div class="nav-title">Menu</div>
+
+    <button class="nav-btn active" onclick="showSection('home', this)">⌂ &nbsp; Home</button>
+    <button class="nav-btn" onclick="showSection('search', this)">⌕ &nbsp; Search</button>
+    <button class="nav-btn" onclick="showSection('library', this)">♫ &nbsp; Your Library</button>
+
+    <div class="nav-title">Your Music</div>
+
+    <button class="nav-btn" onclick="showSection('liked', this)">♥ &nbsp; Liked Songs</button>
+    <button class="nav-btn" onclick="showSection('playlists', this)">☷ &nbsp; Playlists</button>
+    <button class="nav-btn" onclick="showSection('albums', this)">▣ &nbsp; Albums</button>
+
+    <div class="nav-title">For Artists</div>
+
+    <button class="nav-btn" onclick="showSection('artist', this)">♬ &nbsp; Artist Studio</button>
+    <button class="nav-btn" onclick="showSection('premium', this)">◆ &nbsp; Premium</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="topbar">
+      <input
+        id="searchInput"
+        class="search"
+        type="search"
+        placeholder="Search songs, artists, albums..."
+        oninput="searchMusic()"
+      >
+
+      <button class="premium-btn" onclick="showSection('premium')">
+        Get Premium
+      </button>
+
+      <div class="profile">A</div>
+    </div>
+
+    <!-- HOME -->
+    <section id="home">
+
+      <div class="hero">
+        <small>Welcome to Afrova</small>
+
+        <h1>Your sound. Your culture. Your Afrova.</h1>
+
+        <p>
+          Discover new music, follow your favourite artists,
+          create playlists and enjoy the sounds you love.
+        </p>
+
+        <div class="hero-actions">
+          <button class="primary" onclick="playSong(0)">▶ Start Listening</button>
+          <button class="secondary" onclick="showSection('artist')">For Artists</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <h2>Trending on Afrova</h2>
+          <button class="see-all">See all</button>
+        </div>
+
+        <div class="cards" id="songCards"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <h2>Popular Artists</h2>
+        </div>
+
+        <div class="cards">
+
+          <div class="artist-card">
+            <div class="artist-img">A</div>
+            <h3>Afro Artist</h3>
+            <p>Artist</p>
+          </div>
+
+          <div class="artist-card">
+            <div class="artist-img">K</div>
+            <h3>Kora</h3>
+            <p>Artist</p>
+          </div>
+
+          <div class="artist-card">
+            <div class="artist-img">L</div>
+            <h3>Lagos Boy</h3>
+            <p>Artist</p>
+          </div>
+
+          <div class="artist-card">
+            <div class="artist-img">M</div>
+            <h3>Melody</h3>
+            <p>Artist</p>
+          </div>
+
+          <div class="artist-card">
+            <div class="artist-img">S</div>
+            <h3>Soul Africa</h3>
+            <p>Artist</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <h2>Made for You</h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="cover two">🎧</div>
+            <h3>Afrova Mix</h3>
+            <p>Music picked for you</p>
+          </div>
+
+          <div class="card">
+            <div class="cover three">🌍</div>
+            <h3>Afro Vibes</h3>
+            <p>Fresh African sounds</p>
+          </div>
+
+          <div class="card">
+            <div class="cover four">🔥</div>
+            <h3>Hot Right Now</h3>
+            <p>What's trending</p>
+          </div>
+
+          <div class="card">
+            <div class="cover five">🌙</div>
+            <h3>Late Night</h3>
+            <p>Relax and listen</p>
+          </div>
+
+          <div class="card">
+            <div class="cover">✨</div>
+            <h3>New Releases</h3>
+            <p>Fresh music</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SEARCH -->
+    <section id="search" class="hidden">
+      <div class="section">
+        <div class="section-head">
+          <h2>Search Results</h2>
+        </div>
+        <div class="cards" id="searchResults"></div>
+      </div>
+    </section>
+
+    <!-- LIBRARY -->
+    <section id="library" class="hidden">
+      <div class="section">
+        <div class="section-head">
+          <h2>Your Library</h2>
+        </div>
+        <p style="color:var(--muted); line-height:1.7;">
+          Your saved songs, albums and playlists will appear here.
+        </p>
+      </div>
+    </section>
+
+    <!-- LIKED -->
+    <section id="liked" class="hidden">
+      <div class="section">
+        <div class="section-head">
+          <h2>Liked Songs</h2>
+        </div>
+        <div class="cards" id="likedSongs"></div>
+      </div>
+    </section>
+
+    <!-- PLAYLISTS -->
+    <section id="playlists" class="hidden">
+      <div class="section">
+        <div class="section-head">
+          <h2>Your Playlists</h2>
+          <button class="primary" onclick="createPlaylist()">+ Create Playlist</button>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="cover">🎵</div>
+            <h3>My Afro Playlist</h3>
+            <p>Your favourite music</p>
+          </div>
+
+          <div class="card">
+            <div class="cover three">🌴</div>
+            <h3>Afrobeats</h3>
+            <p>Afrobeat collection</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALBUMS -->
+    <section id="albums" class="hidden">
+      <div class="section">
+        <div class="section-head">
+          <h2>Albums</h2>
+        </div>
+        <div class="cards" id="albumCards"></div>
+      </div>
+    </section>
+
+    <!-- ARTIST STUDIO -->
+    <section id="artist" class="hidden">
+
+      <div class="hero">
+        <small>Afrova for Artists</small>
+        <h1>Put your music in front of listeners.</h1>
+        <p>
+          Create your artist profile, upload music, manage releases
+          and view your listener statistics.
+        </p>
+
+        <div class="hero-actions">
+          <button class="primary" onclick="artistMessage()">Create Artist Account</button>
+          <button class="secondary" onclick="artistMessage()">Upload Music</button>
+        </div>
+      </div>
+
+      <div class="artist-area">
+        <h2>Artist Studio</h2>
+        <p>
+          Upload songs and albums, add cover artwork, manage releases
+          and track how people listen to your music.
+        </p>
+
+        <div class="artist-actions">
+          <button class="primary" onclick="artistMessage()">＋ Upload Song</button>
+          <button class="secondary" onclick="artistMessage()">＋ New Album / EP</button>
+          <button class="secondary" onclick="artistMessage()">Analytics</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PREMIUM -->
+    <section id="premium" class="hidden">
+
+      <div class="hero">
+        <small>Afrova Premium</small>
+        <h1>Take your music experience further.</h1>
+        <p>
+          Enjoy an enhanced Afrova experience with Premium plans.
+        </p>
+      </div>
+
+      <div class="plans">
+
+        <div class="plan">
+          <h3>Student</h3>
+          <div class="price">₦400 <span>/ month</span></div>
+          <p>Premium access for eligible students.</p>
+          <button onclick="subscribe('Student')">Choose Student</button>
+        </div>
+
+        <div class="plan">
+          <h3>Individual</h3>
+          <div class="price">₦600 <span>/ month</span></div>
+          <p>Premium access for one person.</p>
+          <button onclick="subscribe('Individual')">Choose Individual</button>
+        </div>
+
+        <div class="plan">
+          <h3>Duo</h3>
+          <div class="price">₦1,200 <span>/ month</span></div>
+          <p>Premium access for two people.</p>
+          <button onclick="subscribe('Duo')">Choose Duo</button>
+        </div>
+
+        <div class="plan">
+          <h3>Family</h3>
+          <div class="price">₦1,500 <span>/ month</span></div>
+          <p>Premium access for your family.</p>
+          <button onclick="subscribe('Family')">Choose Family</button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <button class="active" onclick="showSection('home')">⌂<br>Home</button>
+  <button onclick="showSection('search')">⌕<br>Search</button>
+  <button onclick="showSection('library')">♫<br>Library</button>
+  <button onclick="showSection('premium')">◆<br>Premium</button>
+</div>
+
+<!-- PLAYER -->
+<div class="player">
+
+  <div class="now">
+    <div class="now-cover">♪</div>
+
+    <div class="now-info">
+      <strong id="nowTitle">Select a song</strong>
+      <span id="nowArtist">Afrova</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="control" onclick="previousSong()">⏮</button>
+
+    <button class="main-play" id="playButton" onclick="togglePlay()">▶</button>
+
+    <button class="control" onclick="nextSong()">⏭</button>
+  </div>
+
+  <div class="progress-area">
+    <span class="time" id="currentTime">0:00</span>
+
+    <div class="progress" onclick="seek(event)">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <span class="time" id="duration">0:00</span>
+  </div>
+
+</div>
+
+<div id="message"></div>
+
+<audio id="audio"></audio>
+
+<script>
+
+  /*
+    AFROVA MUSIC DATA
+
+    Replace an audio URL below with a legal audio file
+    that you have permission to use.
+  */
+
+  const songs = [
+    {
+      title: "Afrova Sunrise",
+      artist: "Afrova",
+      cover: "one",
+      audio: ""
+    },
+    {
+      title: "Lagos Nights",
+      artist: "Afro Artist",
+      cover: "two",
+      audio: ""
+    },
+    {
+      title: "African Dreams",
+      artist: "Kora",
+      cover: "three",
+      audio: ""
+    },
+    {
+      title: "Golden Vibes",
+      artist: "Melody",
+      cover: "four",
+      audio: ""
+    },
+    {
+      title: "New Energy",
+      artist: "Soul Africa",
+      cover: "five",
+      audio: ""
+    }
+  ];
+
+  let currentSong = 0;
+  let liked = [];
+  let isPlaying = false;
+
+  const audio = document.getElementById("audio");
+
+  /* CREATE SONG CARDS */
+
+  function renderSongs(list = songs, container = "songCards") {
+
+    const box = document.getElementById(container);
+
+    if (!box) return;
+
+    box.innerHTML = "";
+
+    if (list.length === 0) {
+      box.innerHTML =
+        '<p style="color:#999;">No music found.</p>';
+      return;
+    }
+
+    list.forEach((song, index) => {
+
+      const realIndex = songs.indexOf(song);
+
+      const card = document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="cover ${song.cover}">
+          ♪
+        </div>
+
+        <h3>${song.title}</h3>
+
+        <p>${song.artist}</p>
+
+        <div class="card-bottom">
+
+          <button class="play-small"
+            onclick="playSong(${realIndex})">
+            ▶
+          </button>
+
+          <button
+            class="heart ${liked.includes(realIndex) ? "liked" : ""}"
+            onclick="toggleLike(${realIndex})">
+            ♥
+          </button>
+
+        </div>
+      `;
+
+      box.appendChild(card);
+    });
+  }
+
+  /* PLAY SONG */
+
+  function playSong(index) {
+
+    currentSong = index;
+
+    const song = songs[index];
+
+    document.getElementById("nowTitle").textContent = song.title;
+    document.getElementById("nowArtist").textContent = song.artist;
+
+    if (song.audio) {
+
+      if (audio.src !== song.audio) {
+        audio.src = song.audio;
+      }
+
+      audio.play()
+        .then(() => {
+          isPlaying = true;
+          updatePlayButton();
+        })
+        .catch(() => {
+          showMessage("Add a legal audio file URL to this song first.");
+        });
+
+    } else {
+
+      showMessage(
+        "This song is a demo. Add your legal audio file URL in the code."
+      );
+
+      isPlaying = false;
+      updatePlayButton();
+    }
+  }
+
+  /* PLAY / PAUSE */
+
+  function togglePlay() {
+
+    if (!songs[currentSong].audio) {
+      showMessage("Add an audio file URL to play this song.");
+      return;
+    }
+
+    if (isPlaying) {
+      audio.pause();
+      isPlaying = false;
+    } else {
+      audio.play();
+      isPlaying = true;
+    }
+
+    updatePlayButton();
+  }
+
+  function updatePlayButton() {
+    document.getElementById("playButton").textContent =
+      isPlaying ? "Ⅱ" : "▶";
+  }
+
+  /* NEXT */
+
+  function nextSong() {
+
+    currentSong++;
+
+    if (currentSong >= songs.length) {
+      currentSong = 0;
+    }
+
+    playSong(currentSong);
+  }
+
+  /* PREVIOUS */
+
+  function previousSong() {
+
+    currentSong--;
+
+    if (currentSong < 0) {
+      currentSong = songs.length - 1;
+    }
+
+    playSong(currentSong);
+  }
+
+  /* LIKE */
+
+  function toggleLike(index) {
+
+    if (liked.includes(index)) {
+      liked = liked.filter(i => i !== index);
+      showMessage("Removed from Liked Songs");
+    } else {
+      liked.push(index);
+      showMessage("Added to Liked Songs ♥");
+    }
+
+    renderSongs();
+
+    renderLiked();
+  }
+
+  /* LIKED SONGS */
+
+  function renderLiked() {
+
+    const likedSongs = songs.filter(
+      (_, index) => liked.includes(index)
+    );
+
+    renderSongs(likedSongs, "likedSongs");
+  }
+
+  /* SEARCH */
+
+  function searchMusic() {
+
+    const query =
+      document.getElementById("searchInput").value
+      .toLowerCase()
+      .trim();
+
+    if (!query) {
+      renderSongs(songs, "searchResults");
+      return;
+    }
+
+    showSection("search");
+
+    const results = songs.filter(song =>
+      song.title.toLowerCase().includes(query) ||
+      song.artist.toLowerCase().includes(query)
+    );
+
+    renderSongs(results, "searchResults");
+  }
+
+  /* NAVIGATION */
+
+  function showSection(section, button = null) {
+
+    const sections = [
+      "home",
+      "search",
+      "library",
+      "liked",
+      "playlists",
+      "albums",
+      "artist",
+      "premium"
+    ];
+
+    sections.forEach(id => {
+
+      const element = document.getElementById(id);
+
+      if (element) {
+        element.classList.toggle(
+          "hidden",
+          id !== section
+        );
+      }
+    });
+
+    document.querySelectorAll(".nav-btn")
+      .forEach(btn => btn.classList.remove("active"));
+
+    if (button) {
+      button.classList.add("active");
+    }
+
+    if (section === "liked") {
+      renderLiked();
+    }
+
+    if (section === "search") {
+      renderSongs(songs, "searchResults");
+    }
+
+    if (section === "albums") {
+      renderAlbums();
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  /* ALBUMS */
+
+  function renderAlbums() {
+
+    const box = document.getElementById("albumCards");
+
+    box.innerHTML = "";
+
+    songs.forEach((song, index) => {
+
+      box.innerHTML += `
+        <div class="card">
+
+          <div class="cover ${song.cover}">
+            ▣
+          </div>
+
+          <h3>${song.title} — EP</h3>
+
+          <p>${song.artist}</p>
+
+          <div class="card-bottom">
+
+            <button
+              class="play-small"
+              onclick="playSong(${index})">
+              ▶
+            </button>
+
+          </div>
+
+        </div>
+      `;
+    });
+  }
+
+  /* CREATE PLAYLIST */
+
+  function createPlaylist() {
+
+    const name =
+      prompt("Enter your playlist name:");
+
+    if (!name) return;
+
+    showMessage(
+      `"${name}" playlist created.`
+    );
+  }
+
+  /* ARTIST */
+
+  function artistMessage() {
+
+    showMessage(
+      "Artist Studio will connect to the Afrova backend next."
+    );
+  }
+
+  /* PREMIUM */
+
+  function subscribe(plan) {
+
+    showMessage(
+      `${plan} selected. Paystack payment will be connected next.`
+    );
+  }
+
+  /* MESSAGE */
+
+  function showMessage(text) {
+
+    const box =
+      document.getElementById("message");
+
+    box.textContent = text;
+
+    box.style.display = "block";
+
+    setTimeout(() => {
+      box.style.display = "none";
+    }, 3000);
+  }
+
+  /* AUDIO EVENTS */
+
+  audio.addEventListener("timeupdate", () => {
+
+    if (!audio.duration) return;
+
+    const percent =
+      (audio.currentTime / audio.duration) * 100;
+
+    document.getElementById("progressFill")
+      .style.width = percent + "%";
+
+    document.getElementById("currentTime")
+      .textContent = formatTime(audio.currentTime);
+  });
+
+  audio.addEventListener("loadedmetadata", () => {
+
+    document.getElementById("duration")
+      .textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener("ended", () => {
+
+    isPlaying = false;
+    updatePlayButton();
+
+    nextSong();
+  });
+
+  /* SEEK */
+
+  function seek(event) {
+
+    if (!audio.duration) return;
+
+    const rect =
+      event.currentTarget.getBoundingClientRect();
+
+    const percent =
+      (event.clientX - rect.left) / rect.width;
+
+    audio.currentTime =
+      percent * audio.duration;
+  }
+
+  /* FORMAT TIME */
+
+  function formatTime(seconds) {
+
+    if (!seconds || isNaN(seconds)) {
+      return "0:00";
+    }
+
+    const minutes =
+      Math.floor(seconds / 60);
+
+    const secs =
+      Math.floor(seconds % 60)
+        .toString()
+        .padStart(2, "0");
+
+    return `${minutes}:${secs}`;
+  }
+
+  /* INITIAL LOAD */
+
+  renderSongs();
+  renderSongs(songs, "searchResults");
+  renderLiked();
+  renderAlbums();
+
+</script>
+
+</body>
+</html>
