@@ -984,6 +984,67 @@
 <script>
   const SUPABASE_URL = "https://eeurywspkbqbxayoyexi.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
+  const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+async function signUp(email, password, displayName) {
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    showMessage(error.message);
+    return;
+  }
+
+  if (data.user) {
+    const { error: profileError } =
+      await supabaseClient
+        .from("profiles")
+        .insert({
+          id: data.user.id,
+          display_name: displayName,
+          role: "listener"
+        });
+
+    if (profileError) {
+      showMessage(profileError.message);
+      return;
+    }
+  }
+
+  showMessage("Account created successfully!");
+}
+
+async function login(email, password) {
+  const { error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage("Welcome back to Afrova!");
+}
+
+async function logout() {
+  const { error } =
+    await supabaseClient.auth.signOut();
+
+  if (error) {
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage("You have been logged out.");
+}
 
   /*
     AFROVA MUSIC DATA
