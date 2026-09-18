@@ -1,3251 +1,2372 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Afrova</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #090909;
-      --panel: #121212;
-      --panel2: #181818;
-      --text: #fff;
-      --muted: #a7a7a7;
-      --accent: #1ed760;
-      --accent2: #18b94f;
-      --danger: #ff5b5b;
-      --border: #292929;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      border: 0;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .app {
-      display: flex;
-      min-height: 100vh;
-      padding-bottom: 88px;
-    }
-
-    /* SIDEBAR */
-    .sidebar {
-      width: 245px;
-      background: #000;
-      padding: 24px 16px;
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      z-index: 20;
-      overflow-y: auto;
-    }
-
-    .logo {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      margin: 0 12px 35px;
-    }
-
-    .logo span {
-      color: var(--accent);
-    }
-
-    .nav {
-      display: grid;
-      gap: 5px;
-    }
-
-    .nav button {
-      width: 100%;
-      background: transparent;
-      color: #b3b3b3;
-      text-align: left;
-      padding: 13px 12px;
-      border-radius: 8px;
-      font-weight: 700;
-      transition: .2s;
-    }
-
-    .nav button:hover,
-    .nav button.active {
-      color: #fff;
-      background: #1a1a1a;
-    }
-
-    .nav button.active {
-      color: var(--accent);
-    }
-
-    .sidebar-divider {
-      border-top: 1px solid #222;
-      margin: 25px 12px;
-    }
-
-    .sidebar-small {
-      color: #777;
-      font-size: 12px;
-      padding: 12px;
-      line-height: 1.5;
-    }
-
-    /* MAIN */
-    .main {
-      margin-left: 245px;
-      width: calc(100% - 245px);
-      min-width: 0;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 15;
-      height: 72px;
-      background: rgba(9,9,9,.94);
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 0 28px;
-      border-bottom: 1px solid #151515;
-    }
-
-    .search-wrap {
-      flex: 1;
-      max-width: 650px;
-      position: relative;
-    }
-
-    .search-wrap input {
-      width: 100%;
-      background: #fff;
-      border: 0;
-      color: #111;
-      border-radius: 25px;
-      padding: 13px 20px;
-      outline: none;
-    }
-
-    .top-actions {
-      margin-left: auto;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .plan-badge {
-      border: 1px solid #333;
-      border-radius: 20px;
-      padding: 8px 12px;
-      font-size: 12px;
-      color: #ccc;
-    }
-
-    .account-btn {
-      background: #fff;
-      color: #000;
-      padding: 10px 16px;
-      border-radius: 22px;
-      font-weight: 800;
-    }
-
-    .content {
-      padding: 28px;
-      max-width: 1500px;
-      margin: auto;
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* HERO */
-    .hero {
-      min-height: 330px;
-      border-radius: 20px;
-      padding: 45px;
-      display: flex;
-      align-items: center;
-      background:
-        radial-gradient(circle at 80% 20%, rgba(30,215,96,.35), transparent 35%),
-        linear-gradient(135deg, #1c1c1c, #0d0d0d);
-      margin-bottom: 38px;
-    }
-
-    .hero-content {
-      max-width: 650px;
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 6vw, 76px);
-      line-height: .95;
-      margin-bottom: 18px;
-    }
-
-    .hero p {
-      color: #bbb;
-      font-size: 17px;
-      line-height: 1.6;
-      margin-bottom: 25px;
-    }
-
-    .primary {
-      background: var(--accent);
-      color: #000;
-      padding: 13px 22px;
-      border-radius: 25px;
-      font-weight: 900;
-    }
-
-    .primary:hover {
-      background: #fff;
-    }
-
-    .secondary {
-      background: #292929;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 24px;
-      font-weight: 700;
-    }
-
-    .secondary:hover {
-      background: #383838;
-    }
-
-    /* SECTIONS */
-    .section {
-      margin-bottom: 40px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .section h2 {
-      font-size: 24px;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 18px;
-    }
-
-    .song-card,
-    .artist-card,
-    .album-card {
-      background: var(--panel);
-      padding: 15px;
-      border-radius: 12px;
-      transition: .2s;
-      min-width: 0;
-    }
-
-    .song-card:hover,
-    .artist-card:hover,
-    .album-card:hover {
-      background: #1c1c1c;
-      transform: translateY(-2px);
-    }
-
-    .cover {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #222, #444);
-      object-fit: cover;
-      margin-bottom: 13px;
-      display: block;
-    }
-
-    .song-title,
-    .artist-name {
-      font-weight: 800;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .song-artist,
-    .song-stats {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 5px;
-    }
-
-    .song-stats {
-      font-size: 11px;
-    }
-
-    .card-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      margin-top: 13px;
-    }
-
-    .icon-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #292929;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    .icon-btn:hover {
-      background: var(--accent);
-      color: #000;
-    }
-
-    /* ARTISTS */
-    .artist-card {
-      text-align: center;
-    }
-
-    .artist-avatar {
-      width: 125px;
-      height: 125px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #333;
-      margin: 5px auto 15px;
-      display: block;
-    }
-
-    .artist-card button {
-      background: transparent;
-      color: inherit;
-      width: 100%;
-    }
-
-    /* SEARCH */
-    .search-large {
-      width: 100%;
-      padding: 17px 20px;
-      border-radius: 10px;
-      background: #202020;
-      color: white;
-      border: 1px solid #333;
-      outline: none;
-      margin-bottom: 25px;
-    }
-
-    /* PREMIUM */
-    .premium-header {
-      padding: 20px 0 35px;
-    }
-
-    .premium-header h1 {
-      font-size: 44px;
-      margin-bottom: 10px;
-    }
-
-    .premium-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px;
-    }
-
-    .plan {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 25px;
-    }
-
-    .plan h3 {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    .price {
-      font-size: 32px;
-      font-weight: 900;
-      margin: 15px 0;
-    }
-
-    .plan p {
-      color: var(--muted);
-      line-height: 1.5;
-      min-height: 60px;
-      margin-bottom: 20px;
-    }
-
-    .plan .primary {
-      width: 100%;
-    }
-
-    .premium-active {
-      padding: 20px;
-      background: rgba(30,215,96,.1);
-      border: 1px solid rgba(30,215,96,.35);
-      border-radius: 12px;
-      margin-bottom: 25px;
-    }
-
-    /* ARTIST STUDIO */
-    .studio-head {
-      background: linear-gradient(135deg, #191919, #0c0c0c);
-      padding: 30px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .stat {
-      background: var(--panel);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .stat-number {
-      font-size: 30px;
-      font-weight: 900;
-      margin-top: 8px;
-    }
-
-    .song-row {
-      background: var(--panel);
-      padding: 15px;
-      display: grid;
-      grid-template-columns: 50px 1fr auto auto;
-      align-items: center;
-      gap: 15px;
-      border-bottom: 1px solid #292929;
-    }
-
-    .song-row:first-child {
-      border-radius: 10px 10px 0 0;
-    }
-
-    .song-row:last-child {
-      border-radius: 0 0 10px 10px;
-    }
-
-    .mini-cover {
-      width: 50px;
-      height: 50px;
-      border-radius: 6px;
-      object-fit: cover;
-      background: #333;
-    }
-
-    /* ARTIST PROFILE */
-    .artist-profile-hero {
-      background: linear-gradient(135deg, #222, #0c0c0c);
-      border-radius: 18px;
-      padding: 35px;
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      margin-bottom: 25px;
-    }
-
-    .artist-profile-avatar {
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 50%;
-      background: #333;
-    }
-
-    .artist-profile-info h1 {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    .artist-profile-info p {
-      color: #aaa;
-      line-height: 1.6;
-      max-width: 650px;
-      margin-bottom: 15px;
-    }
-
-    .artist-metrics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      color: #bbb;
-      margin-bottom: 18px;
-    }
-
-    /* MODAL */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.78);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #171717;
-      border: 1px solid #333;
-      border-radius: 15px;
-      width: 100%;
-      max-width: 470px;
-      padding: 28px;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: relative;
-    }
-
-    .modal-box h2 {
-      margin-bottom: 20px;
-    }
-
-    .close {
-      position: absolute;
-      right: 18px;
-      top: 15px;
-      background: transparent;
-      color: #aaa;
-      font-size: 25px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      color: #bbb;
-      font-size: 13px;
-      margin-bottom: 7px;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      background: #252525;
-      border: 1px solid #3a3a3a;
-      color: #fff;
-      border-radius: 7px;
-      outline: none;
-    }
-
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .modal-box .primary {
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    .message {
-      padding: 12px;
-      border-radius: 8px;
-      background: #252525;
-      color: #bbb;
-      margin-bottom: 15px;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-
-    .message.success {
-      background: rgba(30,215,96,.1);
-      color: #80ffac;
-    }
-
-    .message.error {
-      background: rgba(255,91,91,.1);
-      color: #ff9292;
-    }
-
-    /* PLAYER */
-    .player {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 88px;
-      background: #101010;
-      border-top: 1px solid #292929;
-      z-index: 50;
-      display: grid;
-      grid-template-columns: 280px 1fr 280px;
-      align-items: center;
-      gap: 20px;
-      padding: 10px 22px;
-    }
-
-    .now-playing {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .now-playing img {
-      width: 58px;
-      height: 58px;
-      border-radius: 5px;
-      object-fit: cover;
-      background: #333;
-    }
-
-    .now-info {
-      min-width: 0;
-    }
-
-    .now-info div {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .player-center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .player-controls {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .player-controls button {
-      background: transparent;
-      color: #fff;
-      font-size: 18px;
-    }
-
-    .player-controls .play {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #fff;
-      color: #000;
-    }
-
-    .progress {
-      width: 100%;
-      max-width: 600px;
-      height: 4px;
-      accent-color: var(--accent);
-    }
-
-    .player-right {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .volume {
-      width: 100px;
-      accent-color: var(--accent);
-    }
-
-    /* EMPTY */
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: #777;
-    }
-
-    /* MOBILE */
-    @media (max-width: 900px) {
-      .sidebar {
-        width: 75px;
-        padding: 20px 8px;
-      }
-
-      .logo {
-        font-size: 22px;
-        text-align: center;
-        margin: 5px 0 25px;
-      }
-
-      .nav button {
-        text-align: center;
-        padding: 12px 4px;
-        font-size: 0;
-      }
-
-      .nav button::first-letter {
-        font-size: 20px;
-      }
-
-      .sidebar-small,
-      .sidebar-divider {
-        display: none;
-      }
-
-      .main {
-        margin-left: 75px;
-        width: calc(100% - 75px);
-      }
-
-      .player {
-        grid-template-columns: 1fr auto;
-      }
-
-      .player-center {
-        display: none;
-      }
-
-      .player-right {
-        display: none;
-      }
-
-      .now-playing {
-        justify-content: center;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .content {
-        padding: 18px;
-      }
-
-      .topbar {
-        padding: 0 15px;
-      }
-
-      .plan-badge {
-        display: none;
-      }
-
-      .hero {
-        padding: 28px;
-        min-height: 280px;
-      }
-
-      .hero h1 {
-        font-size: 45px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .song-card,
-      .artist-card {
-        padding: 10px;
-      }
-
-      .artist-profile-hero {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .artist-profile-info h1 {
-        font-size: 30px;
-      }
-
-      .song-row {
-        grid-template-columns: 45px 1fr auto;
-      }
-
-      .song-row .status-cell {
-        display: none;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Afrova</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0b0d;color:#fff;font-family:Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:#111115;padding:24px;position:fixed;left:0;top:0;bottom:0}
+.logo{font-size:30px;font-weight:800;margin-bottom:30px}
+.logo span{color:#8b5cf6}
+.nav button{display:block;width:100%;padding:13px;margin:6px 0;background:none;border:0;color:#aaa;text-align:left;border-radius:10px}
+.nav button:hover,.nav button.active{background:#242027;color:#fff}
+.main{margin-left:240px;width:calc(100% - 240px);padding-bottom:110px}
+.topbar{height:70px;background:#101014;display:flex;align-items:center;gap:15px;padding:12px 28px;position:sticky;top:0;z-index:10}
+.search{flex:1;max-width:600px;background:#222229;border:1px solid #333;border-radius:30px;padding:13px 18px;color:#fff;outline:0}
+.account-btn,.primary{background:#8b5cf6;color:white;border:0;border-radius:25px;padding:11px 18px;font-weight:700}
+.secondary{background:#25252d;color:white;border:1px solid #444;border-radius:10px;padding:10px 15px}
+.content{padding:30px}
+.hero{background:linear-gradient(135deg,#29134d,#15151c);padding:45px;border-radius:22px;margin-bottom:30px}
+.hero h1{font-size:44px;margin:0 0 10px}
+.hero p{color:#bbb;max-width:600px}
+h2{margin-top:35px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px}
+.card{background:#151519;border:1px solid #26262d;border-radius:15px;padding:14px;transition:.2s}
+.card:hover{transform:translateY(-2px);border-color:#555}
+.cover{width:100%;aspect-ratio:1;border-radius:11px;background:#25252d;object-fit:cover}
+.card h3{font-size:16px;margin:10px 0 5px}
+.card p{margin:0;color:#999;font-size:13px}
+.card-actions{display:flex;gap:7px;margin-top:12px}
+.card-actions button{flex:1}
+.song-row{display:flex;align-items:center;gap:14px;padding:10px;border-radius:10px}
+.song-row:hover{background:#19191f}
+.song-row img{width:52px;height:52px;object-fit:cover;border-radius:7px}
+.song-info{flex:1}
+.song-info strong{display:block}
+.song-info small{color:#999}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#29222f;color:#c4a7ff;font-size:12px}
+.badge.green{background:#163522;color:#6ee7a1}
+.badge.yellow{background:#403515;color:#facc15}
+.badge.red{background:#401c1c;color:#f87171}
+.player{position:fixed;left:240px;right:0;bottom:0;background:#151519;border-top:1px solid #333;padding:12px 22px;display:flex;align-items:center;gap:15px;z-index:20}
+.player img{width:48px;height:48px;border-radius:7px;object-fit:cover}
+.player-info{min-width:150px}
+.player-info strong{display:block}
+.player-info small{color:#999}
+.player button{background:none;border:0;color:white;font-size:20px}
+.progress{flex:1}
+.progress input{width:100%}
+.modal-bg{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:100}
+.modal{background:#18181d;width:min(650px,94%);max-height:90vh;overflow:auto;border-radius:18px;padding:25px}
+.modal h2{margin-top:0}
+.field{margin:14px 0}
+.field label{display:block;color:#aaa;font-size:13px;margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;background:#24242b;border:1px solid #444;color:white;padding:12px;border-radius:9px;outline:0}
+.field textarea{min-height:100px}
+.close{float:right;background:none;border:0;color:#aaa;font-size:24px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tabs button{background:#222229;border:1px solid #333;color:#ccc;border-radius:20px;padding:9px 14px}
+.tabs button.active{background:#8b5cf6;color:#fff}
+.admin-stat{background:#17171c;padding:20px;border-radius:14px;border:1px solid #292930}
+.admin-stat strong{font-size:30px;display:block;margin-top:8px}
+.track-input{display:grid;grid-template-columns:45px 1fr 1fr;gap:8px;margin:8px 0;align-items:center}
+.track-input span{color:#aaa;text-align:center}
+.release-card{margin:12px 0;padding:15px;background:#151519;border:1px solid #2a2a30;border-radius:12px}
+.empty{padding:35px;text-align:center;color:#888;background:#141419;border-radius:14px}
+.hidden{display:none!important}
+@media(max-width:800px){
+.sidebar{width:70px;padding:15px 8px}
+.logo{font-size:18px;text-align:center}
+.nav button{font-size:0;text-align:center}
+.nav button:first-letter{font-size:20px}
+.main{margin-left:70px;width:calc(100% - 70px)}
+.player{left:70px}
+.content{padding:18px}
+.hero h1{font-size:32px}
+.topbar{padding:10px}
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo">Afro<span>va</span></div>
+<aside class="sidebar">
+  <div class="logo">Afro<span>va</span></div>
 
-    <div class="nav">
-      <button class="active" onclick="showPage('home')">🏠 Home</button>
-      <button onclick="showPage('search')">🔎 Search</button>
-      <button onclick="showPage('liked')">❤️ Liked Songs</button>
-      <button onclick="showPage('playlists')">📋 Playlists</button>
-      <button onclick="showPage('albums')">💿 Albums</button>
-      <button onclick="openArtistStudio()">🎤 Artist Studio</button>
-      <button onclick="showPage('premium')">💎 Premium</button>
-    </div>
+  <nav class="nav">
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('search')">🔎 Search</button>
+    <button onclick="showPage('liked')">❤️ Liked Songs</button>
+    <button onclick="showPage('playlists')">📋 Playlists</button>
+    <button onclick="showPage('albums')">💿 Albums</button>
+    <button onclick="showPage('artist')">🎤 Artist Studio</button>
+    <button onclick="showPage('premium')">⭐ Premium</button>
+    <button id="adminNav" class="hidden" onclick="showPage('admin')">🛡️ Admin</button>
+  </nav>
+</aside>
 
-    <div class="sidebar-divider"></div>
+<main class="main">
 
-    <div class="sidebar-small">
-      Afrova<br>
-      African music for everyone.
-    </div>
-  </aside>
+<header class="topbar">
+  <input id="topSearch" class="search" placeholder="Search songs, artists, albums..." oninput="quickSearch(this.value)">
+  <button class="account-btn" onclick="openAccount()">Account</button>
+</header>
 
-  <!-- MAIN -->
-  <main class="main">
+<section id="content" class="content"></section>
 
-    <header class="topbar">
-      <div class="search-wrap">
-        <input
-          id="topSearch"
-          type="search"
-          placeholder="Search songs, artists..."
-          oninput="quickSearch(this.value)"
-        />
-      </div>
-
-      <div class="top-actions">
-        <div class="plan-badge" id="planBadge">Free</div>
-        <button class="account-btn" onclick="openAccount()">Account</button>
-      </div>
-    </header>
-
-    <div class="content">
-
-      <!-- HOME -->
-      <section id="homePage" class="page active">
-
-        <div class="hero">
-          <div class="hero-content">
-            <h1>Your sound.<br>Our Africa.</h1>
-            <p>
-              Discover African music, follow your favourite artists,
-              build playlists and enjoy your music on Afrova.
-            </p>
-            <button class="primary" onclick="showPage('search')">
-              Start listening
-            </button>
-          </div>
-        </div>
-
-        <div class="section">
-          <div class="section-head">
-            <h2>Trending Songs</h2>
-          </div>
-          <div id="trendingSongs" class="grid"></div>
-        </div>
-
-        <div class="section">
-          <div class="section-head">
-            <h2>Popular Artists</h2>
-          </div>
-          <div id="popularArtists" class="grid"></div>
-        </div>
-
-        <div class="section">
-          <div class="section-head">
-            <h2>Made For You</h2>
-          </div>
-          <div id="madeForYou" class="grid"></div>
-        </div>
-
-      </section>
-
-      <!-- SEARCH -->
-      <section id="searchPage" class="page">
-        <h1 style="margin-bottom:20px;">Search Afrova</h1>
-
-        <input
-          id="searchInput"
-          class="search-large"
-          type="search"
-          placeholder="What do you want to listen to?"
-          oninput="searchSongs(this.value)"
-        />
-
-        <div id="searchResults"></div>
-      </section>
-
-      <!-- LIKED -->
-      <section id="likedPage" class="page">
-        <h1 style="margin-bottom:25px;">Liked Songs</h1>
-        <div id="likedSongs" class="grid"></div>
-      </section>
-
-      <!-- PLAYLISTS -->
-      <section id="playlistsPage" class="page">
-        <h1 style="margin-bottom:15px;">Playlists</h1>
-        <p class="muted">
-          Create and manage your personal playlists.
-        </p>
-
-        <div class="empty">
-          Playlist management is coming next.
-        </div>
-      </section>
-
-      <!-- ALBUMS -->
-      <section id="albumsPage" class="page">
-        <h1 style="margin-bottom:15px;">Albums</h1>
-        <p class="muted">
-          Explore albums and EPs from Afrova artists.
-        </p>
-
-        <div class="empty">
-          Albums will appear here as artists release them.
-        </div>
-      </section>
-
-      <!-- PREMIUM -->
-      <section id="premiumPage" class="page">
-        <div class="premium-header">
-          <h1>Afrova Premium</h1>
-          <p class="muted">
-            Enjoy unlimited listening and more.
-          </p>
-        </div>
-
-        <div id="premiumStatus"></div>
-
-        <div id="premiumPlans" class="premium-grid"></div>
-      </section>
-
-      <!-- ARTIST STUDIO -->
-      <section id="studioPage" class="page">
-        <div id="studioContent"></div>
-      </section>
-
-      <!-- ARTIST PROFILE -->
-      <section id="artistProfilePage" class="page">
-        <div id="artistProfileContent"></div>
-      </section>
-
-    </div>
-  </main>
+</main>
 </div>
 
-<!-- PLAYER -->
 <div class="player">
-
-  <div class="now-playing">
-    <img id="playerCover" src="" alt="">
-    <div class="now-info">
-      <div id="playerTitle">Nothing playing</div>
-      <div id="playerArtist" class="muted">Choose a song</div>
-    </div>
+  <img id="playerCover" src="" alt="">
+  <div class="player-info">
+    <strong id="playerTitle">Nothing playing</strong>
+    <small id="playerArtist">Afrova</small>
   </div>
-
-  <div class="player-center">
-    <div class="player-controls">
-      <button onclick="previousSong()">⏮</button>
-      <button class="play" id="playBtn" onclick="togglePlay()">▶</button>
-      <button onclick="nextSong()">⏭</button>
-    </div>
-
-    <input
-      id="progress"
-      class="progress"
-      type="range"
-      min="0"
-      max="100"
-      value="0"
-      oninput="seekAudio(this.value)"
-    />
-  </div>
-
-  <div class="player-right">
-    🔊
-    <input
-      id="volume"
-      class="volume"
-      type="range"
-      min="0"
-      max="1"
-      step=".01"
-      value=".8"
-      oninput="setVolume(this.value)"
-    />
+  <button onclick="previousSong()">⏮</button>
+  <button onclick="togglePlay()">▶️</button>
+  <button onclick="nextSong()">⏭</button>
+  <div class="progress">
+    <input id="seek" type="range" min="0" max="100" value="0" oninput="seekSong(this.value)">
   </div>
 </div>
 
 <audio id="audio"></audio>
 
 <!-- ACCOUNT MODAL -->
-<div id="accountModal" class="modal">
-  <div class="modal-box">
-    <button class="close" onclick="closeModal('accountModal')">×</button>
-
-    <div id="accountContent"></div>
-  </div>
+<div class="modal-bg" id="accountModal">
+<div class="modal">
+<button class="close" onclick="closeModal('accountModal')">×</button>
+<div id="accountContent"></div>
+</div>
 </div>
 
-<!-- UPLOAD MODAL -->
-<div id="uploadModal" class="modal">
-  <div class="modal-box">
-    <button class="close" onclick="closeModal('uploadModal')">×</button>
+<!-- RELEASE MODAL -->
+<div class="modal-bg" id="releaseModal">
+<div class="modal">
+<button class="close" onclick="closeModal('releaseModal')">×</button>
 
-    <h2>Upload Music</h2>
+<h2>Create Release</h2>
 
-    <div id="uploadMessage"></div>
-
-    <div class="form-group">
-      <label>Song title</label>
-      <input id="uploadTitle" type="text" placeholder="Song title">
-    </div>
-
-    <div class="form-group">
-      <label>Genre</label>
-      <input id="uploadGenre" type="text" placeholder="Afrobeats">
-    </div>
-
-    <div class="form-group">
-      <label>Audio file</label>
-      <input id="audioFile" type="file" accept="audio/*">
-    </div>
-
-    <div class="form-group">
-      <label>Cover artwork</label>
-      <input id="coverFile" type="file" accept="image/*">
-    </div>
-
-    <button class="primary" onclick="uploadSong()">
-      Submit Song
-    </button>
-  </div>
+<div class="field">
+<label>Release type</label>
+<select id="releaseType">
+<option value="single">Single</option>
+<option value="ep">EP</option>
+<option value="album">Album</option>
+</select>
 </div>
 
-<!-- ARTIST ACCOUNT MODAL -->
-<div id="artistModal" class="modal">
-  <div class="modal-box">
-    <button class="close" onclick="closeModal('artistModal')">×</button>
-
-    <h2>Create Artist Profile</h2>
-
-    <div id="artistMessage"></div>
-
-    <div class="form-group">
-      <label>Artist name</label>
-      <input id="artistName" type="text" placeholder="Your artist name">
-    </div>
-
-    <div class="form-group">
-      <label>Bio</label>
-      <textarea id="artistBio" placeholder="Tell listeners about yourself"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Artist image</label>
-      <input id="artistAvatarFile" type="file" accept="image/*">
-    </div>
-
-    <button class="primary" onclick="createArtistAccount()">
-      Create Artist Profile
-    </button>
-  </div>
+<div class="field">
+<label>Title</label>
+<input id="releaseTitle" placeholder="Release title">
 </div>
 
-<!-- STUDENT VERIFICATION -->
-<div id="studentModal" class="modal">
-  <div class="modal-box">
-    <button class="close" onclick="closeModal('studentModal')">×</button>
+<div class="field">
+<label>Cover artwork</label>
+<input id="releaseCover" type="file" accept="image/*">
+</div>
 
-    <h2>Student Premium</h2>
+<div class="field">
+<label>Release date</label>
+<input id="releaseDate" type="date">
+</div>
 
-    <div class="message">
-      Student Premium requires verification of your student status.
-      In the full verification system, Afrova will securely collect
-      the required school document and send it for review.
-    </div>
+<h3>Tracks</h3>
+<div id="trackInputs"></div>
 
-    <button class="primary" onclick="continueStudentPayment()">
-      Continue to Student Payment
-    </button>
-  </div>
+<button class="secondary" onclick="addTrackInput()">＋ Add Track</button>
+<br><br>
+<button class="primary" onclick="createRelease()">Create Release</button>
+
+</div>
+</div>
+
+<!-- STUDENT MODAL -->
+<div class="modal-bg" id="studentModal">
+<div class="modal">
+<button class="close" onclick="closeModal('studentModal')">×</button>
+<h2>Student Verification</h2>
+
+<p style="color:#aaa">
+Submit your school ID or admission document for Afrova student verification.
+Your document will be reviewed by Afrova administration.
+</p>
+
+<div class="field">
+<label>Verification document</label>
+<input id="studentDocument" type="file" accept="image/*,.pdf">
+</div>
+
+<button class="primary" onclick="submitStudentVerification()">
+Submit for verification
+</button>
+</div>
 </div>
 
 <script>
 /* =========================================================
-   AFROVA CONFIGURATION
+   AFROVA CONFIG
 ========================================================= */
 
 const SUPABASE_URL =
-  "https://eeurywspkbqbxayoyexi.supabase.co";
+"https://eeurywspkbqbxayoyexi.supabase.co";
 
-const SUPABASE_ANON_KEY =
-  "sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
+const SUPABASE_KEY =
+"sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const sb = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-/* Paystack payment pages */
 const PAYSTACK_LINKS = {
-  student: "https://paystack.shop/pay/k0jf1wizby",
-  individual: "https://paystack.shop/pay/w0ov-s1tir",
-  duo: "https://paystack.shop/pay/7a78ikzfmy",
-  family: "https://paystack.shop/pay/47wwryj73v"
+  student:"https://paystack.shop/pay/k0jf1wizby",
+  individual:"https://paystack.shop/pay/w0ov-s1tir",
+  duo:"https://paystack.shop/pay/7a78ikzfmy",
+  family:"https://paystack.shop/pay/47wwryj73v"
 };
-
-/* =========================================================
-   APP STATE
-========================================================= */
 
 let currentUser = null;
 let currentProfile = null;
 let currentArtist = null;
-let currentSubscription = null;
-
 let songs = [];
-let artists = [];
-let likedSongs = JSON.parse(
-  localStorage.getItem("afrova_liked") || "[]"
-);
-
+let albums = [];
 let currentSongIndex = -1;
-let audio = document.getElementById("audio");
+let currentSong = null;
+let liked = JSON.parse(localStorage.getItem("afrova_liked") || "[]");
+let trackNumber = 0;
 
-let streamRecordedFor = new Set();
-
-const DEMO_SONGS = [
-  {
-    id: "demo-1",
-    title: "Afrova Sunrise",
-    artist_id: "demo-artist-1",
-    artistName: "Afrova Sounds",
-    genre: "Afrobeats",
-    cover_path: "",
-    audio_path: "",
-    stream_count: 0,
-    monthly_listeners: 0,
-    demo: true
-  },
-  {
-    id: "demo-2",
-    title: "African Nights",
-    artist_id: "demo-artist-2",
-    artistName: "Afrova Collective",
-    genre: "Afropop",
-    cover_path: "",
-    audio_path: "",
-    stream_count: 0,
-    monthly_listeners: 0,
-    demo: true
-  },
-  {
-    id: "demo-3",
-    title: "Lagos Rhythm",
-    artist_id: "demo-artist-3",
-    artistName: "Afrova Beats",
-    genre: "Afrobeats",
-    cover_path: "",
-    audio_path: "",
-    stream_count: 0,
-    monthly_listeners: 0,
-    demo: true
-  },
-  {
-    id: "demo-4",
-    title: "African Love",
-    artist_id: "demo-artist-4",
-    artistName: "Afrova Music",
-    genre: "R&B",
-    cover_path: "",
-    audio_path: "",
-    stream_count: 0,
-    monthly_listeners: 0,
-    demo: true
-  }
-];
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function escapeHTML(value) {
+function escapeHtml(value){
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
-function coverUrl(path) {
-  if (!path) return "";
-
-  if (
-    path.startsWith("http://") ||
-    path.startsWith("https://")
-  ) {
-    return path;
-  }
-
-  return supabaseClient
-    .storage
-    .from("covers")
-    .getPublicUrl(path).data.publicUrl;
+function closeModal(id){
+  document.getElementById(id).style.display="none";
 }
 
-function audioUrl(path) {
-  if (!path) return "";
-
-  if (
-    path.startsWith("http://") ||
-    path.startsWith("https://")
-  ) {
-    return path;
-  }
-
-  return supabaseClient
-    .storage
-    .from("music")
-    .getPublicUrl(path).data.publicUrl;
+function openModal(id){
+  document.getElementById(id).style.display="flex";
 }
 
-function placeholderCover(title = "Afrova") {
-  const text = encodeURIComponent(
-    title.substring(0, 12)
-  );
-
-  return `https://dummyimage.com/600x600/202020/ffffff&text=${text}`;
+function formatDate(date){
+  if(!date) return "";
+  return new Date(date).toLocaleDateString();
 }
 
-function getCover(song) {
-  return coverUrl(song.cover_path) ||
-    placeholderCover(song.title);
+function showMessage(message){
+  alert(message);
 }
 
-function formatNumber(number) {
-  return Number(number || 0).toLocaleString();
-}
-
-function getEmailRedirectUrl() {
-  return window.location.href
-    .split("#")[0]
-    .split("?")[0];
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove("show");
-}
-
-function openModal(id) {
-  document.getElementById(id).classList.add("show");
-}
-
-function showMessage(id, text, type = "") {
-  const element = document.getElementById(id);
-
-  if (!element) return;
-
-  element.innerHTML =
-    `<div class="message ${type}">
-      ${escapeHTML(text)}
-    </div>`;
-}
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function showPage(page) {
-
-  document.querySelectorAll(".page")
-    .forEach(p => p.classList.remove("active"));
-
-  const target =
-    document.getElementById(page + "Page");
-
-  if (target) {
-    target.classList.add("active");
-  }
-
-  document.querySelectorAll(".nav button")
-    .forEach(btn => btn.classList.remove("active"));
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-  if (page === "home") {
-    renderHome();
-  }
-
-  if (page === "liked") {
-    renderLikedSongs();
-  }
-
-  if (page === "premium") {
-    renderPremium();
-  }
-}
 
 /* =========================================================
    AUTH
 ========================================================= */
 
-async function checkLogin() {
+async function checkLogin(){
 
-  const {
-    data: { session }
-  } = await supabaseClient.auth.getSession();
+  const {data} = await sb.auth.getSession();
 
-  currentUser = session?.user || null;
+  currentUser = data.session?.user || null;
 
-  if (currentUser) {
+  if(currentUser){
     await loadProfile();
-    await loadSubscription();
+  }
+
+  updateAdminButton();
+}
+
+async function loadProfile(){
+
+  if(!currentUser) return;
+
+  const {data,error} = await sb
+    .from("profiles")
+    .select("*")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  currentProfile=data;
+
+  if(currentProfile?.role === "artist"){
     await loadArtistProfile();
   }
 
-  updateAccountButton();
-  updatePlanBadge();
+  if(currentProfile?.role === "admin"){
+    document.getElementById("adminNav").classList.remove("hidden");
+  }
 }
 
-supabaseClient.auth.onAuthStateChange(
-  async (_event, session) => {
+async function loadArtistProfile(){
 
-    currentUser = session?.user || null;
+  const {data} = await sb
+    .from("artist_profiles")
+    .select("*")
+    .eq("id",currentUser.id)
+    .maybeSingle();
 
-    if (currentUser) {
-      await loadProfile();
-      await loadSubscription();
-      await loadArtistProfile();
-    } else {
-      currentProfile = null;
-      currentArtist = null;
-      currentSubscription = null;
+  currentArtist=data;
+}
+
+function updateAdminButton(){
+
+  const btn=document.getElementById("adminNav");
+
+  if(currentProfile?.role==="admin"){
+    btn.classList.remove("hidden");
+  }else{
+    btn.classList.add("hidden");
+  }
+}
+
+async function signup(){
+
+  const name=document.getElementById("signupName").value.trim();
+  const email=document.getElementById("signupEmail").value.trim();
+  const password=document.getElementById("signupPassword").value;
+
+  if(!name || !email || !password){
+    showMessage("Please complete all fields.");
+    return;
+  }
+
+  if(password.length < 6){
+    showMessage("Password must be at least 6 characters.");
+    return;
+  }
+
+  const redirect =
+    window.location.href.split("#")[0].split("?")[0];
+
+  const {data,error}=await sb.auth.signUp({
+    email,
+    password,
+    options:{
+      data:{display_name:name},
+      emailRedirectTo:redirect
     }
+  });
 
-    updateAccountButton();
-    updatePlanBadge();
-    renderPremium();
-  }
-);
-
-async function loadProfile() {
-
-  if (!currentUser) return;
-
-  const { data, error } =
-    await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-  if (error) {
-    console.error(error);
+  if(error){
+    showMessage(error.message);
     return;
   }
 
-  currentProfile = data;
-}
-
-async function loadArtistProfile() {
-
-  if (!currentUser) return;
-
-  const { data, error } =
-    await supabaseClient
-      .from("artist_profiles")
-      .select("*")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  currentArtist = data;
-}
-
-async function loadSubscription() {
-
-  if (!currentUser) {
-    currentSubscription = null;
-    return;
-  }
-
-  const { data, error } =
-    await supabaseClient
-      .from("subscriptions")
-      .select("*")
-      .eq("user_id", currentUser.id)
-      .maybeSingle();
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  currentSubscription = data;
-}
-
-function isPremium() {
-
-  if (!currentSubscription) return false;
-
-  if (currentSubscription.status !== "active") {
-    return false;
-  }
-
-  if (
-    currentSubscription.current_period_end &&
-    new Date(
-      currentSubscription.current_period_end
-    ) < new Date()
-  ) {
-    return false;
-  }
-
-  return true;
-}
-
-function updatePlanBadge() {
-
-  const badge =
-    document.getElementById("planBadge");
-
-  if (!badge) return;
-
-  if (isPremium()) {
-
-    const plan =
-      currentSubscription.plan || "Premium";
-
-    badge.textContent =
-      plan.charAt(0).toUpperCase() +
-      plan.slice(1) +
-      " Premium";
-
-  } else {
-    badge.textContent = "Free";
-  }
-}
-
-function updateAccountButton() {
-
-  const button =
-    document.querySelector(".account-btn");
-
-  if (!button) return;
-
-  button.textContent =
-    currentUser ? "Account" : "Log in";
-}
-
-/* =========================================================
-   ACCOUNT UI
-========================================================= */
-
-function openAccount() {
-
-  if (currentUser) {
-    renderLoggedInAccount();
-  } else {
-    renderLogin();
-  }
-
-  openModal("accountModal");
-}
-
-function renderLogin() {
-
-  document.getElementById("accountContent").innerHTML = `
-    <h2>Welcome to Afrova</h2>
-
-    <div id="authMessage"></div>
-
-    <div class="form-group">
-      <label>Email</label>
-      <input id="loginEmail" type="email"
-        placeholder="you@example.com">
-    </div>
-
-    <div class="form-group">
-      <label>Password</label>
-      <input id="loginPassword" type="password"
-        placeholder="Password">
-    </div>
-
-    <button class="primary" onclick="login()">
-      Log in
-    </button>
-
-    <button
-      class="secondary"
-      style="width:100%;margin-top:10px;"
-      onclick="renderSignup()">
-      Create an account
-    </button>
-  `;
-}
-
-function renderSignup() {
-
-  document.getElementById("accountContent").innerHTML = `
-    <h2>Create your Afrova account</h2>
-
-    <div id="authMessage"></div>
-
-    <div class="form-group">
-      <label>Name</label>
-      <input id="signupName" type="text"
-        placeholder="Your name">
-    </div>
-
-    <div class="form-group">
-      <label>Email</label>
-      <input id="signupEmail" type="email"
-        placeholder="you@example.com">
-    </div>
-
-    <div class="form-group">
-      <label>Password</label>
-      <input id="signupPassword" type="password"
-        placeholder="At least 6 characters">
-    </div>
-
-    <button class="primary" onclick="signup()">
-      Create Account
-    </button>
-
-    <button
-      class="secondary"
-      style="width:100%;margin-top:10px;"
-      onclick="renderLogin()">
-      Back to login
-    </button>
-  `;
-}
-
-async function signup() {
-
-  const name =
-    document.getElementById("signupName").value.trim();
-
-  const email =
-    document.getElementById("signupEmail").value.trim();
-
-  const password =
-    document.getElementById("signupPassword").value;
-
-  if (!name || !email || !password) {
-    showMessage(
-      "authMessage",
-      "Please complete all fields.",
-      "error"
-    );
-    return;
-  }
-
-  if (password.length < 6) {
-    showMessage(
-      "authMessage",
-      "Password must contain at least 6 characters.",
-      "error"
-    );
-    return;
-  }
-
-  const { data, error } =
-    await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: name
-        },
-        emailRedirectTo:
-          getEmailRedirectUrl()
-      }
+  if(data.user){
+    await sb.from("profiles").upsert({
+      id:data.user.id,
+      display_name:name,
+      role:"listener"
     });
-
-  if (error) {
-    showMessage(
-      "authMessage",
-      error.message,
-      "error"
-    );
-    return;
   }
-
-  /*
-    If email confirmation is enabled,
-    Supabase sends the confirmation email.
-  */
 
   showMessage(
-    "authMessage",
-    "Account created. Check your email and click the confirmation link before logging in.",
-    "success"
+    "Account created. Please check your email and click the confirmation link before logging in."
   );
+
+  showLoginForm();
 }
 
-async function login() {
+async function login(){
 
-  const email =
-    document.getElementById("loginEmail").value.trim();
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
 
-  const password =
-    document.getElementById("loginPassword").value;
+  const {data,error}=await sb.auth.signInWithPassword({
+    email,
+    password
+  });
 
-  const { error } =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-
-  if (error) {
-
-    showMessage(
-      "authMessage",
-      error.message,
-      "error"
-    );
-
+  if(error){
+    showMessage(error.message);
     return;
   }
 
-  closeModal("accountModal");
+  currentUser=data.user;
 
-  await checkLogin();
-}
-
-async function logout() {
-
-  await supabaseClient.auth.signOut();
+  await loadProfile();
 
   closeModal("accountModal");
 
   showPage("home");
 }
 
-function renderLoggedInAccount() {
+async function logout(){
 
-  const name =
-    currentProfile?.display_name ||
-    currentUser?.email ||
-    "Afrova User";
+  await sb.auth.signOut();
 
-  document.getElementById("accountContent").innerHTML = `
-    <h2>${escapeHTML(name)}</h2>
+  currentUser=null;
+  currentProfile=null;
+  currentArtist=null;
 
-    <p class="muted" style="margin-bottom:20px;">
-      ${escapeHTML(currentUser.email)}
-    </p>
+  updateAdminButton();
 
-    <div class="message">
-      Account type:
-      <strong>
-        ${currentArtist ? "Artist" : "Listener"}
-      </strong>
+  closeModal("accountModal");
+
+  showPage("home");
+}
+
+
+/* =========================================================
+   ACCOUNT UI
+========================================================= */
+
+function openAccount(){
+
+  openModal("accountModal");
+
+  if(!currentUser){
+    showLoginForm();
+  }else{
+    showLoggedInAccount();
+  }
+}
+
+function showLoginForm(){
+
+  document.getElementById("accountContent").innerHTML=`
+    <h2>Login to Afrova</h2>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="loginEmail" type="email">
     </div>
 
-    <button
-      class="secondary"
-      style="width:100%;margin-bottom:10px;"
-      onclick="closeModal('accountModal');showPage('premium')">
-      💎 Premium
-    </button>
+    <div class="field">
+      <label>Password</label>
+      <input id="loginPassword" type="password">
+    </div>
 
-    <button
-      class="secondary"
-      style="width:100%;margin-bottom:10px;"
-      onclick="closeModal('accountModal');openArtistStudio()">
-      🎤 Artist Studio
-    </button>
+    <button class="primary" onclick="login()">Login</button>
 
-    <button
-      style="width:100%;padding:12px;border-radius:7px;background:#333;color:#fff;"
-      onclick="logout()">
-      Log out
-    </button>
+    <p style="color:#999">
+      Don't have an account?
+      <button class="secondary" onclick="showSignupForm()">Create account</button>
+    </p>
   `;
 }
+
+function showSignupForm(){
+
+  document.getElementById("accountContent").innerHTML=`
+    <h2>Create Afrova Account</h2>
+
+    <div class="field">
+      <label>Name</label>
+      <input id="signupName">
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="signupEmail" type="email">
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input id="signupPassword" type="password">
+    </div>
+
+    <button class="primary" onclick="signup()">Create Account</button>
+
+    <p style="color:#999">
+      Already have an account?
+      <button class="secondary" onclick="showLoginForm()">Login</button>
+    </p>
+  `;
+}
+
+function showLoggedInAccount(){
+
+  const admin=currentProfile?.role==="admin";
+
+  document.getElementById("accountContent").innerHTML=`
+    <h2>My Account</h2>
+
+    <p>
+      <strong>${escapeHtml(
+        currentProfile?.display_name ||
+        currentUser.email
+      )}</strong>
+    </p>
+
+    <p style="color:#999">
+      ${escapeHtml(currentUser.email)}
+    </p>
+
+    <p>
+      Account:
+      <span class="badge">${escapeHtml(currentProfile?.role || "listener")}</span>
+    </p>
+
+    ${admin ? `
+      <button class="primary" onclick="closeModal('accountModal');showPage('admin')">
+        Open Admin Dashboard
+      </button>
+    ` : ""}
+
+    <br><br>
+
+    <button class="secondary" onclick="logout()">Logout</button>
+  `;
+}
+
+
+/* =========================================================
+   PAGES
+========================================================= */
+
+async function showPage(page){
+
+  const content=document.getElementById("content");
+
+  if(page==="home"){
+    renderHome();
+  }
+
+  if(page==="search"){
+    renderSearch();
+  }
+
+  if(page==="liked"){
+    renderLiked();
+  }
+
+  if(page==="albums"){
+    await renderAlbums();
+  }
+
+  if(page==="playlists"){
+    content.innerHTML=`
+      <h1>Playlists</h1>
+      <div class="empty">
+        Playlist creation is coming next.
+      </div>
+    `;
+  }
+
+  if(page==="artist"){
+    await renderArtistStudio();
+  }
+
+  if(page==="premium"){
+    await renderPremium();
+  }
+
+  if(page==="admin"){
+    if(currentProfile?.role!=="admin"){
+      showMessage("Admin access required.");
+      return;
+    }
+
+    await renderAdmin();
+  }
+}
+
 
 /* =========================================================
    SONGS
 ========================================================= */
 
-async function loadPublishedSongs() {
+async function loadPublishedSongs(){
 
-  const { data, error } =
-    await supabaseClient
-      .from("songs")
-      .select("*")
-      .eq("status", "published")
-      .order("created_at", {
-        ascending: false
-      });
+  const {data,error}=await sb
+    .from("songs")
+    .select("*")
+    .eq("status","published")
+    .order("created_at",{ascending:false});
 
-  if (error) {
-    console.error(error);
-    songs = [...DEMO_SONGS];
-    return;
-  }
-
-  const uploaded = data || [];
-
-  songs = [
-    ...uploaded.map(song => ({
-      ...song,
-      artistName: "Afrova Artist"
-    })),
-    ...DEMO_SONGS
-  ];
-
-  await attachArtistNames();
-  await loadSongStats();
-}
-
-async function attachArtistNames() {
-
-  const realSongs =
-    songs.filter(s => !s.demo);
-
-  const artistIds = [
-    ...new Set(
-      realSongs.map(s => s.artist_id)
-    )
-  ];
-
-  if (!artistIds.length) return;
-
-  const { data, error } =
-    await supabaseClient
-      .from("artist_profiles")
-      .select("id,artist_name")
-      .in("id", artistIds);
-
-  if (error) {
+  if(error){
     console.error(error);
     return;
   }
 
-  const map = {};
+  songs=data || [];
 
-  (data || []).forEach(artist => {
-    map[artist.id] = artist.artist_name;
+  const artistIds=[
+    ...new Set(songs.map(s=>s.artist_id).filter(Boolean))
+  ];
+
+  if(!artistIds.length) return;
+
+  const {data:artists}=await sb
+    .from("artist_profiles")
+    .select("id,artist_name")
+    .in("id",artistIds);
+
+  const map={};
+
+  (artists || []).forEach(a=>{
+    map[a.id]=a.artist_name;
   });
 
-  songs = songs.map(song => ({
-    ...song,
-    artistName:
-      map[song.artist_id] ||
-      song.artistName ||
-      "Afrova Artist"
+  songs=songs.map(s=>({
+    ...s,
+    artist_name:map[s.artist_id] || "Unknown Artist"
   }));
 }
 
-async function loadSongStats() {
+function renderSongCard(song){
 
-  const ids =
-    songs
-      .filter(song => !song.demo)
-      .map(song => song.id);
+  const cover=song.cover_path
+    ? publicUrl("covers",song.cover_path)
+    : "";
 
-  if (!ids.length) return;
-
-  const { data, error } =
-    await supabaseClient.rpc(
-      "get_song_stats",
-      {
-        requested_song_ids: ids
-      }
-    );
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  const statsMap = {};
-
-  (data || []).forEach(stat => {
-    statsMap[stat.song_id] = stat;
-  });
-
-  songs = songs.map(song => {
-
-    const stat =
-      statsMap[song.id];
-
-    if (!stat) return song;
-
-    return {
-      ...song,
-      stream_count:
-        Number(stat.stream_count || 0),
-      monthly_listeners:
-        Number(stat.monthly_listeners || 0)
-    };
-  });
-}
-
-function renderHome() {
-
-  renderSongGrid(
-    "trendingSongs",
-    songs.slice(0, 8)
-  );
-
-  renderSongGrid(
-    "madeForYou",
-    [...songs].reverse().slice(0, 8)
-  );
-
-  renderArtists();
-}
-
-function renderSongGrid(elementId, list) {
-
-  const element =
-    document.getElementById(elementId);
-
-  if (!element) return;
-
-  if (!list.length) {
-    element.innerHTML =
-      `<div class="empty">No songs available yet.</div>`;
-    return;
-  }
-
-  element.innerHTML =
-    list.map(song => songCard(song)).join("");
-}
-
-function songCard(song) {
-
-  const liked =
-    likedSongs.includes(song.id);
+  const isLiked=liked.includes(song.id);
 
   return `
-    <div class="song-card">
+    <div class="card">
 
-      <img
-        class="cover"
-        src="${getCover(song)}"
-        alt=""
-        onerror="this.src='${placeholderCover(song.title)}'"
-      >
+      ${
+        cover
+        ? `<img class="cover" src="${escapeHtml(cover)}">`
+        : `<div class="cover"></div>`
+      }
 
-      <div class="song-title">
-        ${escapeHTML(song.title)}
-      </div>
+      <h3>${escapeHtml(song.title)}</h3>
 
-      <button
-        style="background:transparent;color:#aaa;padding:0;margin-top:5px;"
-        onclick="openArtistFromSong('${song.artist_id}')">
-        ${escapeHTML(song.artistName || "Afrova Artist")}
-      </button>
-
-      <div class="song-stats">
-        ${formatNumber(song.stream_count)} streams
-      </div>
+      <p>${escapeHtml(song.artist_name || "Artist")}</p>
 
       <div class="card-actions">
 
-        <button
-          class="icon-btn"
+        <button class="primary"
           onclick="playSongById('${song.id}')">
           ▶
         </button>
 
-        <button
-          class="icon-btn"
+        <button class="secondary"
           onclick="toggleLike('${song.id}')">
-          ${liked ? "♥" : "♡"}
+          ${isLiked ? "❤️" : "♡"}
         </button>
 
       </div>
+
     </div>
   `;
 }
 
-/* =========================================================
-   ARTISTS
-========================================================= */
+function renderHome(){
 
-async function renderArtists() {
+  document.getElementById("content").innerHTML=`
 
-  const element =
-    document.getElementById("popularArtists");
-
-  if (!element) return;
-
-  const { data, error } =
-    await supabaseClient
-      .from("artist_profiles")
-      .select("*")
-      .order("created_at", {
-        ascending: false
-      })
-      .limit(12);
-
-  if (error) {
-    console.error(error);
-    element.innerHTML =
-      `<div class="empty">Artists will appear here.</div>`;
-    return;
-  }
-
-  artists = data || [];
-
-  if (!artists.length) {
-
-    element.innerHTML = `
-      <div class="empty">
-        No artists have released music yet.
-      </div>
-    `;
-
-    return;
-  }
-
-  element.innerHTML =
-    artists.map(artist => artistCard(artist)).join("");
-}
-
-function artistCard(artist) {
-
-  const avatar =
-    artist.avatar_url ||
-    placeholderCover(artist.artist_name);
-
-  return `
-    <div class="artist-card">
-      <button onclick="openArtistProfile('${artist.id}')">
-
-        <img
-          class="artist-avatar"
-          src="${avatar}"
-          alt=""
-          onerror="this.src='${placeholderCover(artist.artist_name)}'"
-        >
-
-        <div class="artist-name">
-          ${escapeHTML(artist.artist_name)}
-        </div>
-
-        <div class="muted" style="font-size:12px;margin-top:5px;">
-          Artist
-        </div>
-
+    <div class="hero">
+      <h1>Welcome to Afrova</h1>
+      <p>
+        Discover African music, support artists and enjoy your favourite songs.
+      </p>
+      <button class="primary" onclick="showPage('search')">
+        Explore Music
       </button>
     </div>
-  `;
-}
 
-function openArtistFromSong(artistId) {
+    <h2>Trending Songs</h2>
 
-  if (!artistId || artistId.startsWith("demo-")) {
-    return;
-  }
-
-  openArtistProfile(artistId);
-}
-
-/* =========================================================
-   ARTIST PROFILE
-========================================================= */
-
-async function openArtistProfile(artistId) {
-
-  if (!artistId || artistId.startsWith("demo-")) {
-    return;
-  }
-
-  const { data: artist, error } =
-    await supabaseClient
-      .from("artist_profiles")
-      .select("*")
-      .eq("id", artistId)
-      .single();
-
-  if (error || !artist) {
-    alert("Artist profile could not be loaded.");
-    return;
-  }
-
-  const { data: artistSongs } =
-    await supabaseClient
-      .from("songs")
-      .select("*")
-      .eq("artist_id", artistId)
-      .eq("status", "published")
-      .order("created_at", {
-        ascending: false
-      });
-
-  const songList = artistSongs || [];
-
-  let totalStreams = 0;
-
-  songList.forEach(song => {
-    totalStreams +=
-      Number(song.stream_count || 0);
-  });
-
-  const {
-    data: stats,
-    error: statsError
-  } = await supabaseClient.rpc(
-    "get_artist_stats",
-    {
-      requested_artist_ids: [artistId]
-    }
-  );
-
-  let monthlyListeners = 0;
-  let followers = 0;
-
-  if (!statsError && stats?.length) {
-
-    monthlyListeners =
-      Number(stats[0].monthly_listeners || 0);
-
-    followers =
-      Number(stats[0].followers || 0);
-
-    totalStreams =
-      Number(stats[0].total_streams || totalStreams);
-  }
-
-  let following = false;
-
-  if (currentUser) {
-
-    const { data: follow } =
-      await supabaseClient
-        .from("artist_follows")
-        .select("id")
-        .eq("artist_id", artistId)
-        .eq("user_id", currentUser.id)
-        .maybeSingle();
-
-    following = !!follow;
-  }
-
-  document.getElementById("artistProfileContent").innerHTML = `
-
-    <div class="artist-profile-hero">
-
-      <img
-        class="artist-profile-avatar"
-        src="${artist.avatar_url || placeholderCover(artist.artist_name)}"
-        alt=""
-      >
-
-      <div class="artist-profile-info">
-
-        <h1>${escapeHTML(artist.artist_name)}</h1>
-
-        <div class="artist-metrics">
-          <span>
-            🎧 ${formatNumber(monthlyListeners)}
-            monthly listeners
-          </span>
-
-          <span>
-            ▶ ${formatNumber(totalStreams)}
-            streams
-          </span>
-
-          <span>
-            👥 ${formatNumber(followers)}
-            followers
-          </span>
-        </div>
-
-        <p>
-          ${escapeHTML(
-            artist.bio ||
-            "Welcome to this artist's Afrova profile."
-          )}
-        </p>
-
-        <button
-          class="${following ? "secondary" : "primary"}"
-          onclick="toggleFollowArtist('${artist.id}')">
-          ${following ? "Following" : "Follow"}
-        </button>
-
-      </div>
+    <div class="grid">
+      ${
+        songs.length
+        ? songs.slice(0,8).map(renderSongCard).join("")
+        : `<div class="empty">No published songs yet.</div>`
+      }
     </div>
 
-    <div class="section">
-      <div class="section-head">
-        <h2>Music</h2>
+    <h2>Albums & EPs</h2>
+
+    <div id="homeAlbums" class="grid">
+      Loading releases...
+    </div>
+
+  `;
+
+  renderHomeAlbums();
+}
+
+async function renderHomeAlbums(){
+
+  const {data}=await sb
+    .from("albums")
+    .select("*")
+    .eq("status","published")
+    .order("created_at",{ascending:false})
+    .limit(8);
+
+  albums=data || [];
+
+  const container=document.getElementById("homeAlbums");
+
+  if(!container) return;
+
+  if(!albums.length){
+    container.innerHTML=`
+      <div class="empty">
+        No albums or EPs published yet.
       </div>
+    `;
+    return;
+  }
+
+  container.innerHTML=albums.map(renderAlbumCard).join("");
+}
+
+function renderAlbumCard(album){
+
+  const cover=album.cover_path
+    ? publicUrl("covers",album.cover_path)
+    : "";
+
+  return `
+    <div class="card" onclick="openAlbum('${album.id}')">
 
       ${
-        songList.length
-          ? `<div>${songList.map(song => songRow(song)).join("")}</div>`
-          : `<div class="empty">No published songs yet.</div>`
+        cover
+        ? `<img class="cover" src="${escapeHtml(cover)}">`
+        : `<div class="cover"></div>`
       }
 
-    </div>
-  `;
+      <h3>${escapeHtml(album.title)}</h3>
 
-  showPage("artistProfile");
-}
+      <p>${escapeHtml(
+        album.release_type.toUpperCase()
+      )}</p>
 
-function songRow(song) {
-
-  return `
-    <div class="song-row">
-
-      <img
-        class="mini-cover"
-        src="${getCover(song)}"
-        alt=""
-      >
-
-      <div>
-        <strong>
-          ${escapeHTML(song.title)}
-        </strong>
-
-        <div class="muted" style="font-size:12px;">
-          ${escapeHTML(song.genre || "Music")}
-        </div>
-      </div>
-
-      <div class="muted">
-        ${formatNumber(song.stream_count || 0)} streams
-      </div>
-
-      <button
-        class="icon-btn"
-        onclick="playSongById('${song.id}')">
-        ▶
-      </button>
+      <p>${formatDate(album.release_date)}</p>
 
     </div>
   `;
 }
 
-/* =========================================================
-   FOLLOW ARTIST
-========================================================= */
-
-async function toggleFollowArtist(artistId) {
-
-  if (!currentUser) {
-    openAccount();
-    return;
-  }
-
-  const { data: existing } =
-    await supabaseClient
-      .from("artist_follows")
-      .select("id")
-      .eq("artist_id", artistId)
-      .eq("user_id", currentUser.id)
-      .maybeSingle();
-
-  if (existing) {
-
-    const { error } =
-      await supabaseClient
-        .from("artist_follows")
-        .delete()
-        .eq("id", existing.id);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-  } else {
-
-    const { error } =
-      await supabaseClient
-        .from("artist_follows")
-        .insert({
-          artist_id: artistId,
-          user_id: currentUser.id
-        });
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-  }
-
-  await openArtistProfile(artistId);
-}
-
-/* =========================================================
-   PLAY MUSIC
-========================================================= */
-
-function playSongById(id) {
-
-  const index =
-    songs.findIndex(song => song.id === id);
-
-  if (index === -1) return;
-
-  currentSongIndex = index;
-
-  playCurrentSong();
-}
-
-function playCurrentSong() {
-
-  const song =
-    songs[currentSongIndex];
-
-  if (!song) return;
-
-  document.getElementById("playerTitle")
-    .textContent = song.title;
-
-  document.getElementById("playerArtist")
-    .textContent =
-      song.artistName || "Afrova Artist";
-
-  document.getElementById("playerCover")
-    .src = getCover(song);
-
-  if (!song.audio_path) {
-
-    document.getElementById("playBtn")
-      .textContent = "▶";
-
-    /*
-      Demo songs intentionally have no audio file.
-    */
-
-    return;
-  }
-
-  const url =
-    audioUrl(song.audio_path);
-
-  audio.src = url;
-
-  audio.play()
-    .then(() => {
-      document.getElementById("playBtn")
-        .textContent = "❚❚";
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function togglePlay() {
-
-  const song =
-    songs[currentSongIndex];
-
-  if (!song) {
-
-    if (songs.length) {
-      currentSongIndex = 0;
-      playCurrentSong();
-    }
-
-    return;
-  }
-
-  if (!song.audio_path) return;
-
-  if (audio.paused) {
-
-    audio.play();
-
-    document.getElementById("playBtn")
-      .textContent = "❚❚";
-
-  } else {
-
-    audio.pause();
-
-    document.getElementById("playBtn")
-      .textContent = "▶";
-  }
-}
-
-function nextSong() {
-
-  if (!songs.length) return;
-
-  currentSongIndex =
-    (currentSongIndex + 1) % songs.length;
-
-  playCurrentSong();
-}
-
-function previousSong() {
-
-  if (!songs.length) return;
-
-  currentSongIndex =
-    currentSongIndex <= 0
-      ? songs.length - 1
-      : currentSongIndex - 1;
-
-  playCurrentSong();
-}
-
-function setVolume(value) {
-  audio.volume = Number(value);
-}
-
-function seekAudio(value) {
-
-  if (!audio.duration) return;
-
-  audio.currentTime =
-    (Number(value) / 100) *
-    audio.duration;
-}
-
-audio.addEventListener("timeupdate", () => {
-
-  if (!audio.duration) return;
-
-  document.getElementById("progress").value =
-    (audio.currentTime / audio.duration) * 100;
-
-  /*
-    A stream is recorded after 30 seconds
-    of an uploaded published song.
-  */
-
-  if (
-    audio.currentTime >= 30 &&
-    currentSongIndex >= 0
-  ) {
-    recordStream(songs[currentSongIndex]);
-  }
-});
-
-audio.addEventListener("ended", () => {
-
-  document.getElementById("playBtn")
-    .textContent = "▶";
-
-  nextSong();
-});
-
-/* =========================================================
-   REAL STREAM RECORDING
-========================================================= */
-
-async function recordStream(song) {
-
-  if (!currentUser) return;
-
-  if (!song || song.demo) return;
-
-  if (streamRecordedFor.has(song.id)) {
-    return;
-  }
-
-  streamRecordedFor.add(song.id);
-
-  const { error } =
-    await supabaseClient
-      .from("song_streams")
-      .insert({
-        song_id: song.id,
-        listener_id: currentUser.id
-      });
-
-  if (error) {
-
-    console.error(
-      "Stream recording failed:",
-      error
-    );
-
-    streamRecordedFor.delete(song.id);
-    return;
-  }
-
-  song.stream_count =
-    Number(song.stream_count || 0) + 1;
-
-  renderHome();
-}
-
-/* =========================================================
-   LIKES
-========================================================= */
-
-function toggleLike(id) {
-
-  if (likedSongs.includes(id)) {
-
-    likedSongs =
-      likedSongs.filter(
-        songId => songId !== id
-      );
-
-  } else {
-
-    likedSongs.push(id);
-  }
-
-  localStorage.setItem(
-    "afrova_liked",
-    JSON.stringify(likedSongs)
-  );
-
-  renderHome();
-}
-
-function renderLikedSongs() {
-
-  const liked =
-    songs.filter(song =>
-      likedSongs.includes(song.id)
-    );
-
-  const element =
-    document.getElementById("likedSongs");
-
-  if (!liked.length) {
-
-    element.innerHTML = `
-      <div class="empty">
-        You haven't liked any songs yet.
-      </div>
-    `;
-
-    return;
-  }
-
-  renderSongGrid(
-    "likedSongs",
-    liked
-  );
-}
 
 /* =========================================================
    SEARCH
 ========================================================= */
 
-function quickSearch(value) {
+function quickSearch(value){
 
-  if (!value.trim()) {
-    return;
+  if(value.trim()){
+    showPage("search");
+    searchSongs(value);
   }
-
-  showPage("search");
-
-  const input =
-    document.getElementById("searchInput");
-
-  input.value = value;
-
-  searchSongs(value);
 }
 
-function searchSongs(query) {
+async function searchSongs(query){
 
-  const element =
-    document.getElementById("searchResults");
+  const q=query.trim().toLowerCase();
 
-  if (!element) return;
-
-  const q =
-    query.trim().toLowerCase();
-
-  if (!q) {
-
-    element.innerHTML = `
-      <div class="empty">
-        Search for songs or artists.
-      </div>
-    `;
-
+  if(!q){
+    renderSearch();
     return;
   }
 
-  const results =
-    songs.filter(song =>
-      String(song.title)
-        .toLowerCase()
-        .includes(q) ||
-      String(song.artistName || "")
-        .toLowerCase()
-        .includes(q) ||
-      String(song.genre || "")
-        .toLowerCase()
-        .includes(q)
-    );
+  const results=songs.filter(song=>
+    song.title.toLowerCase().includes(q) ||
+    (song.artist_name || "").toLowerCase().includes(q)
+  );
 
-  if (!results.length) {
+  const albumResults=albums.filter(album=>
+    album.title.toLowerCase().includes(q)
+  );
 
-    element.innerHTML = `
-      <div class="empty">
-        No results found for
-        "${escapeHTML(query)}".
-      </div>
-    `;
+  document.getElementById("content").innerHTML=`
 
-    return;
-  }
+    <h1>Search</h1>
 
-  element.innerHTML = `
+    <h2>Songs</h2>
+
     <div class="grid">
-      ${results.map(song => songCard(song)).join("")}
+      ${
+        results.length
+        ? results.map(renderSongCard).join("")
+        : `<div class="empty">No songs found.</div>`
+      }
+    </div>
+
+    <h2>Albums & EPs</h2>
+
+    <div class="grid">
+      ${
+        albumResults.length
+        ? albumResults.map(renderAlbumCard).join("")
+        : `<div class="empty">No releases found.</div>`
+      }
+    </div>
+
+  `;
+}
+
+function renderSearch(){
+
+  document.getElementById("content").innerHTML=`
+    <h1>Search Afrova</h1>
+    <p style="color:#999">
+      Search for songs, artists or albums using the search bar above.
+    </p>
+
+    <div class="grid">
+      ${songs.slice(0,12).map(renderSongCard).join("")}
     </div>
   `;
 }
+
 
 /* =========================================================
-   PREMIUM
+   LIKES
 ========================================================= */
 
-function renderPremium() {
+function toggleLike(id){
 
-  const status =
-    document.getElementById("premiumStatus");
+  if(liked.includes(id)){
+    liked=liked.filter(x=>x!==id);
+  }else{
+    liked.push(id);
+  }
 
-  const plans =
-    document.getElementById("premiumPlans");
+  localStorage.setItem(
+    "afrova_liked",
+    JSON.stringify(liked)
+  );
 
-  if (!status || !plans) return;
+  showPage("home");
+}
 
-  if (isPremium()) {
+function renderLiked(){
 
-    const plan =
-      currentSubscription.plan || "Premium";
+  const result=songs.filter(s=>liked.includes(s.id));
 
-    status.innerHTML = `
-      <div class="premium-active">
-        <strong>✓ Afrova Premium is active</strong>
+  document.getElementById("content").innerHTML=`
 
-        <div class="muted" style="margin-top:7px;">
-          Current plan:
-          ${escapeHTML(
-            plan.charAt(0).toUpperCase() +
-            plan.slice(1)
-          )}
-        </div>
+    <h1>Liked Songs</h1>
+
+    <div class="grid">
+      ${
+        result.length
+        ? result.map(renderSongCard).join("")
+        : `<div class="empty">You haven't liked any songs yet.</div>`
+      }
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   ALBUMS
+========================================================= */
+
+async function renderAlbums(){
+
+  const {data,error}=await sb
+    .from("albums")
+    .select("*")
+    .eq("status","published")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+  }
+
+  albums=data || [];
+
+  document.getElementById("content").innerHTML=`
+
+    <h1>Albums & EPs</h1>
+
+    <div class="grid">
+      ${
+        albums.length
+        ? albums.map(renderAlbumCard).join("")
+        : `<div class="empty">No published albums or EPs yet.</div>`
+      }
+    </div>
+
+  `;
+}
+
+async function openAlbum(id){
+
+  const {data:album}=await sb
+    .from("albums")
+    .select("*")
+    .eq("id",id)
+    .maybeSingle();
+
+  if(!album) return;
+
+  const {data:artist}=await sb
+    .from("artist_profiles")
+    .select("*")
+    .eq("id",album.artist_id)
+    .maybeSingle();
+
+  const {data:tracks,error}=await sb
+    .rpc("get_album_tracks",{
+      requested_album_id:id
+    });
+
+  if(error){
+    console.error(error);
+  }
+
+  const cover=album.cover_path
+    ? publicUrl("covers",album.cover_path)
+    : "";
+
+  document.getElementById("content").innerHTML=`
+
+    <button class="secondary" onclick="showPage('albums')">
+      ← Albums
+    </button>
+
+    <div class="hero" style="margin-top:20px">
+
+      <div style="display:flex;gap:25px;align-items:center;flex-wrap:wrap">
 
         ${
-          currentSubscription.current_period_end
-            ? `<div class="muted" style="margin-top:5px;">
-                Current period ends:
-                ${new Date(
-                  currentSubscription.current_period_end
-                ).toLocaleDateString()}
-              </div>`
-            : ""
+          cover
+          ? `<img src="${escapeHtml(cover)}"
+               style="width:200px;height:200px;object-fit:cover;border-radius:15px">`
+          : `<div class="cover" style="width:200px"></div>`
         }
+
+        <div>
+          <span class="badge">
+            ${escapeHtml(album.release_type.toUpperCase())}
+          </span>
+
+          <h1>${escapeHtml(album.title)}</h1>
+
+          <p>
+            ${escapeHtml(artist?.artist_name || "Artist")}
+          </p>
+
+          <p style="color:#999">
+            ${formatDate(album.release_date)}
+            · ${(tracks || []).length} tracks
+          </p>
+
+          <button class="primary"
+            onclick="playAlbum('${album.id}')">
+            ▶ Play All
+          </button>
+        </div>
+
       </div>
-    `;
-
-    /*
-      Purchase buttons are intentionally hidden
-      while the user's Premium subscription is active.
-    */
-
-    plans.innerHTML = `
-      <div class="message success">
-        Your Premium access is active.
-        The Premium purchase buttons are hidden while
-        this subscription remains active.
-      </div>
-    `;
-
-    return;
-  }
-
-  status.innerHTML = `
-    <div class="message">
-      Choose a Premium plan below.
-    </div>
-  `;
-
-  plans.innerHTML = `
-    ${premiumPlan(
-      "Student Premium",
-      "₦400/month",
-      "For verified students.",
-      "student"
-    )}
-
-    ${premiumPlan(
-      "Individual Premium",
-      "₦600/month",
-      "Premium listening for one person.",
-      "individual"
-    )}
-
-    ${premiumPlan(
-      "Duo",
-      "₦1,200/month",
-      "Premium access for two people.",
-      "duo"
-    )}
-
-    ${premiumPlan(
-      "Family",
-      "₦1,500/month",
-      "Premium access for your family.",
-      "family"
-    )}
-  `;
-}
-
-function premiumPlan(
-  name,
-  price,
-  description,
-  plan
-) {
-
-  return `
-    <div class="plan">
-
-      <h3>${name}</h3>
-
-      <div class="price">${price}</div>
-
-      <p>${description}</p>
-
-      <button
-        class="primary"
-        onclick="subscribe('${plan}')">
-        Choose ${name}
-      </button>
 
     </div>
+
+    <h2>Tracklist</h2>
+
+    <div>
+      ${
+        tracks?.length
+        ? tracks.map((track,index)=>`
+          <div class="song-row">
+
+            <span style="width:30px;color:#777">
+              ${track.track_number || index+1}
+            </span>
+
+            ${
+              track.cover_path
+              ? `<img src="${escapeHtml(
+                    publicUrl("covers",track.cover_path)
+                  )}">`
+              : `<div style="width:52px;height:52px"></div>`
+            }
+
+            <div class="song-info">
+              <strong>${escapeHtml(track.title)}</strong>
+              <small>${escapeHtml(
+                artist?.artist_name || "Artist"
+              )}</small>
+            </div>
+
+            <button class="secondary"
+              onclick="playTrackObject(${JSON.stringify(track).replaceAll('"','&quot;')})">
+              ▶
+            </button>
+
+          </div>
+        `).join("")
+        : `<div class="empty">No published tracks.</div>`
+      }
+    </div>
+
   `;
 }
 
-function subscribe(plan) {
+async function playAlbum(id){
 
-  if (!currentUser) {
+  const {data:tracks}=await sb
+    .rpc("get_album_tracks",{
+      requested_album_id:id
+    });
 
-    openAccount();
+  if(!tracks?.length) return;
 
-    return;
-  }
+  songs=tracks.map(t=>({
+    ...t,
+    id:t.song_id,
+    artist_name:"Artist"
+  }));
 
-  if (isPremium()) {
+  currentSongIndex=0;
 
-    alert(
-      "You already have an active Premium subscription."
-    );
-
-    return;
-  }
-
-  if (plan === "student") {
-
-    openModal("studentModal");
-
-    return;
-  }
-
-  window.location.href =
-    PAYSTACK_LINKS[plan];
+  playSong(songs[0]);
 }
 
-function continueStudentPayment() {
 
-  closeModal("studentModal");
+/* =========================================================
+   AUDIO PLAYER
+========================================================= */
 
-  window.location.href =
-    PAYSTACK_LINKS.student;
+function publicUrl(bucket,path){
+
+  if(!path) return "";
+
+  const {data}=sb.storage
+    .from(bucket)
+    .getPublicUrl(path);
+
+  return data.publicUrl;
 }
+
+function playSongById(id){
+
+  const index=songs.findIndex(s=>s.id===id);
+
+  if(index<0) return;
+
+  currentSongIndex=index;
+
+  playSong(songs[index]);
+}
+
+function playTrackObject(track){
+
+  playSong({
+    ...track,
+    id:track.song_id,
+    artist_name:"Artist"
+  });
+}
+
+function playSong(song){
+
+  currentSong=song;
+
+  const url=publicUrl("music",song.audio_path);
+
+  document.getElementById("audio").src=url;
+
+  document.getElementById("playerTitle").textContent=
+    song.title || "Unknown";
+
+  document.getElementById("playerArtist").textContent=
+    song.artist_name || "Artist";
+
+  document.getElementById("playerCover").src=
+    song.cover_path
+    ? publicUrl("covers",song.cover_path)
+    : "";
+
+  document.getElementById("audio").play()
+    .catch(()=>showMessage(
+      "This song could not be played. Check that the audio file exists."
+    ));
+
+  recordStreamLater(song);
+}
+
+function togglePlay(){
+
+  const audio=document.getElementById("audio");
+
+  if(!audio.src){
+    return;
+  }
+
+  if(audio.paused){
+    audio.play();
+  }else{
+    audio.pause();
+  }
+}
+
+function nextSong(){
+
+  if(!songs.length) return;
+
+  currentSongIndex++;
+
+  if(currentSongIndex>=songs.length){
+    currentSongIndex=0;
+  }
+
+  playSong(songs[currentSongIndex]);
+}
+
+function previousSong(){
+
+  if(!songs.length) return;
+
+  currentSongIndex--;
+
+  if(currentSongIndex<0){
+    currentSongIndex=songs.length-1;
+  }
+
+  playSong(songs[currentSongIndex]);
+}
+
+function seekSong(value){
+
+  const audio=document.getElementById("audio");
+
+  if(audio.duration){
+    audio.currentTime=
+      (value/100)*audio.duration;
+  }
+}
+
+document.getElementById("audio")
+.addEventListener("timeupdate",()=>{
+
+  const audio=document.getElementById("audio");
+
+  if(audio.duration){
+    document.getElementById("seek").value=
+      (audio.currentTime/audio.duration)*100;
+  }
+});
+
+document.getElementById("audio")
+.addEventListener("ended",nextSong);
+
+
+/* =========================================================
+   STREAM RECORDING
+========================================================= */
+
+const recordedStreams=new Set();
+
+function recordStreamLater(song){
+
+  if(!currentUser || !song?.id) return;
+
+  const id=song.id;
+
+  if(recordedStreams.has(id)) return;
+
+  recordedStreams.add(id);
+
+  setTimeout(async()=>{
+
+    const {error}=await sb
+      .from("song_streams")
+      .insert({
+        song_id:id,
+        listener_id:currentUser.id
+      });
+
+    if(error){
+      console.error("Stream recording error:",error);
+    }
+
+  },30000);
+}
+
 
 /* =========================================================
    ARTIST STUDIO
 ========================================================= */
 
-async function openArtistStudio() {
+async function renderArtistStudio(){
 
-  if (!currentUser) {
-    openAccount();
-    return;
-  }
+  if(!currentUser){
 
-  await loadArtistProfile();
-
-  if (!currentArtist) {
-
-    openModal("artistModal");
-
-    return;
-  }
-
-  await renderArtistStudio();
-
-  showPage("studio");
-}
-
-async function renderArtistStudio() {
-
-  const element =
-    document.getElementById("studioContent");
-
-  element.innerHTML = `
-    <div class="studio-head">
-      <h1>${escapeHTML(currentArtist.artist_name)}</h1>
-
-      <p class="muted" style="margin-top:7px;">
-        Artist Studio
-      </p>
-
-      <button
-        class="primary"
-        style="margin-top:20px;"
-        onclick="openModal('uploadModal')">
-        + Upload Music
-      </button>
-    </div>
-
-    <div id="studioStats"></div>
-
-    <div class="section">
-      <div class="section-head">
-        <h2>Your Songs</h2>
-      </div>
-
-      <div id="artistSongs"></div>
-    </div>
-  `;
-
-  await loadArtistStudioStats();
-}
-
-async function loadArtistStudioStats() {
-
-  const { data: artistSongs, error } =
-    await supabaseClient
-      .from("songs")
-      .select("*")
-      .eq("artist_id", currentUser.id)
-      .order("created_at", {
-        ascending: false
-      });
-
-  if (error) {
-
-    console.error(error);
-
-    return;
-  }
-
-  const songsList =
-    artistSongs || [];
-
-  const { data: stats } =
-    await supabaseClient.rpc(
-      "get_artist_stats",
-      {
-        requested_artist_ids: [currentUser.id]
-      }
-    );
-
-  const artistStats =
-    stats?.[0] || {};
-
-  const totalStreams =
-    Number(artistStats.total_streams || 0);
-
-  const monthlyListeners =
-    Number(
-      artistStats.monthly_listeners || 0
-    );
-
-  const followers =
-    Number(artistStats.followers || 0);
-
-  document.getElementById("studioStats").innerHTML = `
-    <div class="stats-grid">
-
-      <div class="stat">
-        <div class="muted">Monthly listeners</div>
-        <div class="stat-number">
-          ${formatNumber(monthlyListeners)}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="muted">Total streams</div>
-        <div class="stat-number">
-          ${formatNumber(totalStreams)}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="muted">Followers</div>
-        <div class="stat-number">
-          ${formatNumber(followers)}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="muted">Songs</div>
-        <div class="stat-number">
-          ${formatNumber(songsList.length)}
-        </div>
-      </div>
-
-    </div>
-  `;
-
-  const list =
-    document.getElementById("artistSongs");
-
-  if (!songsList.length) {
-
-    list.innerHTML = `
+    document.getElementById("content").innerHTML=`
+      <h1>Artist Studio</h1>
       <div class="empty">
-        You haven't uploaded any songs yet.
+        Please log in to access Artist Studio.
+        <br><br>
+        <button class="primary" onclick="openAccount()">
+          Login
+        </button>
       </div>
     `;
 
     return;
   }
 
-  list.innerHTML =
-    songsList.map(song => `
+  if(!currentArtist){
 
-      <div class="song-row">
+    document.getElementById("content").innerHTML=`
+      <h1>Become an Afrova Artist</h1>
 
-        <img
-          class="mini-cover"
-          src="${getCover(song)}"
-          alt=""
-        >
+      <div class="empty">
 
-        <div>
-          <strong>
-            ${escapeHTML(song.title)}
-          </strong>
+        <p>
+          Create your artist profile and submit it for verification.
+        </p>
 
-          <div class="muted">
-            ${escapeHTML(song.genre || "Music")}
-          </div>
-        </div>
-
-        <div class="status-cell">
-          <span class="muted">
-            ${formatNumber(song.stream_count || 0)}
-            streams
-          </span>
-        </div>
-
-        <div>
-          <span
-            style="
-              padding:6px 9px;
-              border-radius:12px;
-              background:#292929;
-              font-size:11px;
-            ">
-            ${escapeHTML(song.status)}
-          </span>
-        </div>
+        <button class="primary" onclick="createArtistProfile()">
+          Create Artist Profile
+        </button>
 
       </div>
-
-    `).join("");
-}
-
-/* =========================================================
-   CREATE ARTIST ACCOUNT
-========================================================= */
-
-async function createArtistAccount() {
-
-  if (!currentUser) return;
-
-  const name =
-    document.getElementById("artistName")
-      .value.trim();
-
-  const bio =
-    document.getElementById("artistBio")
-      .value.trim();
-
-  const avatarFile =
-    document.getElementById("artistAvatarFile")
-      .files[0];
-
-  if (!name) {
-
-    showMessage(
-      "artistMessage",
-      "Enter an artist name.",
-      "error"
-    );
+    `;
 
     return;
   }
 
-  let avatarUrl = null;
+  const {data:stats}=await sb
+    .rpc("get_artist_stats",{
+      requested_artist_ids:[currentArtist.id]
+    });
 
-  if (avatarFile) {
+  const stat=stats?.[0] || {};
 
-    const safeName =
-      avatarFile.name
-        .replace(/[^a-zA-Z0-9._-]/g, "_");
+  const {data:mySongs}=await sb
+    .from("songs")
+    .select("*")
+    .eq("artist_id",currentUser.id)
+    .order("created_at",{ascending:false});
 
-    const path =
-      `${currentUser.id}/${Date.now()}-${safeName}`;
+  const {data:myAlbums}=await sb
+    .from("albums")
+    .select("*")
+    .eq("artist_id",currentUser.id)
+    .order("created_at",{ascending:false});
 
-    const { error: uploadError } =
-      await supabaseClient.storage
-        .from("covers")
-        .upload(path, avatarFile, {
-          upsert: false
-        });
+  document.getElementById("content").innerHTML=`
 
-    if (uploadError) {
+    <h1>Artist Studio</h1>
 
-      showMessage(
-        "artistMessage",
-        uploadError.message,
-        "error"
-      );
+    <p>
+      Artist:
+      <strong>${escapeHtml(currentArtist.artist_name)}</strong>
+    </p>
 
-      return;
+    <p>
+      Verification:
+      ${verificationBadge(currentArtist.verification_status)}
+    </p>
+
+    <div class="grid">
+
+      <div class="admin-stat">
+        Monthly listeners
+        <strong>${stat.monthly_listeners || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Total streams
+        <strong>${stat.total_streams || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Followers
+        <strong>${stat.followers || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Songs
+        <strong>${mySongs?.length || 0}</strong>
+      </div>
+
+    </div>
+
+    <br>
+
+    ${
+      currentArtist.verification_status==="approved"
+      ? `
+        <button class="primary"
+          onclick="openReleaseCreator()">
+          ＋ Create Single / EP / Album
+        </button>
+      `
+      : `
+        <div class="empty">
+          Your artist profile must be approved before you can publish music.
+        </div>
+      `
     }
 
-    avatarUrl =
-      supabaseClient
-        .storage
-        .from("covers")
-        .getPublicUrl(path)
-        .data.publicUrl;
+    <h2>Your Releases</h2>
+
+    ${
+      myAlbums?.length
+      ? myAlbums.map(a=>`
+        <div class="release-card">
+          <strong>${escapeHtml(a.title)}</strong>
+          <span class="badge">${escapeHtml(a.release_type)}</span>
+          <p style="color:#999">
+            Status:
+            ${statusBadge(a.status)}
+          </p>
+        </div>
+      `).join("")
+      : `<div class="empty">No releases yet.</div>`
+    }
+
+    <h2>Your Songs</h2>
+
+    ${
+      mySongs?.length
+      ? mySongs.map(s=>`
+        <div class="song-row">
+          <div class="song-info">
+            <strong>${escapeHtml(s.title)}</strong>
+            <small>${statusBadge(s.status)}</small>
+          </div>
+        </div>
+      `).join("")
+      : `<div class="empty">No songs yet.</div>`
+    }
+
+  `;
+}
+
+function verificationBadge(status){
+
+  if(status==="approved"){
+    return `<span class="badge green">Verified</span>`;
   }
 
-  /*
-    Prototype role change.
-    Production should perform role assignment
-    through a protected server-side workflow.
-  */
+  if(status==="rejected"){
+    return `<span class="badge red">Rejected</span>`;
+  }
 
-  const { error: roleError } =
-    await supabaseClient
-      .from("profiles")
-      .update({
-        role: "artist"
-      })
-      .eq("id", currentUser.id);
+  return `<span class="badge yellow">Pending</span>`;
+}
 
-  if (roleError) {
+function statusBadge(status){
 
-    showMessage(
-      "artistMessage",
-      roleError.message,
-      "error"
-    );
+  if(status==="published"){
+    return `<span class="badge green">Published</span>`;
+  }
 
+  if(status==="rejected"){
+    return `<span class="badge red">Rejected</span>`;
+  }
+
+  return `<span class="badge yellow">Pending</span>`;
+}
+
+async function createArtistProfile(){
+
+  if(!currentUser) return;
+
+  const name=prompt("Enter your artist name:");
+
+  if(!name?.trim()) return;
+
+  const {error}=await sb
+    .from("artist_profiles")
+    .insert({
+      id:currentUser.id,
+      artist_name:name.trim(),
+      verification_status:"pending"
+    });
+
+  if(error){
+    showMessage(error.message);
     return;
   }
 
-  const { error } =
-    await supabaseClient
-      .from("artist_profiles")
-      .insert({
-        id: currentUser.id,
-        artist_name: name,
-        bio,
-        avatar_url: avatarUrl
-      });
+  const {error:roleError}=await sb
+    .from("profiles")
+    .update({
+      role:"artist"
+    })
+    .eq("id",currentUser.id);
 
-  if (error) {
-
-    showMessage(
-      "artistMessage",
-      error.message,
-      "error"
-    );
-
+  if(roleError){
+    showMessage(roleError.message);
     return;
   }
 
   await loadProfile();
-  await loadArtistProfile();
-
-  closeModal("artistModal");
-
-  await renderArtistStudio();
-
-  showPage("studio");
-}
-
-/* =========================================================
-   UPLOAD SONG
-========================================================= */
-
-async function uploadSong() {
-
-  if (!currentUser || !currentArtist) {
-
-    showMessage(
-      "uploadMessage",
-      "Create your artist profile first.",
-      "error"
-    );
-
-    return;
-  }
-
-  const title =
-    document.getElementById("uploadTitle")
-      .value.trim();
-
-  const genre =
-    document.getElementById("uploadGenre")
-      .value.trim();
-
-  const audioFile =
-    document.getElementById("audioFile")
-      .files[0];
-
-  const coverFile =
-    document.getElementById("coverFile")
-      .files[0];
-
-  if (!title || !audioFile) {
-
-    showMessage(
-      "uploadMessage",
-      "Song title and audio file are required.",
-      "error"
-    );
-
-    return;
-  }
 
   showMessage(
-    "uploadMessage",
-    "Uploading your files..."
+    "Artist profile created and submitted for verification."
   );
 
-  const audioSafeName =
-    audioFile.name
-      .replace(/[^a-zA-Z0-9._-]/g, "_");
+  renderArtistStudio();
+}
 
-  const audioPath =
-    `${currentUser.id}/${Date.now()}-${audioSafeName}`;
 
-  const { error: audioError } =
-    await supabaseClient.storage
-      .from("music")
-      .upload(audioPath, audioFile, {
-        upsert: false
-      });
+/* =========================================================
+   RELEASE CREATOR
+========================================================= */
 
-  if (audioError) {
+function openReleaseCreator(){
+
+  if(!currentArtist ||
+     currentArtist.verification_status!=="approved"){
 
     showMessage(
-      "uploadMessage",
-      audioError.message,
-      "error"
+      "Your artist account must be verified first."
     );
 
     return;
   }
 
-  let coverPath = null;
+  document.getElementById("releaseTitle").value="";
+  document.getElementById("releaseCover").value="";
+  document.getElementById("releaseDate").value="";
 
-  if (coverFile) {
+  document.getElementById("trackInputs").innerHTML="";
 
-    const coverSafeName =
-      coverFile.name
-        .replace(/[^a-zA-Z0-9._-]/g, "_");
+  trackNumber=0;
 
-    coverPath =
-      `${currentUser.id}/${Date.now()}-${coverSafeName}`;
+  addTrackInput();
 
-    const { error: coverError } =
-      await supabaseClient.storage
-        .from("covers")
-        .upload(
-          coverPath,
-          coverFile,
-          {
-            upsert: false
-          }
-        );
+  openModal("releaseModal");
+}
 
-    if (coverError) {
+function addTrackInput(){
 
-      showMessage(
-        "uploadMessage",
-        coverError.message,
-        "error"
-      );
+  trackNumber++;
 
+  const container=document.getElementById("trackInputs");
+
+  const row=document.createElement("div");
+
+  row.className="track-input";
+
+  row.innerHTML=`
+
+    <span>${trackNumber}</span>
+
+    <input
+      type="text"
+      class="track-title"
+      placeholder="Track title">
+
+    <input
+      type="file"
+      class="track-file"
+      accept="audio/*">
+
+  `;
+
+  container.appendChild(row);
+}
+
+async function createRelease(){
+
+  if(!currentUser || !currentArtist){
+    showMessage("Artist account required.");
+    return;
+  }
+
+  if(currentArtist.verification_status!=="approved"){
+    showMessage("Artist verification is required.");
+    return;
+  }
+
+  const title=document
+    .getElementById("releaseTitle")
+    .value.trim();
+
+  const type=document
+    .getElementById("releaseType")
+    .value;
+
+  const releaseDate=document
+    .getElementById("releaseDate")
+    .value || null;
+
+  const coverFile=document
+    .getElementById("releaseCover")
+    .files[0];
+
+  if(!title){
+    showMessage("Enter a release title.");
+    return;
+  }
+
+  const titleInputs=[
+    ...document.querySelectorAll(".track-title")
+  ];
+
+  const fileInputs=[
+    ...document.querySelectorAll(".track-file")
+  ];
+
+  if(!titleInputs.length){
+    showMessage("Add at least one track.");
+    return;
+  }
+
+  if(type==="single" && titleInputs.length!==1){
+    showMessage("A single must contain exactly one track.");
+    return;
+  }
+
+  for(let i=0;i<titleInputs.length;i++){
+
+    if(!titleInputs[i].value.trim()){
+      showMessage(`Enter a title for track ${i+1}.`);
+      return;
+    }
+
+    if(!fileInputs[i].files[0]){
+      showMessage(`Choose an audio file for track ${i+1}.`);
       return;
     }
   }
 
-  /*
-    IMPORTANT:
-    Songs start as pending.
-    They are not automatically published.
-  */
+  let coverPath=null;
 
-  const { error } =
-    await supabaseClient
+  if(coverFile){
+
+    const extension=
+      coverFile.name.split(".").pop();
+
+    coverPath=
+      `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+    const {error}=await sb.storage
+      .from("covers")
+      .upload(coverPath,coverFile);
+
+    if(error){
+      showMessage("Cover upload failed: "+error.message);
+      return;
+    }
+  }
+
+  const {data:album,error:albumError}=await sb
+    .from("albums")
+    .insert({
+      artist_id:currentUser.id,
+      title,
+      release_type:type,
+      cover_path:coverPath,
+      release_date:releaseDate,
+      status:"pending"
+    })
+    .select()
+    .single();
+
+  if(albumError){
+    showMessage(albumError.message);
+    return;
+  }
+
+  for(let i=0;i<titleInputs.length;i++){
+
+    const file=fileInputs[i].files[0];
+
+    const extension=
+      file.name.split(".").pop();
+
+    const audioPath=
+      `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+    const {error:uploadError}=await sb.storage
+      .from("music")
+      .upload(audioPath,file);
+
+    if(uploadError){
+
+      showMessage(
+        `Track ${i+1} upload failed: ${uploadError.message}`
+      );
+
+      return;
+    }
+
+    const {error:songError}=await sb
       .from("songs")
       .insert({
-        artist_id: currentUser.id,
-        title,
-        audio_path: audioPath,
-        cover_path: coverPath,
-        genre,
-        status: "pending"
+        artist_id:currentUser.id,
+        album_id:album.id,
+        title:titleInputs[i].value.trim(),
+        audio_path:audioPath,
+        cover_path:coverPath,
+        track_number:i+1,
+        disc_number:1,
+        status:"pending"
       });
 
-  if (error) {
+    if(songError){
+      showMessage(
+        `Track ${i+1} could not be saved: ${songError.message}`
+      );
+      return;
+    }
+  }
 
-    showMessage(
-      "uploadMessage",
-      error.message,
-      "error"
-    );
+  closeModal("releaseModal");
 
+  showMessage(
+    "Release submitted successfully. It is now waiting for Afrova admin approval."
+  );
+
+  renderArtistStudio();
+}
+
+
+/* =========================================================
+   STUDENT VERIFICATION
+========================================================= */
+
+function openStudentVerification(){
+
+  if(!currentUser){
+    openAccount();
+    return;
+  }
+
+  openModal("studentModal");
+}
+
+async function submitStudentVerification(){
+
+  if(!currentUser){
+    showMessage("Please log in first.");
+    return;
+  }
+
+  const file=document
+    .getElementById("studentDocument")
+    .files[0];
+
+  if(!file){
+    showMessage("Choose a verification document.");
     return;
   }
 
   showMessage(
-    "uploadMessage",
-    "Song submitted successfully. It is now pending review.",
-    "success"
+    "Student document storage is being prepared. We will connect the private verification bucket before accepting real documents."
   );
-
-  document.getElementById("uploadTitle").value = "";
-  document.getElementById("uploadGenre").value = "";
-  document.getElementById("audioFile").value = "";
-  document.getElementById("coverFile").value = "";
-
-  setTimeout(async () => {
-
-    closeModal("uploadModal");
-
-    await loadArtistStudioStats();
-
-  }, 1500);
 }
+
 
 /* =========================================================
-   PAYMENT RETURN
+   PREMIUM
 ========================================================= */
 
-function checkPaymentReturn() {
+async function getSubscription(){
 
-  const params =
-    new URLSearchParams(
-      window.location.search
+  if(!currentUser) return null;
+
+  const {data}=await sb
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
+
+  return data;
+}
+
+async function renderPremium(){
+
+  const subscription=await getSubscription();
+
+  const active=
+    subscription &&
+    subscription.status==="active";
+
+  document.getElementById("content").innerHTML=`
+
+    <h1>Afrova Premium</h1>
+
+    ${
+      active
+      ? `
+        <div class="hero">
+
+          <span class="badge green">Premium Active</span>
+
+          <h2>
+            ${escapeHtml(
+              subscription.plan.toUpperCase()
+            )}
+          </h2>
+
+          <p>
+            Your Afrova Premium subscription is active.
+          </p>
+
+          <p style="color:#999">
+            You can choose another plan when you want to change your subscription.
+          </p>
+
+        </div>
+      `
+      : `
+        <div class="hero">
+          <h2>Upgrade your listening experience.</h2>
+          <p>
+            Choose the plan that works for you.
+          </p>
+        </div>
+      `
+    }
+
+    <div class="grid">
+
+      ${premiumCard(
+        "Student Premium",
+        "₦400/month",
+        "student",
+        subscription
+      )}
+
+      ${premiumCard(
+        "Individual Premium",
+        "₦600/month",
+        "individual",
+        subscription
+      )}
+
+      ${premiumCard(
+        "Duo",
+        "₦1,200/month",
+        "duo",
+        subscription
+      )}
+
+      ${premiumCard(
+        "Family",
+        "₦1,500/month",
+        "family",
+        subscription
+      )}
+
+    </div>
+
+    <h2>Student Verification</h2>
+
+    <div class="empty">
+
+      <p>
+        Student Premium requires student verification.
+      </p>
+
+      <button class="secondary"
+        onclick="openStudentVerification()">
+        Submit Student Verification
+      </button>
+
+    </div>
+
+  `;
+}
+
+function premiumCard(name,price,plan,subscription){
+
+  const active=
+    subscription?.status==="active";
+
+  const isSame=
+    active && subscription.plan===plan;
+
+  if(isSame){
+    return `
+      <div class="card">
+        <h3>${name}</h3>
+        <p>${price}</p>
+        <br>
+        <span class="badge green">Current Plan</span>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="card">
+
+      <h3>${name}</h3>
+
+      <p style="font-size:22px;color:white">
+        ${price}
+      </p>
+
+      <br>
+
+      <button class="primary"
+        onclick="startPremium('${plan}')">
+        ${active ? "Change Plan" : "Subscribe"}
+      </button>
+
+    </div>
+  `;
+}
+
+async function startPremium(plan){
+
+  if(!currentUser){
+
+    showMessage(
+      "Please create an Afrova account or log in before subscribing."
     );
 
-  const reference =
-    params.get("reference");
+    openAccount();
 
-  if (!reference) return;
+    return;
+  }
+
+  if(plan==="student"){
+
+    showMessage(
+      "Student Premium requires student verification before payment."
+    );
+
+    openStudentVerification();
+
+    return;
+  }
+
+  window.location.href=PAYSTACK_LINKS[plan];
+}
+
+
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
+
+async function renderAdmin(){
+
+  if(currentProfile?.role!=="admin"){
+    showMessage("Admin access required.");
+    return;
+  }
+
+  const {data:stats,error}=await sb
+    .rpc("get_admin_stats");
+
+  if(error){
+    console.error(error);
+  }
+
+  const s=stats || {};
+
+  document.getElementById("content").innerHTML=`
+
+    <h1>Afrova Admin Dashboard</h1>
+
+    <div class="grid">
+
+      <div class="admin-stat">
+        Users
+        <strong>${s.users || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Artists
+        <strong>${s.artists || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Pending Artists
+        <strong>${s.pending_artists || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Songs
+        <strong>${s.songs || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Pending Songs
+        <strong>${s.pending_songs || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Albums / EPs
+        <strong>${s.albums || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Pending Releases
+        <strong>${s.pending_albums || 0}</strong>
+      </div>
+
+      <div class="admin-stat">
+        Pending Students
+        <strong>${s.pending_students || 0}</strong>
+      </div>
+
+    </div>
+
+    <h2>Moderation</h2>
+
+    <div class="tabs">
+
+      <button onclick="adminArtists()">
+        🎤 Artists
+      </button>
+
+      <button onclick="adminStudents()">
+        🎓 Students
+      </button>
+
+      <button onclick="adminSongs()">
+        🎵 Songs
+      </button>
+
+      <button onclick="adminAlbums()">
+        💿 Albums
+      </button>
+
+    </div>
+
+    <div id="adminPanel">
+      <div class="empty">
+        Choose a moderation section above.
+      </div>
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   ADMIN ARTISTS
+========================================================= */
+
+async function adminArtists(){
+
+  const {data,error}=await sb
+    .from("artist_profiles")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  document.getElementById("adminPanel").innerHTML=`
+
+    <h2>Artist Verification</h2>
+
+    ${
+      data?.length
+      ? data.map(artist=>`
+
+        <div class="release-card">
+
+          <h3>${escapeHtml(artist.artist_name)}</h3>
+
+          <p>
+            ${verificationBadge(artist.verification_status)}
+          </p>
+
+          ${
+            artist.bio
+            ? `<p style="color:#999">${escapeHtml(artist.bio)}</p>`
+            : ""
+          }
+
+          ${
+            artist.verification_status!=="approved"
+            ? `
+              <button class="primary"
+                onclick="setArtistVerification('${artist.id}','approved')">
+                Approve
+              </button>
+            `
+            : `
+              <button class="secondary"
+                onclick="setArtistVerification('${artist.id}','pending')">
+                Remove Verification
+              </button>
+            `
+          }
+
+          ${
+            artist.verification_status!=="rejected"
+            ? `
+              <button class="secondary"
+                onclick="setArtistVerification('${artist.id}','rejected')">
+                Reject
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+
+      `).join("")
+      : `<div class="empty">No artists.</div>`
+    }
+
+  `;
+}
+
+async function setArtistVerification(id,status){
+
+  if(currentProfile?.role!=="admin") return;
+
+  const {error}=await sb
+    .from("artist_profiles")
+    .update({
+      verification_status:status,
+      verified_at:
+        status==="approved"
+        ? new Date().toISOString()
+        : null
+    })
+    .eq("id",id);
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage("Artist verification updated.");
+
+  adminArtists();
+}
+
+
+/* =========================================================
+   ADMIN SONGS
+========================================================= */
+
+async function adminSongs(){
+
+  const {data,error}=await sb
+    .from("songs")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  document.getElementById("adminPanel").innerHTML=`
+
+    <h2>Song Moderation</h2>
+
+    ${
+      data?.length
+      ? data.map(song=>`
+
+        <div class="release-card">
+
+          <h3>${escapeHtml(song.title)}</h3>
+
+          <p>
+            ${statusBadge(song.status)}
+          </p>
+
+          ${
+            song.status!=="published"
+            ? `
+              <button class="primary"
+                onclick="setSongStatus('${song.id}','published')">
+                Publish
+              </button>
+            `
+            : `
+              <button class="secondary"
+                onclick="setSongStatus('${song.id}','pending')">
+                Unpublish
+              </button>
+            `
+          }
+
+          ${
+            song.status!=="rejected"
+            ? `
+              <button class="secondary"
+                onclick="setSongStatus('${song.id}','rejected')">
+                Reject
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+
+      `).join("")
+      : `<div class="empty">No songs submitted.</div>`
+    }
+
+  `;
+}
+
+async function setSongStatus(id,status){
+
+  const {error}=await sb
+    .from("songs")
+    .update({status})
+    .eq("id",id);
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage("Song status updated.");
+
+  await loadPublishedSongs();
+
+  adminSongs();
+}
+
+
+/* =========================================================
+   ADMIN ALBUMS
+========================================================= */
+
+async function adminAlbums(){
+
+  const {data,error}=await sb
+    .from("albums")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  document.getElementById("adminPanel").innerHTML=`
+
+    <h2>Album / EP Moderation</h2>
+
+    ${
+      data?.length
+      ? data.map(album=>`
+
+        <div class="release-card">
+
+          <h3>${escapeHtml(album.title)}</h3>
+
+          <p>
+            Type:
+            <span class="badge">
+              ${escapeHtml(album.release_type)}
+            </span>
+          </p>
+
+          <p>
+            ${statusBadge(album.status)}
+          </p>
+
+          ${
+            album.status!=="published"
+            ? `
+              <button class="primary"
+                onclick="setAlbumStatus('${album.id}','published')">
+                Publish
+              </button>
+            `
+            : `
+              <button class="secondary"
+                onclick="setAlbumStatus('${album.id}','pending')">
+                Unpublish
+              </button>
+            `
+          }
+
+          ${
+            album.status!=="rejected"
+            ? `
+              <button class="secondary"
+                onclick="setAlbumStatus('${album.id}','rejected')">
+                Reject
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+
+      `).join("")
+      : `<div class="empty">No releases submitted.</div>`
+    }
+
+  `;
+}
+
+async function setAlbumStatus(id,status){
+
+  const {error}=await sb
+    .from("albums")
+    .update({status})
+    .eq("id",id);
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
 
   /*
-    Paystack webhook is responsible for updating
-    the subscriptions table.
-
-    The browser does NOT activate Premium itself.
+    When an album is published, publish its pending tracks too.
+    When rejected, reject its tracks too.
   */
 
-  setTimeout(async () => {
+  if(status==="published"){
 
-    await loadSubscription();
-    updatePlanBadge();
-    renderPremium();
+    await sb
+      .from("songs")
+      .update({status:"published"})
+      .eq("album_id",id);
 
-  }, 2500);
+  }
+
+  if(status==="rejected"){
+
+    await sb
+      .from("songs")
+      .update({status:"rejected"})
+      .eq("album_id",id);
+
+  }
+
+  showMessage("Release status updated.");
+
+  adminAlbums();
 }
+
+
+/* =========================================================
+   ADMIN STUDENTS
+========================================================= */
+
+async function adminStudents(){
+
+  const {data,error}=await sb
+    .from("student_verifications")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  document.getElementById("adminPanel").innerHTML=`
+
+    <h2>Student Verification</h2>
+
+    ${
+      data?.length
+      ? data.map(student=>`
+
+        <div class="release-card">
+
+          <h3>Student verification</h3>
+
+          <p>
+            User:
+            ${escapeHtml(student.user_id)}
+          </p>
+
+          <p>
+            ${statusBadge(student.status)}
+          </p>
+
+          <p style="color:#999">
+            Submitted:
+            ${formatDate(student.created_at)}
+          </p>
+
+          ${
+            student.status!=="approved"
+            ? `
+              <button class="primary"
+                onclick="setStudentStatus('${student.id}','approved')">
+                Approve
+              </button>
+            `
+            : ""
+          }
+
+          ${
+            student.status!=="rejected"
+            ? `
+              <button class="secondary"
+                onclick="setStudentStatus('${student.id}','rejected')">
+                Reject
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+
+      `).join("")
+      : `<div class="empty">No student verification requests.</div>`
+    }
+
+  `;
+}
+
+async function setStudentStatus(id,status){
+
+  const {error}=await sb
+    .from("student_verifications")
+    .update({
+      status,
+      reviewed_by:currentUser.id,
+      reviewed_at:new Date().toISOString()
+    })
+    .eq("id",id);
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage("Student verification updated.");
+
+  adminStudents();
+}
+
 
 /* =========================================================
    INITIALIZATION
 ========================================================= */
 
-async function init() {
+sb.auth.onAuthStateChange(async(event,session)=>{
 
-  audio.volume = .8;
+  currentUser=session?.user || null;
+
+  if(currentUser){
+    await loadProfile();
+  }else{
+    currentProfile=null;
+    currentArtist=null;
+  }
+
+  updateAdminButton();
+});
+
+(async function(){
 
   await checkLogin();
 
   await loadPublishedSongs();
 
-  renderHome();
+  await renderAlbums();
 
-  renderPremium();
+  showPage("home");
 
-  checkPaymentReturn();
-}
-
-init();
-
+})();
 </script>
 
 </body>
