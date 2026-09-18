@@ -1,2892 +1,1562 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b0b0f">
-  <title>Afrova — Music for Everyone</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #09090d;
-      --panel: #111117;
-      --panel2: #181820;
-      --text: #ffffff;
-      --muted: #9b9ba7;
-      --accent: #ff7a00;
-      --accent2: #ff9d3d;
-      --border: rgba(255,255,255,.08);
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 95px;
-    }
-
-    button {
-      font-family: inherit;
-      cursor: pointer;
-      border: 0;
-    }
-
-    input {
-      font-family: inherit;
-    }
-
-    .app {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* SIDEBAR */
-
-    .sidebar {
-      width: 240px;
-      background: #0d0d12;
-      border-right: 1px solid var(--border);
-      padding: 25px 16px;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 20;
-    }
-
-    .logo {
-      font-size: 29px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin: 0 10px 35px;
-    }
-
-    .logo span {
-      color: var(--accent);
-    }
-
-    .nav-title {
-      color: #666672;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin: 20px 12px 10px;
-      letter-spacing: 1px;
-    }
-
-    .nav-btn {
-      width: 100%;
-      background: transparent;
-      color: var(--muted);
-      padding: 12px;
-      border-radius: 9px;
-      text-align: left;
-      margin-bottom: 4px;
-      font-size: 14px;
-      transition: .2s;
-    }
-
-    .nav-btn:hover,
-    .nav-btn.active {
-      background: var(--panel2);
-      color: white;
-    }
-
-    .nav-btn.active {
-      color: var(--accent2);
-    }
-
-    /* MAIN */
-
-    .main {
-      margin-left: 240px;
-      width: calc(100% - 240px);
-      padding: 25px 30px 130px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 35px;
-    }
-
-    .search {
-      flex: 1;
-      max-width: 650px;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      border-radius: 25px;
-      padding: 13px 18px;
-      color: white;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .search:focus {
-      border-color: var(--accent);
-    }
-
-    .premium-btn {
-      background: var(--accent);
-      color: white;
-      padding: 12px 18px;
-      border-radius: 22px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .premium-btn:hover {
-      background: var(--accent2);
-    }
-
-    .profile {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff7a00, #ffbd70);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      color: #17100a;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    /* HERO */
-
-    .hero {
-      background:
-        radial-gradient(circle at 85% 20%, rgba(255,122,0,.4), transparent 30%),
-        linear-gradient(120deg, #1b1410, #121218);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 42px;
-      margin-bottom: 40px;
-      overflow: hidden;
-    }
-
-    .hero small {
-      color: var(--accent2);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .hero h1 {
-      font-size: clamp(35px, 5vw, 62px);
-      line-height: 1;
-      margin: 15px 0;
-      max-width: 650px;
-    }
-
-    .hero p {
-      color: #c0c0c9;
-      max-width: 570px;
-      line-height: 1.6;
-      margin-bottom: 25px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .primary {
-      background: var(--accent);
-      color: white;
-      padding: 13px 22px;
-      border-radius: 24px;
-      font-weight: 700;
-    }
-
-    .primary:hover {
-      background: var(--accent2);
-    }
-
-    .secondary {
-      background: rgba(255,255,255,.08);
-      color: white;
-      padding: 13px 22px;
-      border-radius: 24px;
-      font-weight: 700;
-    }
-
-    .secondary:hover {
-      background: rgba(255,255,255,.14);
-    }
-
-    /* SECTIONS */
-
-    .section {
-      margin-bottom: 42px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .section-head h2 {
-      font-size: 22px;
-    }
-
-    .see-all {
-      color: var(--accent2);
-      background: none;
-      font-size: 13px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(130px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 12px;
-      transition: .2s;
-      min-width: 0;
-    }
-
-    .card:hover {
-      background: var(--panel2);
-      transform: translateY(-3px);
-    }
-
-    .cover {
-      aspect-ratio: 1;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #ff7a00, #381b08);
-      display: grid;
-      place-items: center;
-      font-size: 34px;
-      margin-bottom: 12px;
-      overflow: hidden;
-    }
-
-    .cover.two {
-      background: linear-gradient(135deg, #5932a8, #191129);
-    }
-
-    .cover.three {
-      background: linear-gradient(135deg, #007d71, #071e1c);
-    }
-
-    .cover.four {
-      background: linear-gradient(135deg, #ba1945, #270a14);
-    }
-
-    .cover.five {
-      background: linear-gradient(135deg, #b38a00, #241d00);
-    }
-
-    .card h3 {
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 5px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 12px;
-    }
-
-    .play-small {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: white;
-      font-size: 14px;
-    }
-
-    .heart {
-      background: none;
-      color: #777783;
-      font-size: 19px;
-    }
-
-    .heart.liked {
-      color: #ff5b72;
-    }
-
-    /* ARTISTS */
-
-    .artist-card {
-      text-align: center;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 18px 10px;
-      border-radius: 14px;
-    }
-
-    .artist-img {
-      width: 95px;
-      height: 95px;
-      border-radius: 50%;
-      margin: auto auto 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #ff7a00, #4a2207);
-      font-size: 28px;
-      font-weight: 800;
-    }
-
-    .artist-card p {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    /* PREMIUM */
-
-    .plans {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-    }
-
-    .plan {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 22px;
-    }
-
-    .plan h3 {
-      margin-bottom: 10px;
-    }
-
-    .price {
-      font-size: 27px;
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
-
-    .price span {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: normal;
-    }
-
-    .plan p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      margin-bottom: 18px;
-    }
-
-    .plan button {
-      width: 100%;
-      padding: 11px;
-      border-radius: 20px;
-      background: var(--accent);
-      color: white;
-      font-weight: 700;
-    }
-
-    /* ARTIST AREA */
-
-    .artist-area {
-      background: linear-gradient(135deg, #17100b, #101016);
-      border: 1px solid var(--border);
-      padding: 28px;
-      border-radius: 18px;
-    }
-
-    .artist-area h2 {
-      margin-bottom: 10px;
-    }
-
-    .artist-area p {
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .artist-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* PLAYER */
-
-    .player {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 82px;
-      background: rgba(16,16,22,.97);
-      border-top: 1px solid var(--border);
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      padding: 10px 22px;
-      gap: 18px;
-    }
-
-    .now {
-      width: 230px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .now-cover {
-      width: 52px;
-      height: 52px;
-      border-radius: 7px;
-      background: linear-gradient(135deg, #ff7a00, #3b1803);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-
-    .now-info {
-      overflow: hidden;
-    }
-
-    .now-info strong,
-    .now-info span {
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .now-info span {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .control {
-      background: none;
-      color: white;
-      font-size: 18px;
-    }
-
-    .main-play {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: white;
-      color: black;
-      font-size: 16px;
-    }
-
-    .progress-area {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .progress {
-      height: 4px;
-      flex: 1;
-      background: #3b3b45;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      border-radius: 5px;
-    }
-
-    .time {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    /* MOBILE NAV */
-
-    .mobile-nav {
-      display: none;
-    }
-
-    /* AUTH MODAL */
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.78);
-      backdrop-filter: blur(8px);
-      z-index: 200;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.show {
-      display: flex;
-    }
-
-    .auth-box {
-      width: 100%;
-      max-width: 420px;
-      background: #111117;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 25px 80px rgba(0,0,0,.5);
-    }
-
-    .auth-logo {
-      text-align: center;
-      font-size: 30px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .auth-logo span {
-      color: var(--accent);
-    }
-
-    .auth-subtitle {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 25px;
-    }
-
-    .auth-box h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .auth-input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #181820;
-      color: white;
-      outline: none;
-    }
-
-    .auth-input:focus {
-      border-color: var(--accent);
-    }
-
-    .auth-submit {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent);
-      color: white;
-      border-radius: 10px;
-      font-weight: 700;
-      margin-top: 5px;
-    }
-
-    .auth-submit:hover {
-      background: var(--accent2);
-    }
-
-    .auth-switch {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 18px;
-    }
-
-    .auth-switch button {
-      background: none;
-      color: var(--accent2);
-      font-weight: 700;
-    }
-
-    .close-modal {
-      float: right;
-      background: rgba(255,255,255,.08);
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-size: 18px;
-    }
-
-    .account-info {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .account-avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff7a00, #ffbd70);
-      color: #17100a;
-      display: grid;
-      place-items: center;
-      font-size: 25px;
-      font-weight: 800;
-      margin: 0 auto 12px;
-    }
-
-    .account-email {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 5px;
-      word-break: break-word;
-    }
-
-    .logout-btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.08);
-      color: white;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-
-    /* MESSAGE */
-
-    #message {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      max-width: 340px;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      padding: 13px 17px;
-      border-radius: 10px;
-      z-index: 300;
-      display: none;
-      font-size: 13px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 1000px) {
-      .cards {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .plans {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .sidebar {
-        display: none;
-      }
-
-      .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 18px 15px 125px;
-      }
-
-      .topbar {
-        margin-bottom: 22px;
-      }
-
-      .premium-btn {
-        display: none;
-      }
-
-      .hero {
-        padding: 28px 22px;
-        border-radius: 17px;
-      }
-
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .plans {
-        grid-template-columns: 1fr;
-      }
-
-      .player {
-        height: 76px;
-        padding: 8px 12px;
-        gap: 8px;
-      }
-
-      .now {
-        width: 42%;
-      }
-
-      .now-cover {
-        width: 45px;
-        height: 45px;
-      }
-
-      .controls {
-        gap: 8px;
-      }
-
-      .control:nth-child(1),
-      .control:nth-child(3) {
-        display: none;
-      }
-
-      .progress-area {
-        position: absolute;
-        left: 12px;
-        right: 12px;
-        bottom: 4px;
-      }
-
-      .mobile-nav {
-        position: fixed;
-        display: flex;
-        left: 0;
-        right: 0;
-        bottom: 76px;
-        height: 48px;
-        background: #0d0d12;
-        border-top: 1px solid var(--border);
-        z-index: 49;
-        justify-content: space-around;
-        align-items: center;
-      }
-
-      .mobile-nav button {
-        background: none;
-        color: var(--muted);
-        font-size: 11px;
-      }
-
-      .mobile-nav button.active {
-        color: var(--accent2);
-      }
-
-      .auth-box {
-        padding: 23px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0b0f">
+<title>Afrova — Music for Everyone</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#09090d;--panel:#111117;--panel2:#181820;
+--text:#fff;--muted:#9b9ba7;--accent:#ff7a00;
+--accent2:#ff9d3d;--border:rgba(255,255,255,.08)
+}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:95px}
+button{font-family:inherit;cursor:pointer;border:0}
+input,textarea,select{font-family:inherit}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0d0d12;border-right:1px solid var(--border);padding:25px 16px;position:fixed;top:0;bottom:0;left:0;z-index:20}
+.logo{font-size:29px;font-weight:800;letter-spacing:-1px;margin:0 10px 35px}
+.logo span{color:var(--accent)}
+.nav-title{color:#666672;font-size:11px;font-weight:700;text-transform:uppercase;margin:20px 12px 10px;letter-spacing:1px}
+.nav-btn{width:100%;background:transparent;color:var(--muted);padding:12px;border-radius:9px;text-align:left;margin-bottom:4px;font-size:14px}
+.nav-btn:hover,.nav-btn.active{background:var(--panel2);color:#fff}
+.nav-btn.active{color:var(--accent2)}
+.main{margin-left:240px;width:calc(100% - 240px);padding:25px 30px 130px}
+.topbar{display:flex;align-items:center;gap:15px;margin-bottom:35px}
+.search{flex:1;max-width:650px;background:var(--panel2);border:1px solid var(--border);border-radius:25px;padding:13px 18px;color:#fff;outline:none;font-size:14px}
+.search:focus{border-color:var(--accent)}
+.premium-btn{background:var(--accent);color:#fff;padding:12px 18px;border-radius:22px;font-weight:700;white-space:nowrap}
+.profile{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ff7a00,#ffbd70);display:grid;place-items:center;font-weight:800;color:#17100a;cursor:pointer;flex-shrink:0}
+.hero{background:radial-gradient(circle at 85% 20%,rgba(255,122,0,.4),transparent 30%),linear-gradient(120deg,#1b1410,#121218);border:1px solid var(--border);border-radius:22px;padding:42px;margin-bottom:40px;overflow:hidden}
+.hero small{color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:2px}
+.hero h1{font-size:clamp(35px,5vw,62px);line-height:1;margin:15px 0;max-width:650px}
+.hero p{color:#c0c0c9;max-width:570px;line-height:1.6;margin-bottom:25px}
+.hero-actions,.artist-actions{display:flex;gap:10px;flex-wrap:wrap}
+.primary{background:var(--accent);color:#fff;padding:13px 22px;border-radius:24px;font-weight:700}
+.secondary{background:rgba(255,255,255,.08);color:#fff;padding:13px 22px;border-radius:24px;font-weight:700}
+.section{margin-bottom:42px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-head h2{font-size:22px}
+.see-all{color:var(--accent2);background:none;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:12px;transition:.2s;min-width:0}
+.card:hover{background:var(--panel2);transform:translateY(-3px)}
+.cover{aspect-ratio:1;border-radius:9px;background:linear-gradient(135deg,#ff7a00,#381b08);display:grid;place-items:center;font-size:34px;margin-bottom:12px;overflow:hidden}
+.cover img{width:100%;height:100%;object-fit:cover}
+.cover.two{background:linear-gradient(135deg,#5932a8,#191129)}
+.cover.three{background:linear-gradient(135deg,#007d71,#071e1c)}
+.cover.four{background:linear-gradient(135deg,#ba1945,#270a14)}
+.cover.five{background:linear-gradient(135deg,#b38a00,#241d00)}
+.card h3{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
+.card p{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.play-small{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff}
+.heart{background:none;color:#777783;font-size:19px}
+.heart.liked{color:#ff5b72}
+.artist-card{text-align:center;background:var(--panel);border:1px solid var(--border);padding:18px 10px;border-radius:14px}
+.artist-img{width:95px;height:95px;border-radius:50%;margin:auto auto 12px;display:grid;place-items:center;background:linear-gradient(135deg,#ff7a00,#4a2207);font-size:28px;font-weight:800}
+.artist-card p{color:var(--muted);font-size:12px;margin-top:5px}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.plan{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px}
+.plan h3{margin-bottom:10px}
+.price{font-size:27px;font-weight:800;margin-bottom:15px}
+.price span{font-size:12px;color:var(--muted);font-weight:normal}
+.plan p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:18px}
+.plan button{width:100%;padding:11px;border-radius:20px;background:var(--accent);color:#fff;font-weight:700}
+.artist-area{background:linear-gradient(135deg,#17100b,#101016);border:1px solid var(--border);padding:28px;border-radius:18px}
+.artist-area h2{margin-bottom:10px}
+.artist-area p{color:var(--muted);line-height:1.6;margin-bottom:20px}
+.player{position:fixed;bottom:0;left:0;right:0;height:82px;background:rgba(16,16,22,.97);border-top:1px solid var(--border);z-index:50;display:flex;align-items:center;padding:10px 22px;gap:18px}
+.now{width:230px;display:flex;align-items:center;gap:12px}
+.now-cover{width:52px;height:52px;border-radius:7px;background:linear-gradient(135deg,#ff7a00,#3b1803);display:grid;place-items:center;flex-shrink:0;overflow:hidden}
+.now-cover img{width:100%;height:100%;object-fit:cover}
+.now-info{overflow:hidden}
+.now-info strong,.now-info span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now-info span{color:var(--muted);font-size:12px;margin-top:4px}
+.controls{display:flex;align-items:center;gap:15px}
+.control{background:none;color:#fff;font-size:18px}
+.main-play{width:42px;height:42px;border-radius:50%;background:#fff;color:#000;font-size:16px}
+.progress-area{flex:1;display:flex;align-items:center;gap:10px}
+.progress{height:4px;flex:1;background:#3b3b45;border-radius:5px;cursor:pointer}
+.progress-fill{height:100%;width:0;background:var(--accent);border-radius:5px}
+.time{color:var(--muted);font-size:11px}
+.mobile-nav{display:none}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.auth-box{width:100%;max-width:450px;max-height:90vh;overflow-y:auto;background:#111117;border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.5)}
+.auth-logo{text-align:center;font-size:30px;font-weight:800;margin-bottom:8px}
+.auth-logo span{color:var(--accent)}
+.auth-subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:25px}
+.auth-box h2{text-align:center;margin-bottom:20px}
+.auth-input{width:100%;padding:14px;margin-bottom:12px;border-radius:10px;border:1px solid var(--border);background:#181820;color:#fff;outline:none}
+textarea.auth-input{min-height:100px;resize:vertical}
+.auth-submit{width:100%;padding:14px;background:var(--accent);color:#fff;border-radius:10px;font-weight:700;margin-top:5px}
+.auth-switch{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+.auth-switch button{background:none;color:var(--accent2);font-weight:700}
+.close-modal{float:right;background:rgba(255,255,255,.08);color:#fff;width:30px;height:30px;border-radius:50%;font-size:18px}
+.account-info{text-align:center;margin:20px 0}
+.account-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ff7a00,#ffbd70);color:#17100a;display:grid;place-items:center;font-size:25px;font-weight:800;margin:0 auto 12px}
+.account-email{color:var(--muted);font-size:13px;margin-top:5px;word-break:break-word}
+.logout-btn{width:100%;padding:13px;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-weight:700;margin-top:10px}
+#message{position:fixed;top:20px;right:20px;max-width:340px;background:var(--panel2);border:1px solid var(--border);padding:13px 17px;border-radius:10px;z-index:300;display:none;font-size:13px}
+.hidden{display:none!important}
+.upload-label{display:block;color:#aaa;font-size:12px;margin:4px 0 7px}
+.file-box{width:100%;padding:12px;background:#181820;border:1px dashed #444;border-radius:10px;color:#bbb;margin-bottom:13px}
+.artist-song-list{margin-top:25px}
+.artist-song{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:rgba(255,255,255,.04);border-radius:10px;margin-bottom:8px}
+.artist-song small{color:var(--muted)}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.plans{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+.sidebar{display:none}.main{margin-left:0;width:100%;padding:18px 15px 125px}.topbar{margin-bottom:22px}.premium-btn{display:none}
+.hero{padding:28px 22px;border-radius:17px}.cards{grid-template-columns:repeat(2,1fr);gap:10px}.plans{grid-template-columns:1fr}
+.player{height:76px;padding:8px 12px;gap:8px}.now{width:42%}.now-cover{width:45px;height:45px}.controls{gap:8px}
+.control:nth-child(1),.control:nth-child(3){display:none}.progress-area{position:absolute;left:12px;right:12px;bottom:4px}
+.mobile-nav{position:fixed;display:flex;left:0;right:0;bottom:76px;height:48px;background:#0d0d12;border-top:1px solid var(--border);z-index:49;justify-content:space-around;align-items:center}
+.mobile-nav button{background:none;color:var(--muted);font-size:11px}.mobile-nav button.active{color:var(--accent2)}
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-
-    <div class="logo">
-      Afro<span>va</span>
-    </div>
-
-    <div class="nav-title">Menu</div>
-
-    <button class="nav-btn active" onclick="showSection('home', this)">
-      ⌂ &nbsp; Home
-    </button>
-
-    <button class="nav-btn" onclick="showSection('search', this)">
-      ⌕ &nbsp; Search
-    </button>
-
-    <button class="nav-btn" onclick="showSection('library', this)">
-      ♫ &nbsp; Your Library
-    </button>
-
-    <div class="nav-title">Your Music</div>
-
-    <button class="nav-btn" onclick="showSection('liked', this)">
-      ♥ &nbsp; Liked Songs
-    </button>
-
-    <button class="nav-btn" onclick="showSection('playlists', this)">
-      ☷ &nbsp; Playlists
-    </button>
-
-    <button class="nav-btn" onclick="showSection('albums', this)">
-      ▣ &nbsp; Albums
-    </button>
-
-    <div class="nav-title">For Artists</div>
-
-    <button class="nav-btn" onclick="showSection('artist', this)">
-      ♬ &nbsp; Artist Studio
-    </button>
-
-    <button class="nav-btn" onclick="showSection('premium', this)">
-      ◆ &nbsp; Premium
-    </button>
-
-  </aside>
-
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <div class="topbar">
-
-      <input
-        id="searchInput"
-        class="search"
-        type="search"
-        placeholder="Search songs, artists, albums..."
-        oninput="searchMusic()"
-      >
-
-      <button
-        class="premium-btn"
-        onclick="showSection('premium')">
-        Get Premium
-      </button>
-
-      <div
-        class="profile"
-        id="profileButton"
-        onclick="openAccount()">
-        A
-      </div>
-
-    </div>
-
-
-    <!-- HOME -->
-    <section id="home">
-
-      <div class="hero">
-
-        <small>Welcome to Afrova</small>
-
-        <h1>
-          Your sound. Your culture. Your Afrova.
-        </h1>
-
-        <p>
-          Discover new music, follow your favourite artists,
-          create playlists and enjoy the sounds you love.
-        </p>
-
-        <div class="hero-actions">
-
-          <button
-            class="primary"
-            onclick="playSong(0)">
-            ▶ Start Listening
-          </button>
-
-          <button
-            class="secondary"
-            onclick="showSection('artist')">
-            For Artists
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Trending on Afrova</h2>
-          <button class="see-all">See all</button>
-        </div>
-
-        <div
-          class="cards"
-          id="songCards">
-        </div>
-
-      </div>
-
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Popular Artists</h2>
-        </div>
-
-        <div class="cards">
-
-          <div class="artist-card">
-            <div class="artist-img">A</div>
-            <h3>Afro Artist</h3>
-            <p>Artist</p>
-          </div>
-
-          <div class="artist-card">
-            <div class="artist-img">K</div>
-            <h3>Kora</h3>
-            <p>Artist</p>
-          </div>
-
-          <div class="artist-card">
-            <div class="artist-img">L</div>
-            <h3>Lagos Boy</h3>
-            <p>Artist</p>
-          </div>
-
-          <div class="artist-card">
-            <div class="artist-img">M</div>
-            <h3>Melody</h3>
-            <p>Artist</p>
-          </div>
-
-          <div class="artist-card">
-            <div class="artist-img">S</div>
-            <h3>Soul Africa</h3>
-            <p>Artist</p>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Made for You</h2>
-        </div>
-
-        <div class="cards">
-
-          <div class="card">
-            <div class="cover two">🎧</div>
-            <h3>Afrova Mix</h3>
-            <p>Music picked for you</p>
-          </div>
-
-          <div class="card">
-            <div class="cover three">🌍</div>
-            <h3>Afro Vibes</h3>
-            <p>Fresh African sounds</p>
-          </div>
-
-          <div class="card">
-            <div class="cover four">🔥</div>
-            <h3>Hot Right Now</h3>
-            <p>What's trending</p>
-          </div>
-
-          <div class="card">
-            <div class="cover five">🌙</div>
-            <h3>Late Night</h3>
-            <p>Relax and listen</p>
-          </div>
-
-          <div class="card">
-            <div class="cover">✨</div>
-            <h3>New Releases</h3>
-            <p>Fresh music</p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- SEARCH -->
-    <section id="search" class="hidden">
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Search Results</h2>
-        </div>
-
-        <div
-          class="cards"
-          id="searchResults">
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- LIBRARY -->
-    <section id="library" class="hidden">
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Your Library</h2>
-        </div>
-
-        <p style="color:var(--muted); line-height:1.7;">
-          Your saved songs, albums and playlists will appear here.
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- LIKED -->
-    <section id="liked" class="hidden">
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Liked Songs</h2>
-        </div>
-
-        <div
-          class="cards"
-          id="likedSongs">
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PLAYLISTS -->
-    <section id="playlists" class="hidden">
-
-      <div class="section">
-
-        <div class="section-head">
-
-          <h2>Your Playlists</h2>
-
-          <button
-            class="primary"
-            onclick="createPlaylist()">
-            + Create Playlist
-          </button>
-
-        </div>
-
-        <div class="cards">
-
-          <div class="card">
-            <div class="cover">🎵</div>
-            <h3>My Afro Playlist</h3>
-            <p>Your favourite music</p>
-          </div>
-
-          <div class="card">
-            <div class="cover three">🌴</div>
-            <h3>Afrobeats</h3>
-            <p>Afrobeat collection</p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ALBUMS -->
-    <section id="albums" class="hidden">
-
-      <div class="section">
-
-        <div class="section-head">
-          <h2>Albums</h2>
-        </div>
-
-        <div
-          class="cards"
-          id="albumCards">
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ARTIST STUDIO -->
-    <section id="artist" class="hidden">
-
-      <div class="hero">
-
-        <small>Afrova for Artists</small>
-
-        <h1>
-          Put your music in front of listeners.
-        </h1>
-
-        <p>
-          Create your artist profile, upload music,
-          manage releases and view your listener statistics.
-        </p>
-
-        <div class="hero-actions">
-
-          <button
-            class="primary"
-            onclick="artistMessage()">
-            Create Artist Account
-          </button>
-
-          <button
-            class="secondary"
-            onclick="artistMessage()">
-            Upload Music
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="artist-area">
-
-        <h2>Artist Studio</h2>
-
-        <p>
-          Upload songs and albums, add cover artwork,
-          manage releases and track how people listen
-          to your music.
-        </p>
-
-        <div class="artist-actions">
-
-          <button
-            class="primary"
-            onclick="artistMessage()">
-            ＋ Upload Song
-          </button>
-
-          <button
-            class="secondary"
-            onclick="artistMessage()">
-            ＋ New Album / EP
-          </button>
-
-          <button
-            class="secondary"
-            onclick="artistMessage()">
-            Analytics
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PREMIUM -->
-    <section id="premium" class="hidden">
-
-      <div class="hero">
-
-        <small>Afrova Premium</small>
-
-        <h1>
-          Take your music experience further.
-        </h1>
-
-        <p>
-          Enjoy an enhanced Afrova experience with Premium plans.
-        </p>
-
-      </div>
-
-
-      <div class="plans">
-
-        <div class="plan">
-
-          <h3>Student</h3>
-
-          <div class="price">
-            ₦400 <span>/ month</span>
-          </div>
-
-          <p>
-            Premium access for eligible students.
-          </p>
-
-          <button onclick="subscribe('Student')">
-            Choose Student
-          </button>
-
-        </div>
-
-
-        <div class="plan">
-
-          <h3>Individual</h3>
-
-          <div class="price">
-            ₦600 <span>/ month</span>
-          </div>
-
-          <p>
-            Premium access for one person.
-          </p>
-
-          <button onclick="subscribe('Individual')">
-            Choose Individual
-          </button>
-
-        </div>
-
-
-        <div class="plan">
-
-          <h3>Duo</h3>
-
-          <div class="price">
-            ₦1,200 <span>/ month</span>
-          </div>
-
-          <p>
-            Premium access for two people.
-          </p>
-
-          <button onclick="subscribe('Duo')">
-            Choose Duo
-          </button>
-
-        </div>
-
-
-        <div class="plan">
-
-          <h3>Family</h3>
-
-          <div class="price">
-            ₦1,500 <span>/ month</span>
-          </div>
-
-          <p>
-            Premium access for your family.
-          </p>
-
-          <button onclick="subscribe('Family')">
-            Choose Family
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
+<aside class="sidebar">
+<div class="logo">Afro<span>va</span></div>
+
+<div class="nav-title">Menu</div>
+<button class="nav-btn active" onclick="showSection('home',this)">⌂ &nbsp; Home</button>
+<button class="nav-btn" onclick="showSection('search',this)">⌕ &nbsp; Search</button>
+<button class="nav-btn" onclick="showSection('library',this)">♫ &nbsp; Your Library</button>
+
+<div class="nav-title">Your Music</div>
+<button class="nav-btn" onclick="showSection('liked',this)">♥ &nbsp; Liked Songs</button>
+<button class="nav-btn" onclick="showSection('playlists',this)">☷ &nbsp; Playlists</button>
+<button class="nav-btn" onclick="showSection('albums',this)">▣ &nbsp; Albums</button>
+
+<div class="nav-title">For Artists</div>
+<button class="nav-btn" onclick="showSection('artist',this)">♬ &nbsp; Artist Studio</button>
+<button class="nav-btn" onclick="showSection('premium',this)">◆ &nbsp; Premium</button>
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+<input id="searchInput" class="search" type="search" placeholder="Search songs, artists, albums..." oninput="searchMusic()">
+<button class="premium-btn" onclick="showSection('premium')">Get Premium</button>
+<div class="profile" id="profileButton" onclick="openAccount()">A</div>
 </div>
 
+<section id="home">
 
-<!-- MOBILE NAV -->
+<div class="hero">
+<small>Welcome to Afrova</small>
+<h1>Your sound. Your culture. Your Afrova.</h1>
+<p>Discover new music, follow your favourite artists, create playlists and enjoy the sounds you love.</p>
+<div class="hero-actions">
+<button class="primary" onclick="playSong(0)">▶ Start Listening</button>
+<button class="secondary" onclick="showSection('artist')">For Artists</button>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><h2>Trending on Afrova</h2></div>
+<div class="cards" id="songCards"></div>
+</div>
+
+<div class="section">
+<div class="section-head"><h2>Popular Artists</h2></div>
+<div class="cards">
+<div class="artist-card"><div class="artist-img">A</div><h3>Afro Artist</h3><p>Artist</p></div>
+<div class="artist-card"><div class="artist-img">K</div><h3>Kora</h3><p>Artist</p></div>
+<div class="artist-card"><div class="artist-img">L</div><h3>Lagos Boy</h3><p>Artist</p></div>
+<div class="artist-card"><div class="artist-img">M</div><h3>Melody</h3><p>Artist</p></div>
+<div class="artist-card"><div class="artist-img">S</div><h3>Soul Africa</h3><p>Artist</p></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><h2>Made for You</h2></div>
+<div class="cards">
+<div class="card"><div class="cover two">🎧</div><h3>Afrova Mix</h3><p>Music picked for you</p></div>
+<div class="card"><div class="cover three">🌍</div><h3>Afro Vibes</h3><p>Fresh African sounds</p></div>
+<div class="card"><div class="cover four">🔥</div><h3>Hot Right Now</h3><p>What's trending</p></div>
+<div class="card"><div class="cover five">🌙</div><h3>Late Night</h3><p>Relax and listen</p></div>
+<div class="card"><div class="cover">✨</div><h3>New Releases</h3><p>Fresh music</p></div>
+</div>
+</div>
+
+</section>
+
+<section id="search" class="hidden">
+<div class="section">
+<div class="section-head"><h2>Search Results</h2></div>
+<div class="cards" id="searchResults"></div>
+</div>
+</section>
+
+<section id="library" class="hidden">
+<div class="section">
+<div class="section-head"><h2>Your Library</h2></div>
+<p style="color:var(--muted);line-height:1.7">Your saved songs, albums and playlists will appear here.</p>
+</div>
+</section>
+
+<section id="liked" class="hidden">
+<div class="section">
+<div class="section-head"><h2>Liked Songs</h2></div>
+<div class="cards" id="likedSongs"></div>
+</div>
+</section>
+
+<section id="playlists" class="hidden">
+<div class="section">
+<div class="section-head">
+<h2>Your Playlists</h2>
+<button class="primary" onclick="createPlaylist()">+ Create Playlist</button>
+</div>
+<div class="cards">
+<div class="card"><div class="cover">🎵</div><h3>My Afro Playlist</h3><p>Your favourite music</p></div>
+<div class="card"><div class="cover three">🌴</div><h3>Afrobeats</h3><p>Afrobeat collection</p></div>
+</div>
+</div>
+</section>
+
+<section id="albums" class="hidden">
+<div class="section">
+<div class="section-head"><h2>Albums</h2></div>
+<div class="cards" id="albumCards"></div>
+</div>
+</section>
+
+<section id="artist" class="hidden">
+
+<div class="hero">
+<small>Afrova for Artists</small>
+<h1>Put your music in front of listeners.</h1>
+<p>Create your artist profile, upload music, manage releases and view your listener statistics.</p>
+
+<div class="hero-actions">
+<button class="primary" onclick="openArtistAccount()">Create Artist Account</button>
+<button class="secondary" onclick="openUpload()">Upload Music</button>
+</div>
+</div>
+
+<div class="artist-area">
+<h2>Artist Studio</h2>
+<p>Upload songs and albums, add cover artwork, manage releases and track how people listen to your music.</p>
+
+<div class="artist-actions">
+<button class="primary" onclick="openUpload()">＋ Upload Song</button>
+<button class="secondary" onclick="showMessage('Album / EP creation is the next release feature.')">＋ New Album / EP</button>
+<button class="secondary" onclick="showMessage('Artist analytics will be added after song statistics are connected.')">Analytics</button>
+</div>
+
+<div id="artistSongs" class="artist-song-list"></div>
+</div>
+
+</section>
+
+<section id="premium" class="hidden">
+
+<div class="hero">
+<small>Afrova Premium</small>
+<h1>Take your music experience further.</h1>
+<p>Enjoy an enhanced Afrova experience with Premium plans.</p>
+</div>
+
+<div class="plans">
+
+<div class="plan">
+<h3>Student</h3>
+<div class="price">₦400 <span>/ month</span></div>
+<p>Premium access for eligible students.</p>
+<button onclick="subscribe('Student')">Choose Student</button>
+</div>
+
+<div class="plan">
+<h3>Individual</h3>
+<div class="price">₦600 <span>/ month</span></div>
+<p>Premium access for one person.</p>
+<button onclick="subscribe('Individual')">Choose Individual</button>
+</div>
+
+<div class="plan">
+<h3>Duo</h3>
+<div class="price">₦1,200 <span>/ month</span></div>
+<p>Premium access for two people.</p>
+<button onclick="subscribe('Duo')">Choose Duo</button>
+</div>
+
+<div class="plan">
+<h3>Family</h3>
+<div class="price">₦1,500 <span>/ month</span></div>
+<p>Premium access for your family.</p>
+<button onclick="subscribe('Family')">Choose Family</button>
+</div>
+
+</div>
+</section>
+
+</main>
+</div>
 
 <div class="mobile-nav">
-
-  <button
-    class="active"
-    onclick="showSection('home')">
-    ⌂<br>Home
-  </button>
-
-  <button
-    onclick="showSection('search')">
-    ⌕<br>Search
-  </button>
-
-  <button
-    onclick="showSection('library')">
-    ♫<br>Library
-  </button>
-
-  <button
-    onclick="showSection('premium')">
-    ◆<br>Premium
-  </button>
-
+<button class="active" onclick="showSection('home')">⌂<br>Home</button>
+<button onclick="showSection('search')">⌕<br>Search</button>
+<button onclick="showSection('library')">♫<br>Library</button>
+<button onclick="showSection('premium')">◆<br>Premium</button>
 </div>
-
-
-<!-- PLAYER -->
 
 <div class="player">
 
-  <div class="now">
-
-    <div class="now-cover">
-      ♪
-    </div>
-
-    <div class="now-info">
-
-      <strong id="nowTitle">
-        Select a song
-      </strong>
-
-      <span id="nowArtist">
-        Afrova
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <div class="controls">
-
-    <button
-      class="control"
-      onclick="previousSong()">
-      ⏮
-    </button>
-
-    <button
-      class="main-play"
-      id="playButton"
-      onclick="togglePlay()">
-      ▶
-    </button>
-
-    <button
-      class="control"
-      onclick="nextSong()">
-      ⏭
-    </button>
-
-  </div>
-
-
-  <div class="progress-area">
-
-    <span
-      class="time"
-      id="currentTime">
-      0:00
-    </span>
-
-    <div
-      class="progress"
-      onclick="seek(event)">
-
-      <div
-        class="progress-fill"
-        id="progressFill">
-      </div>
-
-    </div>
-
-    <span
-      class="time"
-      id="duration">
-      0:00
-    </span>
-
-  </div>
-
+<div class="now">
+<div class="now-cover" id="nowCover">♪</div>
+<div class="now-info">
+<strong id="nowTitle">Select a song</strong>
+<span id="nowArtist">Afrova</span>
+</div>
 </div>
 
+<div class="controls">
+<button class="control" onclick="previousSong()">⏮</button>
+<button class="main-play" id="playButton" onclick="togglePlay()">▶</button>
+<button class="control" onclick="nextSong()">⏭</button>
+</div>
+
+<div class="progress-area">
+<span class="time" id="currentTime">0:00</span>
+<div class="progress" onclick="seek(event)">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<span class="time" id="duration">0:00</span>
+</div>
+
+</div>
 
 <!-- AUTH MODAL -->
 
-<div
-  class="modal-overlay"
-  id="authModal">
+<div class="modal-overlay" id="authModal">
+<div class="auth-box">
 
-  <div class="auth-box">
+<button class="close-modal" onclick="closeModal('authModal')">×</button>
 
-    <button
-      class="close-modal"
-      onclick="closeAuth()">
-      ×
-    </button>
+<div class="auth-logo">Afro<span>va</span></div>
+<div class="auth-subtitle">Your sound. Your culture. Your Afrova.</div>
 
-    <div class="auth-logo">
-      Afro<span>va</span>
-    </div>
-
-    <div class="auth-subtitle">
-      Your sound. Your culture. Your Afrova.
-    </div>
-
-
-    <!-- LOGIN -->
-
-    <div id="loginForm">
-
-      <h2>Welcome back</h2>
-
-      <input
-        id="loginEmail"
-        class="auth-input"
-        type="email"
-        placeholder="Email address"
-        autocomplete="email"
-      >
-
-      <input
-        id="loginPassword"
-        class="auth-input"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
-
-      <button
-        class="auth-submit"
-        onclick="handleLogin()">
-        Log In
-      </button>
-
-      <div class="auth-switch">
-        Don't have an account?
-        <button onclick="showSignup()">
-          Sign Up
-        </button>
-      </div>
-
-    </div>
-
-
-    <!-- SIGN UP -->
-
-    <div
-      id="signupForm"
-      class="hidden">
-
-      <h2>Create your account</h2>
-
-      <input
-        id="signupName"
-        class="auth-input"
-        type="text"
-        placeholder="Display name"
-        autocomplete="name"
-      >
-
-      <input
-        id="signupEmail"
-        class="auth-input"
-        type="email"
-        placeholder="Email address"
-        autocomplete="email"
-      >
-
-      <input
-        id="signupPassword"
-        class="auth-input"
-        type="password"
-        placeholder="Password"
-        autocomplete="new-password"
-      >
-
-      <button
-        class="auth-submit"
-        onclick="handleSignup()">
-        Create Account
-      </button>
-
-      <div class="auth-switch">
-        Already have an account?
-        <button onclick="showLogin()">
-          Log In
-        </button>
-      </div>
-
-    </div>
-
-
-    <!-- ACCOUNT -->
-
-    <div
-      id="accountForm"
-      class="hidden">
-
-      <h2>Your Account</h2>
-
-      <div class="account-info">
-
-        <div
-          class="account-avatar"
-          id="accountAvatar">
-          A
-        </div>
-
-        <strong id="accountName">
-          Afrova User
-        </strong>
-
-        <div
-          class="account-email"
-          id="accountEmail">
-          -
-        </div>
-
-      </div>
-
-      <button
-        class="logout-btn"
-        onclick="logout()">
-        Log Out
-      </button>
-
-    </div>
-
-  </div>
-
+<div id="loginForm">
+<h2>Welcome back</h2>
+<input id="loginEmail" class="auth-input" type="email" placeholder="Email address">
+<input id="loginPassword" class="auth-input" type="password" placeholder="Password">
+<button class="auth-submit" onclick="handleLogin()">Log In</button>
+<div class="auth-switch">Don't have an account? <button onclick="showSignup()">Sign Up</button></div>
 </div>
 
+<div id="signupForm" class="hidden">
+<h2>Create your account</h2>
+<input id="signupName" class="auth-input" type="text" placeholder="Display name">
+<input id="signupEmail" class="auth-input" type="email" placeholder="Email address">
+<input id="signupPassword" class="auth-input" type="password" placeholder="Password">
+<button class="auth-submit" onclick="handleSignup()">Create Account</button>
+<div class="auth-switch">Already have an account? <button onclick="showLogin()">Log In</button></div>
+</div>
 
-<!-- MESSAGE -->
+<div id="accountForm" class="hidden">
+<h2>Your Account</h2>
+<div class="account-info">
+<div class="account-avatar" id="accountAvatar">A</div>
+<strong id="accountName">Afrova User</strong>
+<div class="account-email" id="accountEmail">-</div>
+</div>
+<button class="logout-btn" onclick="logout()">Log Out</button>
+</div>
+
+</div>
+</div>
+
+<!-- ARTIST ACCOUNT MODAL -->
+
+<div class="modal-overlay" id="artistModal">
+<div class="auth-box">
+
+<button class="close-modal" onclick="closeModal('artistModal')">×</button>
+
+<div class="auth-logo">Afro<span>va</span></div>
+<div class="auth-subtitle">Create your Afrova artist profile</div>
+
+<h2>Artist Account</h2>
+
+<input id="artistName" class="auth-input" type="text" placeholder="Artist name">
+
+<textarea id="artistBio" class="auth-input" placeholder="Tell listeners about yourself"></textarea>
+
+<button class="auth-submit" onclick="createArtistAccount()">Create Artist Profile</button>
+
+</div>
+</div>
+
+<!-- UPLOAD MODAL -->
+
+<div class="modal-overlay" id="uploadModal">
+<div class="auth-box">
+
+<button class="close-modal" onclick="closeModal('uploadModal')">×</button>
+
+<div class="auth-logo">Afro<span>va</span></div>
+<div class="auth-subtitle">Upload your music to Afrova</div>
+
+<h2>Upload Song</h2>
+
+<input id="songTitle" class="auth-input" type="text" placeholder="Song title">
+
+<input id="songGenre" class="auth-input" type="text" placeholder="Genre">
+
+<label class="upload-label">Audio file</label>
+<input id="songFile" class="file-box" type="file" accept="audio/*">
+
+<label class="upload-label">Cover artwork</label>
+<input id="coverFile" class="file-box" type="file" accept="image/*">
+
+<button class="auth-submit" id="uploadButton" onclick="uploadSong()">Upload Song</button>
+
+</div>
+</div>
 
 <div id="message"></div>
 
-
 <audio id="audio"></audio>
-
-
-<!-- SUPABASE LIBRARY -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-<!-- AFROVA APP SCRIPT -->
-
 <script>
 
-  /* =========================================
-     SUPABASE
-     ========================================= */
+/* =========================
+   SUPABASE
+========================= */
 
-  const SUPABASE_URL =
-    "https://eeurywspkbqbxayoyexi.supabase.co";
+const SUPABASE_URL="https://eeurywspkbqbxayoyexi.supabase.co";
 
-  const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Ajf06QZRdqJULjf9QOT-yw_6LCjkA86";
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+const supabaseClient=window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY
+);
 
 
-  /* =========================================
-     AUTH
-     ========================================= */
+/* =========================
+   AUTH
+========================= */
 
-  async function signUp(
-    email,
-    password,
-    displayName
-  ) {
+async function createProfile(user){
 
-    const { data, error } =
-      await supabaseClient.auth.signUp({
+if(!user)return;
 
-        email: email,
+const {data:existing}=await supabaseClient
+.from("profiles")
+.select("id")
+.eq("id",user.id)
+.maybeSingle();
 
-        password: password,
+if(existing)return;
 
-        options: {
-          data: {
-            display_name: displayName
-          }
-        }
+const displayName=
+user.user_metadata?.display_name||
+user.email?.split("@")[0]||
+"Afrova User";
 
-      });
+const {error}=await supabaseClient
+.from("profiles")
+.insert({
+id:user.id,
+display_name:displayName,
+role:"listener"
+});
 
+if(error)console.error(error.message);
 
-    if (error) {
+}
 
-      showMessage(error.message);
 
-      return false;
-    }
+async function handleSignup(){
 
+const name=document.getElementById("signupName").value.trim();
+const email=document.getElementById("signupEmail").value.trim();
+const password=document.getElementById("signupPassword").value;
 
-    /*
-      If Supabase requires email confirmation,
-      there may not be a session yet.
-    */
+if(!name||!email||password.length<6){
+showMessage("Enter your name, email and a password of at least 6 characters.");
+return;
+}
 
-    if (data.session && data.user) {
+const {data,error}=await supabaseClient.auth.signUp({
+email,
+password,
+options:{data:{display_name:name}}
+});
 
-      await createProfile(data.user);
+if(error){
+showMessage(error.message);
+return;
+}
 
-      showMessage(
-        "Account created successfully!"
-      );
+if(data.session&&data.user){
+await createProfile(data.user);
+showMessage("Account created successfully!");
+showAccount(data.user);
+}else{
+showMessage("Account created. Check your email to confirm your account.");
+}
 
-    } else {
+}
 
-      showMessage(
-        "Account created. Check your email to confirm your account."
-      );
 
-    }
+async function handleLogin(){
 
-    return true;
-  }
+const email=document.getElementById("loginEmail").value.trim();
+const password=document.getElementById("loginPassword").value;
 
+if(!email||!password){
+showMessage("Enter your email and password.");
+return;
+}
 
-  async function createProfile(user) {
+const {data,error}=await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
 
-    if (!user) return;
+if(error){
+showMessage(error.message);
+return;
+}
 
+await createProfile(data.user);
+showAccount(data.user);
+showMessage("Welcome back to Afrova!");
 
-    const { data: existingProfile } =
-      await supabaseClient
-        .from("profiles")
-        .select("id")
-        .eq("id", user.id)
-        .maybeSingle();
+}
 
 
-    if (existingProfile) {
-      return;
-    }
+async function logout(){
 
+const {error}=await supabaseClient.auth.signOut();
 
-    const displayName =
-      user.user_metadata?.display_name ||
-      user.email?.split("@")[0] ||
-      "Afrova User";
+if(error){
+showMessage(error.message);
+return;
+}
 
+closeModal("authModal");
+updateAccountButton(null);
+showMessage("You have been logged out.");
 
-    const { error } =
-      await supabaseClient
-        .from("profiles")
-        .insert({
+}
 
-          id: user.id,
 
-          display_name: displayName,
+async function checkLogin(){
 
-          role: "listener"
+const {data}=await supabaseClient.auth.getSession();
 
-        });
+if(data.session){
+await createProfile(data.session.user);
+updateAccountButton(data.session.user);
+}else{
+updateAccountButton(null);
+}
 
+}
 
-    if (error) {
 
-      console.error(
-        "Profile creation error:",
-        error.message
-      );
+supabaseClient.auth.onAuthStateChange((event,session)=>{
 
-    }
+if(session){
+updateAccountButton(session.user);
+}else{
+updateAccountButton(null);
+}
 
-  }
+});
 
 
-  async function login(
-    email,
-    password
-  ) {
+function openAccount(){
 
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
+document.getElementById("authModal").classList.add("show");
 
-        email: email,
+supabaseClient.auth.getSession().then(({data})=>{
 
-        password: password
+if(data.session){
+showAccount(data.session.user);
+}else{
+showLogin();
+}
 
-      });
+});
 
+}
 
-    if (error) {
 
-      showMessage(error.message);
+function showLogin(){
+document.getElementById("loginForm").classList.remove("hidden");
+document.getElementById("signupForm").classList.add("hidden");
+document.getElementById("accountForm").classList.add("hidden");
+}
 
-      return false;
-    }
 
+function showSignup(){
+document.getElementById("loginForm").classList.add("hidden");
+document.getElementById("signupForm").classList.remove("hidden");
+document.getElementById("accountForm").classList.add("hidden");
+}
 
-    await createProfile(data.user);
 
-    showMessage(
-      "Welcome back to Afrova!"
-    );
+function showAccount(user){
 
-    return true;
-  }
+document.getElementById("loginForm").classList.add("hidden");
+document.getElementById("signupForm").classList.add("hidden");
+document.getElementById("accountForm").classList.remove("hidden");
 
+const name=user.user_metadata?.display_name||user.email?.split("@")[0]||"Afrova User";
 
-  async function logout() {
+document.getElementById("accountName").textContent=name;
+document.getElementById("accountEmail").textContent=user.email||"";
+document.getElementById("accountAvatar").textContent=name.charAt(0).toUpperCase();
 
-    const { error } =
-      await supabaseClient.auth.signOut();
+}
 
 
-    if (error) {
+function updateAccountButton(user){
 
-      showMessage(error.message);
+const button=document.getElementById("profileButton");
 
-      return;
+if(!button)return;
 
-    }
+if(user){
 
+const name=user.user_metadata?.display_name||user.email?.split("@")[0]||"A";
 
-    closeAuth();
+button.textContent=name.charAt(0).toUpperCase();
 
-    updateAccountButton(null);
+}else{
+button.textContent="A";
+}
 
-    showMessage(
-      "You have been logged out."
-    );
+}
 
-  }
 
+/* =========================
+   ARTIST ACCOUNT
+========================= */
 
-  async function checkLogin() {
+async function openArtistAccount(){
 
-    const { data } =
-      await supabaseClient.auth.getSession();
+const {data}=await supabaseClient.auth.getSession();
 
+if(!data.session){
+showMessage("Please log in or create an Afrova account first.");
+openAccount();
+return;
+}
 
-    if (data.session) {
+const user=data.session.user;
 
-      await createProfile(
-        data.session.user
-      );
+const {data:artist}=await supabaseClient
+.from("artist_profiles")
+.select("*")
+.eq("id",user.id)
+.maybeSingle();
 
-      updateAccountButton(
-        data.session.user
-      );
+if(artist){
 
-    } else {
+showMessage("You already have an Artist Account.");
+loadArtistSongs();
+return;
 
-      updateAccountButton(null);
+}
 
-    }
+document.getElementById("artistModal").classList.add("show");
 
-  }
+}
 
 
-  supabaseClient.auth.onAuthStateChange(
-    (event, session) => {
+async function createArtistAccount(){
 
-      if (session) {
+const {data}=await supabaseClient.auth.getSession();
 
-        updateAccountButton(
-          session.user
-        );
+if(!data.session){
+showMessage("Please log in first.");
+closeModal("artistModal");
+openAccount();
+return;
+}
 
-      } else {
+const user=data.session.user;
 
-        updateAccountButton(null);
+const artistName=document.getElementById("artistName").value.trim();
+const bio=document.getElementById("artistBio").value.trim();
 
-      }
+if(!artistName){
+showMessage("Enter your artist name.");
+return;
+}
 
-    }
-  );
+const {error:artistError}=await supabaseClient
+.from("artist_profiles")
+.insert({
+id:user.id,
+artist_name:artistName,
+bio:bio
+});
 
+if(artistError){
 
-  /* =========================================
-     AUTH UI
-     ========================================= */
+if(artistError.code==="23505"){
+showMessage("You already have an Artist Account.");
+}else{
+showMessage(artistError.message);
+}
 
-  function openAccount() {
+return;
+}
 
-    document
-      .getElementById("authModal")
-      .classList.add("show");
 
+/*
+Update the profile role.
+*/
 
-    supabaseClient.auth.getSession()
-      .then(({ data }) => {
+const {error:roleError}=await supabaseClient
+.from("profiles")
+.update({role:"artist"})
+.eq("id",user.id);
 
-        if (data.session) {
+if(roleError){
+console.error("Role update:",roleError.message);
+}
 
-          showAccount(
-            data.session.user
-          );
+closeModal("artistModal");
 
-        } else {
+showMessage("Artist Account created successfully!");
 
-          showLogin();
+loadArtistSongs();
 
-        }
+}
 
-      });
 
-  }
+/* =========================
+   UPLOAD SONG
+========================= */
 
+async function openUpload(){
 
-  function closeAuth() {
+const {data}=await supabaseClient.auth.getSession();
 
-    document
-      .getElementById("authModal")
-      .classList.remove("show");
+if(!data.session){
+showMessage("Please log in first.");
+openAccount();
+return;
+}
 
-  }
+const {data:artist}=await supabaseClient
+.from("artist_profiles")
+.select("*")
+.eq("id",data.session.user.id)
+.maybeSingle();
 
+if(!artist){
+showMessage("Create your Artist Account first.");
+openArtistAccount();
+return;
+}
 
-  function showLogin() {
+document.getElementById("uploadModal").classList.add("show");
 
-    document
-      .getElementById("loginForm")
-      .classList.remove("hidden");
+}
 
-    document
-      .getElementById("signupForm")
-      .classList.add("hidden");
 
-    document
-      .getElementById("accountForm")
-      .classList.add("hidden");
+async function uploadSong(){
 
-  }
+const {data}=await supabaseClient.auth.getSession();
 
+if(!data.session){
+showMessage("Please log in first.");
+return;
+}
 
-  function showSignup() {
+const user=data.session.user;
 
-    document
-      .getElementById("loginForm")
-      .classList.add("hidden");
+const title=document.getElementById("songTitle").value.trim();
+const genre=document.getElementById("songGenre").value.trim();
 
-    document
-      .getElementById("signupForm")
-      .classList.remove("hidden");
+const audioFile=document.getElementById("songFile").files[0];
+const coverFile=document.getElementById("coverFile").files[0];
 
-    document
-      .getElementById("accountForm")
-      .classList.add("hidden");
+if(!title){
+showMessage("Enter the song title.");
+return;
+}
 
-  }
+if(!audioFile){
+showMessage("Choose an audio file.");
+return;
+}
 
+const button=document.getElementById("uploadButton");
 
-  function showAccount(user) {
+button.disabled=true;
+button.textContent="Uploading...";
 
-    document
-      .getElementById("loginForm")
-      .classList.add("hidden");
+try{
 
-    document
-      .getElementById("signupForm")
-      .classList.add("hidden");
+const safeAudioName=
+audioFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
 
-    document
-      .getElementById("accountForm")
-      .classList.remove("hidden");
+const audioPath=
+`${user.id}/${Date.now()}-${safeAudioName}`;
 
+const {error:audioError}=await supabaseClient
+.storage
+.from("music")
+.upload(audioPath,audioFile,{
+contentType:audioFile.type||"audio/mpeg",
+upsert:false
+});
 
-    const name =
-      user.user_metadata?.display_name ||
-      user.email?.split("@")[0] ||
-      "Afrova User";
+if(audioError)throw audioError;
 
+let coverPath=null;
 
-    document
-      .getElementById("accountName")
-      .textContent = name;
+if(coverFile){
 
+const safeCoverName=
+coverFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
 
-    document
-      .getElementById("accountEmail")
-      .textContent =
-        user.email || "";
+coverPath=
+`${user.id}/${Date.now()}-${safeCoverName}`;
 
+const {error:coverError}=await supabaseClient
+.storage
+.from("covers")
+.upload(coverPath,coverFile,{
+contentType:coverFile.type||"image/jpeg",
+upsert:false
+});
 
-    document
-      .getElementById("accountAvatar")
-      .textContent =
-        name.charAt(0).toUpperCase();
+if(coverError)throw coverError;
 
-  }
+}
 
+const {data:artist}=await supabaseClient
+.from("artist_profiles")
+.select("artist_name")
+.eq("id",user.id)
+.single();
 
-  function updateAccountButton(user) {
+if(!artist)throw new Error("Artist profile not found.");
 
-    const button =
-      document.getElementById(
-        "profileButton"
-      );
+const {error:dbError}=await supabaseClient
+.from("songs")
+.insert({
+artist_id:user.id,
+title:title,
+audio_path:audioPath,
+cover_path:coverPath,
+genre:genre||null,
+status:"published"
+});
 
+if(dbError)throw dbError;
 
-    if (!button) return;
+closeModal("uploadModal");
 
+document.getElementById("songTitle").value="";
+document.getElementById("songGenre").value="";
+document.getElementById("songFile").value="";
+document.getElementById("coverFile").value="";
 
-    if (user) {
+showMessage("Song uploaded successfully!");
 
-      const name =
-        user.user_metadata?.display_name ||
-        user.email?.split("@")[0] ||
-        "A";
+await loadArtistSongs();
+await loadPublishedSongs();
 
-      button.textContent =
-        name.charAt(0).toUpperCase();
+}catch(error){
 
-    } else {
+console.error(error);
+showMessage("Upload failed: "+error.message);
 
-      button.textContent = "A";
+}finally{
 
-    }
+button.disabled=false;
+button.textContent="Upload Song";
 
-  }
+}
 
+}
 
-  async function handleLogin() {
 
-    const email =
-      document
-        .getElementById("loginEmail")
-        .value
-        .trim();
+/* =========================
+   SONG DATABASE
+========================= */
 
+async function loadPublishedSongs(){
 
-    const password =
-      document
-        .getElementById("loginPassword")
-        .value;
+const {data,error}=await supabaseClient
+.from("songs")
+.select("id,title,artist_id,audio_path,cover_path,genre,status,created_at")
+.eq("status","published")
+.order("created_at",{ascending:false});
 
+if(error){
+console.error("Song loading:",error.message);
+return;
+}
 
-    if (!email || !password) {
+if(!data||!data.length)return;
 
-      showMessage(
-        "Please enter your email and password."
-      );
+const artistIds=[...new Set(data.map(song=>song.artist_id))];
 
-      return;
+const {data:artists}=await supabaseClient
+.from("artist_profiles")
+.select("id,artist_name")
+.in("id",artistIds);
 
-    }
+const artistMap={};
 
+(artists||[]).forEach(a=>{
+artistMap[a.id]=a.artist_name;
+});
 
-    const success =
-      await login(
-        email,
-        password
-      );
+const uploadedSongs=data.map(song=>{
 
+const audioUrl=supabaseClient
+.storage
+.from("music")
+.getPublicUrl(song.audio_path).data.publicUrl;
 
-    if (success) {
+let coverUrl="";
 
-      const { data } =
-        await supabaseClient.auth.getSession();
+if(song.cover_path){
+coverUrl=supabaseClient
+.storage
+.from("covers")
+.getPublicUrl(song.cover_path).data.publicUrl;
+}
 
+return {
+id:song.id,
+title:song.title,
+artist:artistMap[song.artist_id]||"Afrova Artist",
+audio:audioUrl,
+coverUrl:coverUrl,
+cover:"one",
+remote:true
+};
 
-      if (data.session) {
+});
 
-        showAccount(
-          data.session.user
-        );
+window.uploadedSongs=uploadedSongs;
 
-      }
+songs.splice(0,songs.length,...uploadedSongs,...demoSongs);
 
-    }
+renderSongs();
+renderAlbums();
 
-  }
+}
 
 
-  async function handleSignup() {
+async function loadArtistSongs(){
 
-    const displayName =
-      document
-        .getElementById("signupName")
-        .value
-        .trim();
+const {data}=await supabaseClient.auth.getSession();
 
+if(!data.session)return;
 
-    const email =
-      document
-        .getElementById("signupEmail")
-        .value
-        .trim();
+const {data:artist}=await supabaseClient
+.from("artist_profiles")
+.select("artist_name")
+.eq("id",data.session.user.id)
+.maybeSingle();
 
+const box=document.getElementById("artistSongs");
 
-    const password =
-      document
-        .getElementById("signupPassword")
-        .value;
+if(!box)return;
 
+if(!artist){
 
-    if (!displayName) {
+box.innerHTML=
+'<p style="color:#999">Create your Artist Account to see your songs here.</p>';
 
-      showMessage(
-        "Please enter your display name."
-      );
+return;
 
-      return;
+}
 
-    }
+const {data:songData,error}=await supabaseClient
+.from("songs")
+.select("*")
+.eq("artist_id",data.session.user.id)
+.order("created_at",{ascending:false});
 
+if(error){
+box.innerHTML=`<p style="color:#ff8b8b">${error.message}</p>`;
+return;
+}
 
-    if (!email) {
+if(!songData||!songData.length){
 
-      showMessage(
-        "Please enter your email."
-      );
+box.innerHTML=
+'<p style="color:#999">You have not uploaded any songs yet.</p>';
 
-      return;
+return;
 
-    }
+}
 
+box.innerHTML=
+`<h3 style="margin-bottom:12px">Your Uploaded Songs</h3>`+
+songData.map(song=>`
 
-    if (password.length < 6) {
+<div class="artist-song">
 
-      showMessage(
-        "Password must be at least 6 characters."
-      );
+<div>
+<strong>${escapeHtml(song.title)}</strong>
+<br>
+<small>${escapeHtml(song.genre||"No genre")} · ${song.status}</small>
+</div>
 
-      return;
+<button class="play-small" onclick="playRemoteSong('${song.id}')">▶</button>
 
-    }
+</div>
 
+`).join("");
 
-    const success =
-      await signUp(
-        email,
-        password,
-        displayName
-      );
+}
 
 
-    if (success) {
+async function playRemoteSong(id){
 
-      document
-        .getElementById("signupName")
-        .value = "";
+const {data,error}=await supabaseClient
+.from("songs")
+.select("*,artist_profiles(artist_name)")
+.eq("id",id)
+.single();
 
-      document
-        .getElementById("signupEmail")
-        .value = "";
+if(error){
+showMessage(error.message);
+return;
+}
 
-      document
-        .getElementById("signupPassword")
-        .value = "";
+const audioUrl=supabaseClient
+.storage
+.from("music")
+.getPublicUrl(data.audio_path).data.publicUrl;
 
-    }
+currentSong={
+id:data.id,
+title:data.title,
+artist:data.artist_profiles?.artist_name||"Afrova Artist",
+audio:audioUrl,
+coverUrl:data.cover_path
+?supabaseClient.storage.from("covers").getPublicUrl(data.cover_path).data.publicUrl
+:""
+};
 
-  }
+document.getElementById("nowTitle").textContent=currentSong.title;
+document.getElementById("nowArtist").textContent=currentSong.artist;
 
+setNowCover(currentSong);
 
-  /* =========================================
-     AFROVA MUSIC DATA
-     ========================================= */
+audio.src=currentSong.audio;
 
-  const songs = [
+try{
+await audio.play();
+isPlaying=true;
+updatePlayButton();
+}catch{
+showMessage("The audio could not be played.");
+}
 
-    {
-      title: "Afrova Sunrise",
-      artist: "Afrova",
-      cover: "one",
-      audio: ""
-    },
+}
 
-    {
-      title: "Lagos Nights",
-      artist: "Afro Artist",
-      cover: "two",
-      audio: ""
-    },
 
-    {
-      title: "African Dreams",
-      artist: "Kora",
-      cover: "three",
-      audio: ""
-    },
+/* =========================
+   DEMO MUSIC
+========================= */
 
-    {
-      title: "Golden Vibes",
-      artist: "Melody",
-      cover: "four",
-      audio: ""
-    },
+const demoSongs=[
+{
+title:"Afrova Sunrise",
+artist:"Afrova",
+cover:"one",
+audio:""
+},
+{
+title:"Lagos Nights",
+artist:"Afro Artist",
+cover:"two",
+audio:""
+},
+{
+title:"African Dreams",
+artist:"Kora",
+cover:"three",
+audio:""
+},
+{
+title:"Golden Vibes",
+artist:"Melody",
+cover:"four",
+audio:""
+},
+{
+title:"New Energy",
+artist:"Soul Africa",
+cover:"five",
+audio:""
+}
+];
 
-    {
-      title: "New Energy",
-      artist: "Soul Africa",
-      cover: "five",
-      audio: ""
-    }
+const songs=[...demoSongs];
 
-  ];
+let currentSong=0;
+let liked=[];
+let isPlaying=false;
 
+const audio=document.getElementById("audio");
 
-  let currentSong = 0;
 
-  let liked = [];
+function renderSongs(list=songs,container="songCards"){
 
-  let isPlaying = false;
+const box=document.getElementById(container);
 
+if(!box)return;
 
-  const audio =
-    document.getElementById("audio");
+box.innerHTML="";
 
+if(!list.length){
+box.innerHTML='<p style="color:#999">No music found.</p>';
+return;
+}
 
-  /* =========================================
-     CREATE SONG CARDS
-     ========================================= */
+list.forEach((song)=>{
 
-  function renderSongs(
-    list = songs,
-    container = "songCards"
-  ) {
+const realIndex=songs.indexOf(song);
 
-    const box =
-      document.getElementById(container);
+const card=document.createElement("div");
+card.className="card";
 
+const cover=song.coverUrl
+?`<div class="cover"><img src="${song.coverUrl}" alt=""></div>`
+:`<div class="cover ${song.cover||"one"}">♪</div>`;
 
-    if (!box) return;
+card.innerHTML=`
 
+${cover}
 
-    box.innerHTML = "";
+<h3>${escapeHtml(song.title)}</h3>
+<p>${escapeHtml(song.artist)}</p>
 
+<div class="card-bottom">
 
-    if (list.length === 0) {
+<button class="play-small" onclick="playSong(${realIndex})">▶</button>
 
-      box.innerHTML =
-        '<p style="color:#999;">No music found.</p>';
+<button class="heart ${liked.includes(realIndex)?"liked":""}" onclick="toggleLike(${realIndex})">♥</button>
 
-      return;
+</div>
+`;
 
-    }
+box.appendChild(card);
 
+});
 
-    list.forEach((song) => {
+}
 
-      const realIndex =
-        songs.indexOf(song);
 
+function playSong(index){
 
-      const card =
-        document.createElement("div");
+if(index<0||index>=songs.length)return;
 
+currentSong=index;
 
-      card.className = "card";
+const song=songs[index];
 
+document.getElementById("nowTitle").textContent=song.title;
+document.getElementById("nowArtist").textContent=song.artist;
 
-      card.innerHTML = `
+setNowCover(song);
 
-        <div class="cover ${song.cover}">
-          ♪
-        </div>
+if(!song.audio){
 
-        <h3>${song.title}</h3>
+showMessage("This demo song has no audio file yet.");
+isPlaying=false;
+updatePlayButton();
+return;
 
-        <p>${song.artist}</p>
+}
 
-        <div class="card-bottom">
+audio.src=song.audio;
 
-          <button
-            class="play-small"
-            onclick="playSong(${realIndex})">
-            ▶
-          </button>
+audio.play().then(()=>{
 
-          <button
-            class="heart ${
-              liked.includes(realIndex)
-                ? "liked"
-                : ""
-            }"
-            onclick="toggleLike(${realIndex})">
-            ♥
-          </button>
+isPlaying=true;
+updatePlayButton();
 
-        </div>
+}).catch(()=>{
+showMessage("The audio could not be played.");
+});
 
-      `;
+}
 
 
-      box.appendChild(card);
+function setNowCover(song){
 
-    });
+const box=document.getElementById("nowCover");
 
-  }
+if(song.coverUrl){
+box.innerHTML=`<img src="${song.coverUrl}" alt="">`;
+}else{
+box.innerHTML="♪";
+}
 
+}
 
-  /* =========================================
-     PLAY SONG
-     ========================================= */
 
-  function playSong(index) {
+function togglePlay(){
 
-    currentSong = index;
+const song=songs[currentSong];
 
+if(!song||!song.audio){
 
-    const song =
-      songs[index];
+showMessage("Select an uploaded song to play it.");
+return;
 
+}
 
-    document
-      .getElementById("nowTitle")
-      .textContent =
-        song.title;
+if(isPlaying){
 
+audio.pause();
+isPlaying=false;
 
-    document
-      .getElementById("nowArtist")
-      .textContent =
-        song.artist;
+}else{
 
+audio.play();
+isPlaying=true;
 
-    if (song.audio) {
+}
 
-      if (audio.src !== song.audio) {
+updatePlayButton();
 
-        audio.src =
-          song.audio;
+}
 
-      }
 
+function updatePlayButton(){
 
-      audio.play()
-        .then(() => {
+document.getElementById("playButton").textContent=
+isPlaying?"Ⅱ":"▶";
 
-          isPlaying = true;
+}
 
-          updatePlayButton();
 
-        })
-        .catch(() => {
+function nextSong(){
 
-          showMessage(
-            "The audio could not be played."
-          );
+if(!songs.length)return;
 
-        });
+currentSong++;
 
+if(currentSong>=songs.length)currentSong=0;
 
-    } else {
+playSong(currentSong);
 
-      showMessage(
-        "This song is a demo. Add your legal audio file URL."
-      );
+}
 
 
-      isPlaying = false;
+function previousSong(){
 
-      updatePlayButton();
+if(!songs.length)return;
 
-    }
+currentSong--;
 
-  }
+if(currentSong<0)currentSong=songs.length-1;
 
+playSong(currentSong);
 
-  /* =========================================
-     PLAY / PAUSE
-     ========================================= */
+}
 
-  function togglePlay() {
 
-    if (!songs[currentSong].audio) {
+function toggleLike(index){
 
-      showMessage(
-        "Add an audio file URL to play this song."
-      );
+if(liked.includes(index)){
 
-      return;
+liked=liked.filter(i=>i!==index);
+showMessage("Removed from Liked Songs");
 
-    }
+}else{
 
+liked.push(index);
+showMessage("Added to Liked Songs ♥");
 
-    if (isPlaying) {
+}
 
-      audio.pause();
+renderSongs();
+renderLiked();
 
-      isPlaying = false;
+}
 
-    } else {
 
-      audio.play();
+function renderLiked(){
 
-      isPlaying = true;
+const likedSongs=songs.filter((_,i)=>liked.includes(i));
 
-    }
+renderSongs(likedSongs,"likedSongs");
 
+}
 
-    updatePlayButton();
 
-  }
+function searchMusic(){
 
+const query=document
+.getElementById("searchInput")
+.value.toLowerCase()
+.trim();
 
-  function updatePlayButton() {
+if(!query){
+renderSongs(songs,"searchResults");
+return;
+}
 
-    document
-      .getElementById("playButton")
-      .textContent =
-        isPlaying ? "Ⅱ" : "▶";
+showSection("search");
 
-  }
+const results=songs.filter(song=>
+song.title.toLowerCase().includes(query)||
+song.artist.toLowerCase().includes(query)
+);
 
+renderSongs(results,"searchResults");
 
-  /* =========================================
-     NEXT
-     ========================================= */
+}
 
-  function nextSong() {
 
-    currentSong++;
+function showSection(section,button=null){
 
+const sections=[
+"home","search","library","liked",
+"playlists","albums","artist","premium"
+];
 
-    if (
-      currentSong >= songs.length
-    ) {
+sections.forEach(id=>{
 
-      currentSong = 0;
+const el=document.getElementById(id);
 
-    }
+if(el)el.classList.toggle("hidden",id!==section);
 
+});
 
-    playSong(currentSong);
+document.querySelectorAll(".nav-btn")
+.forEach(btn=>btn.classList.remove("active"));
 
-  }
+if(button)button.classList.add("active");
 
+if(section==="liked")renderLiked();
 
-  /* =========================================
-     PREVIOUS
-     ========================================= */
+if(section==="search")renderSongs(songs,"searchResults");
 
-  function previousSong() {
+if(section==="albums")renderAlbums();
 
-    currentSong--;
+if(section==="artist")loadArtistSongs();
 
+window.scrollTo({top:0,behavior:"smooth"});
 
-    if (currentSong < 0) {
+}
 
-      currentSong =
-        songs.length - 1;
 
-    }
+function renderAlbums(){
 
+const box=document.getElementById("albumCards");
 
-    playSong(currentSong);
+if(!box)return;
 
-  }
+box.innerHTML="";
 
+songs.forEach((song,index)=>{
 
-  /* =========================================
-     LIKE
-     ========================================= */
+box.innerHTML+=`
 
-  function toggleLike(index) {
+<div class="card">
 
-    if (liked.includes(index)) {
+${song.coverUrl
+?`<div class="cover"><img src="${song.coverUrl}" alt=""></div>`
+:`<div class="cover ${song.cover||"one"}">▣</div>`}
 
-      liked =
-        liked.filter(
-          i => i !== index
-        );
+<h3>${escapeHtml(song.title)} — EP</h3>
+<p>${escapeHtml(song.artist)}</p>
 
-      showMessage(
-        "Removed from Liked Songs"
-      );
+<div class="card-bottom">
+<button class="play-small" onclick="playSong(${index})">▶</button>
+</div>
 
-    } else {
+</div>
 
-      liked.push(index);
+`;
 
-      showMessage(
-        "Added to Liked Songs ♥"
-      );
+});
 
-    }
+}
 
 
-    renderSongs();
+function createPlaylist(){
 
-    renderLiked();
+const name=prompt("Enter your playlist name:");
 
-  }
+if(name)showMessage(`"${name}" playlist created.`);
 
+}
 
-  /* =========================================
-     LIKED SONGS
-     ========================================= */
 
-  function renderLiked() {
+/* =========================
+   PREMIUM
+========================= */
 
-    const likedSongs =
-      songs.filter(
-        (_, index) =>
-          liked.includes(index)
-      );
+function subscribe(plan){
 
+showMessage(`${plan} selected. Paystack payment will be connected next.`);
 
-    renderSongs(
-      likedSongs,
-      "likedSongs"
-    );
+}
 
-  }
 
+/* =========================
+   MODALS
+========================= */
 
-  /* =========================================
-     SEARCH
-     ========================================= */
+function closeModal(id){
 
-  function searchMusic() {
+document.getElementById(id).classList.remove("show");
 
-    const query =
-      document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase()
-        .trim();
+}
 
 
-    if (!query) {
+document.querySelectorAll(".modal-overlay")
+.forEach(modal=>{
 
-      renderSongs(
-        songs,
-        "searchResults"
-      );
+modal.addEventListener("click",function(event){
 
-      return;
+if(event.target===this){
+this.classList.remove("show");
+}
 
-    }
+});
 
+});
 
-    showSection("search");
 
+/* =========================
+   MESSAGE
+========================= */
 
-    const results =
-      songs.filter(song =>
+function showMessage(text){
 
-        song.title
-          .toLowerCase()
-          .includes(query) ||
+const box=document.getElementById("message");
 
-        song.artist
-          .toLowerCase()
-          .includes(query)
+box.textContent=text;
+box.style.display="block";
 
-      );
+clearTimeout(window.messageTimer);
 
+window.messageTimer=setTimeout(()=>{
+box.style.display="none";
+},3500);
 
-    renderSongs(
-      results,
-      "searchResults"
-    );
+}
 
-  }
 
+function escapeHtml(value){
 
-  /* =========================================
-     NAVIGATION
-     ========================================= */
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-  function showSection(
-    section,
-    button = null
-  ) {
+}
 
-    const sections = [
 
-      "home",
-      "search",
-      "library",
-      "liked",
-      "playlists",
-      "albums",
-      "artist",
-      "premium"
+/* =========================
+   AUDIO
+========================= */
 
-    ];
+audio.addEventListener("timeupdate",()=>{
 
+if(!audio.duration)return;
 
-    sections.forEach(id => {
+const percent=
+audio.currentTime/audio.duration*100;
 
-      const element =
-        document.getElementById(id);
+document.getElementById("progressFill")
+.style.width=percent+"%";
 
+document.getElementById("currentTime")
+.textContent=formatTime(audio.currentTime);
 
-      if (element) {
+});
 
-        element.classList.toggle(
-          "hidden",
-          id !== section
-        );
 
-      }
+audio.addEventListener("loadedmetadata",()=>{
 
-    });
+document.getElementById("duration")
+.textContent=formatTime(audio.duration);
 
+});
 
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach(btn =>
-        btn.classList.remove("active")
-      );
 
+audio.addEventListener("ended",()=>{
 
-    if (button) {
+isPlaying=false;
+updatePlayButton();
+nextSong();
 
-      button.classList.add("active");
+});
 
-    }
 
+function seek(event){
 
-    if (section === "liked") {
+if(!audio.duration)return;
 
-      renderLiked();
+const rect=event.currentTarget.getBoundingClientRect();
 
-    }
+const percent=
+(event.clientX-rect.left)/rect.width;
 
+audio.currentTime=percent*audio.duration;
 
-    if (section === "search") {
+}
 
-      renderSongs(
-        songs,
-        "searchResults"
-      );
 
-    }
+function formatTime(seconds){
 
+if(!seconds||isNaN(seconds))return"0:00";
 
-    if (section === "albums") {
+const minutes=Math.floor(seconds/60);
 
-      renderAlbums();
+const secs=Math.floor(seconds%60)
+.toString()
+.padStart(2,"0");
 
-    }
+return`${minutes}:${secs}`;
 
+}
 
-    window.scrollTo({
 
-      top: 0,
+/* =========================
+   START APP
+========================= */
 
-      behavior: "smooth"
+renderSongs();
+renderSongs(songs,"searchResults");
+renderLiked();
+renderAlbums();
 
-    });
+checkLogin();
 
-  }
-
-
-  /* =========================================
-     ALBUMS
-     ========================================= */
-
-  function renderAlbums() {
-
-    const box =
-      document.getElementById(
-        "albumCards"
-      );
-
-
-    if (!box) return;
-
-
-    box.innerHTML = "";
-
-
-    songs.forEach((song, index) => {
-
-      box.innerHTML += `
-
-        <div class="card">
-
-          <div class="cover ${song.cover}">
-            ▣
-          </div>
-
-          <h3>
-            ${song.title} — EP
-          </h3>
-
-          <p>
-            ${song.artist}
-          </p>
-
-          <div class="card-bottom">
-
-            <button
-              class="play-small"
-              onclick="playSong(${index})">
-              ▶
-            </button>
-
-          </div>
-
-        </div>
-
-      `;
-
-    });
-
-  }
-
-
-  /* =========================================
-     CREATE PLAYLIST
-     ========================================= */
-
-  function createPlaylist() {
-
-    const name =
-      prompt(
-        "Enter your playlist name:"
-      );
-
-
-    if (!name) return;
-
-
-    showMessage(
-      `"${name}" playlist created.`
-    );
-
-  }
-
-
-  /* =========================================
-     ARTIST
-     ========================================= */
-
-  function artistMessage() {
-
-    showMessage(
-      "Artist Studio will connect to the Afrova backend next."
-    );
-
-  }
-
-
-  /* =========================================
-     PREMIUM
-     ========================================= */
-
-  function subscribe(plan) {
-
-    showMessage(
-      `${plan} selected. Paystack payment will be connected next.`
-    );
-
-  }
-
-
-  /* =========================================
-     MESSAGE
-     ========================================= */
-
-  function showMessage(text) {
-
-    const box =
-      document.getElementById(
-        "message"
-      );
-
-
-    box.textContent = text;
-
-    box.style.display =
-      "block";
-
-
-    setTimeout(() => {
-
-      box.style.display =
-        "none";
-
-    }, 3500);
-
-  }
-
-
-  /* =========================================
-     AUDIO EVENTS
-     ========================================= */
-
-  audio.addEventListener(
-    "timeupdate",
-    () => {
-
-      if (!audio.duration) return;
-
-
-      const percent =
-        (audio.currentTime /
-          audio.duration) * 100;
-
-
-      document
-        .getElementById(
-          "progressFill"
-        )
-        .style.width =
-          percent + "%";
-
-
-      document
-        .getElementById(
-          "currentTime"
-        )
-        .textContent =
-          formatTime(
-            audio.currentTime
-          );
-
-    }
-  );
-
-
-  audio.addEventListener(
-    "loadedmetadata",
-    () => {
-
-      document
-        .getElementById(
-          "duration"
-        )
-        .textContent =
-          formatTime(
-            audio.duration
-          );
-
-    }
-  );
-
-
-  audio.addEventListener(
-    "ended",
-    () => {
-
-      isPlaying = false;
-
-      updatePlayButton();
-
-      nextSong();
-
-    }
-  );
-
-
-  /* =========================================
-     SEEK
-     ========================================= */
-
-  function seek(event) {
-
-    if (!audio.duration) return;
-
-
-    const rect =
-      event.currentTarget
-        .getBoundingClientRect();
-
-
-    const percent =
-      (event.clientX -
-        rect.left) /
-      rect.width;
-
-
-    audio.currentTime =
-      percent *
-      audio.duration;
-
-  }
-
-
-  /* =========================================
-     FORMAT TIME
-     ========================================= */
-
-  function formatTime(seconds) {
-
-    if (
-      !seconds ||
-      isNaN(seconds)
-    ) {
-
-      return "0:00";
-
-    }
-
-
-    const minutes =
-      Math.floor(
-        seconds / 60
-      );
-
-
-    const secs =
-      Math.floor(
-        seconds % 60
-      )
-      .toString()
-      .padStart(2, "0");
-
-
-    return `${minutes}:${secs}`;
-
-  }
-
-
-  /* =========================================
-     INITIAL LOAD
-     ========================================= */
-
-  renderSongs();
-
-  renderSongs(
-    songs,
-    "searchResults"
-  );
-
-  renderLiked();
-
-  renderAlbums();
-
-  checkLogin();
-
-
-  /* CLOSE AUTH MODAL WHEN CLICKING OUTSIDE */
-
-  document
-    .getElementById("authModal")
-    .addEventListener(
-      "click",
-      function(event) {
-
-        if (
-          event.target === this
-        ) {
-
-          closeAuth();
-
-        }
-
-      }
-    );
+loadPublishedSongs();
 
 </script>
 
